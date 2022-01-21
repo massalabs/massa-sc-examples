@@ -1,0 +1,22 @@
+{
+  "name": "massa-sc-examples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:z80dev/massa-sc-examples.git",
+  "license": "MIT",
+  "scripts": {
+    "token": "asc --transform json-as/transform assembly/token.ts --target release --exportRuntime --textFile build/token.wat --binaryFile build/token.wasm",
+    "create_token": "node massa_tools/include_base64.js assembly/create_token.ts && asc --transform json-as/transform --traceResolution assembly/create_token.m.ts --target release --exportRuntime --textFile build/create_token.wat --binaryFile build/create_token.wasm && rm assembly/create_token.m.ts"
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.19.20",
+    "jest": "^27.4.5"
+  },
+  "dependencies": {
+    "as-base58": "^0.1.1",
+    "as-hmac-sha2": "^1.0.2",
+    "json-as": "^0.2.6",
+    "massa-sc-std": "https://github.com/z80dev/massa-sc-std",
+    "visitor-as": "^0.6.0"
+  }
+}
