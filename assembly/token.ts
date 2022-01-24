@@ -1,7 +1,7 @@
 /* ERC20 Implementation for Massa Labs
  *
  * */
-import { Storage, get_call_stack, print } from "massa-sc-std";
+import { Storage, Context, print } from "massa-sc-std";
 import { JSON } from "json-as";
 
 /*
@@ -74,16 +74,14 @@ export function balanceOf(address: string): string {
 
 export function transfer(_args: string): string {
     const args = JSON.parse<TransferArgs>(_args);
-    const addresses = JSON.parse<string[]>(get_call_stack());
+    const addresses = JSON.parse<string[]>(Context.get_call_stack());
     const sender = addresses[0];
-
-    print("transfering " + args.amount.toString() + " tokens from " + sender + " to " + args.to);
     return _transfer(sender, args.to, args.amount).toString();
 }
 
 export function allow(_args: string): string {
     const args = JSON.parse<AllowArgs>(_args);
-    const addresses = JSON.parse<string[]>(get_call_stack());
+    const addresses = JSON.parse<string[]>(Context.get_call_stack());
     const owner = addresses[0];
     _setAllowance(owner, args.spender, args.amount);
     return args.amount.toString();
@@ -95,27 +93,21 @@ export function allowance(_args: string): string {
 }
 
 export function transferFrom(_args: string): void {
-    print("In transferFrom");
-    const addresses = JSON.parse<string[]>(get_call_stack());
-    const spender = addresses[addresses.length - 1];
+    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const spender = addresses[addresses.length - 2];
     const args = JSON.parse<TransferFromArgs>(_args);
     const allowed = U32.parseInt(_getAllowance(args.owner, spender));
     assert(args.amount < allowed, "ALLOWANCE_EXCEEDED");
     _transfer(args.owner, args.to, args.amount);
-    print("Transfered token from " + args.owner + " to " + args.to);
     const newAllowance = allowed - args.amount;
     _setAllowance(args.owner, spender, newAllowance);
-    print("Set new allowance for" + args.owner + " to " + newAllowance.toString());
 }
 
 export function mint(_args: string): string {
     // anyone can call this!!!
     const args = JSON.parse<MintArgs>(_args);
-    print("minting " + args.amount.toString() + " tokens for " + args.address);
     let supply = U32.parseInt(totalSupply());
-    print("Current supply: " + supply.toString())
     supply += args.amount;
-    print("New supply: " + supply.toString())
     Storage.set_data("TOTAL_SUPPLY", supply.toString());
     let bal = U32.parseInt(balanceOf(args.address));
     bal += args.amount;
@@ -141,7 +133,12 @@ function _setAllowance(owner: string, spender: string, amount: u32): void {
 }
 
 function _getAllowance(owner: string, spender: string): string {
-    return Storage.get_data_or_default(_allowKey(owner, spender), "0")
+    if (Storage.has_data(_allowKey(owner, spender))) {
+        return Storage.get_data(_allowKey(owner, spender))
+    } else {
+        Storage.set_data(_allowKey(owner, spender), "0");
+        return "0";
+    }
 }
 
 function _setBalance(address: string, balance: u32): void {
