@@ -1,4 +1,4 @@
-import { Storage, include_base64, get_call_stack, call, print, create_sc } from "massa-sc-std";
+import { Storage, Context, include_base64, call, print, create_sc } from "massa-sc-std";
 import { JSON } from "json-as";
 import { MintArgs, TransferArgs, AllowArgs, AllowanceArgs } from "./token";
 
@@ -18,9 +18,9 @@ function createToken(name: string, supply: u32, mintRecipient: string): string {
 }
 
 export function main(_args: string): i32 {
-    const addresses = JSON.parse<string[]>(get_call_stack());
+    const addresses = JSON.parse<string[]>(Context.get_call_stack());
     const my_address = addresses[0];
-    const token1 = createToken("z80coin", 10000, my_address);
+    const token1 = createToken("seacoin", 10000, my_address);
     let bal = call(token1, "balanceOf", my_address, 0);
     print(my_address + " token balance: " + bal);
     call(token1, "transfer", JSON.stringify<TransferArgs>({to: acct2, amount: 50}), 0)
