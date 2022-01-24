@@ -1883,7 +1883,7 @@ makeerror@1.0.12:
 
 "massa-sc-std@https://github.com/z80dev/massa-sc-std":
   version "1.0.0"
-  resolved "https://github.com/z80dev/massa-sc-std#d69de7813077ae310d67355d46af4ecfd5942ff1"
+  resolved "https://github.com/z80dev/massa-sc-std#df7a08d194614eb0d64434712eb23f839df62cc2"
 
 merge-stream@^2.0.0:
   version "2.0.0"

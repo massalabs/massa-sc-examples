@@ -1,10 +1,37 @@
+/* ERC20 Implementation for Massa Labs
+ *
+ * */
 import { Storage, get_call_stack, print } from "massa-sc-std";
 import { JSON } from "json-as";
 
+/*
+Arguments to be parsed by each public function
+
+in cosm-wasm they call these "messages"
+
+Questions to be answered:
+- Since anything beyond a single string requires us to decode JSON, should we follow
+  this pattern even for functions that accept a single string?
+
+- In the future, what tooling can we write to abstract JSON encoding/decoding from the
+  smart contract author?
+ */
 @json
 export class MintArgs {
     address: string = "";
     amount: u32 = 0;
+}
+
+@json
+export class AllowArgs {
+    spender: string = "";
+    amount: u32 = 0;
+}
+
+@json
+export class AllowanceArgs {
+    owner: string = "";
+    spender: string = "";
 }
 
 @json
@@ -13,9 +40,14 @@ export class TransferArgs {
     amount: u32 = 0;
 }
 
-function balKey(address: string): string {
-    return "bal" + address;
+@json
+export class TransferFromArgs {
+    owner: string = "";
+    to: string = "";
+    amount: u32 = 0;
 }
+
+/* External functions */
 
 export function name(): string {
     // must be set or will revert
@@ -34,31 +66,50 @@ export function totalSupply(): string {
     return Storage.get_data("TOTAL_SUPPLY")
 }
 
+
 export function balanceOf(address: string): string {
-    const key = balKey(address);
-    if (Storage.has_data(key)) {
-        const raw_bal = Storage.get_data("bal" + address);
-        return raw_bal;
-    } else return "0";
+    const key = _balKey(address);
+    return Storage.get_data_or_default(key, "0");
 }
 
 export function transfer(_args: string): string {
     const args = JSON.parse<TransferArgs>(_args);
     const addresses = JSON.parse<string[]>(get_call_stack());
-    const my_address = addresses[0];
+    const sender = addresses[0];
 
-    print("transfering " + args.amount.toString() + " tokens from " + my_address + " to " + args.to);
-    let senderBal = U32.parseInt(balanceOf(my_address));
-    let receiverBal = U32.parseInt(balanceOf(args.to));
-    assert(senderBal > args.amount, "INSUFFICIENT_BALANCE")
-    senderBal -= args.amount;
-    Storage.set_data(balKey(my_address), senderBal.toString());
-    receiverBal += args.amount;
-    Storage.set_data(balKey(args.to), receiverBal.toString());
+    print("transfering " + args.amount.toString() + " tokens from " + sender + " to " + args.to);
+    return _transfer(sender, args.to, args.amount).toString();
+}
+
+export function allow(_args: string): string {
+    const args = JSON.parse<AllowArgs>(_args);
+    const addresses = JSON.parse<string[]>(get_call_stack());
+    const owner = addresses[0];
+    _setAllowance(owner, args.spender, args.amount);
     return args.amount.toString();
 }
 
+export function allowance(_args: string): string {
+    const args = JSON.parse<AllowanceArgs>(_args);
+    return _getAllowance(args.owner, args.spender);
+}
+
+export function transferFrom(_args: string): void {
+    print("In transferFrom");
+    const addresses = JSON.parse<string[]>(get_call_stack());
+    const spender = addresses[addresses.length - 1];
+    const args = JSON.parse<TransferFromArgs>(_args);
+    const allowed = U32.parseInt(_getAllowance(args.owner, spender));
+    assert(args.amount < allowed, "ALLOWANCE_EXCEEDED");
+    _transfer(args.owner, args.to, args.amount);
+    print("Transfered token from " + args.owner + " to " + args.to);
+    const newAllowance = allowed - args.amount;
+    _setAllowance(args.owner, spender, newAllowance);
+    print("Set new allowance for" + args.owner + " to " + newAllowance.toString());
+}
+
 export function mint(_args: string): string {
+    // anyone can call this!!!
     const args = JSON.parse<MintArgs>(_args);
     print("minting " + args.amount.toString() + " tokens for " + args.address);
     let supply = U32.parseInt(totalSupply());
@@ -68,6 +119,39 @@ export function mint(_args: string): string {
     Storage.set_data("TOTAL_SUPPLY", supply.toString());
     let bal = U32.parseInt(balanceOf(args.address));
     bal += args.amount;
-    Storage.set_data(balKey(args.address), bal.toString())
+    _setBalance(args.address, bal);
     return args.amount.toString();
+}
+
+// internal utility functions
+
+function _transfer(sender: string, recipient: string, amount: u32): u32 {
+    let senderBal = U32.parseInt(balanceOf(sender));
+    assert(senderBal > amount, "INSUFFICIENT_BALANCE")
+    let receiverBal = U32.parseInt(balanceOf(recipient));
+    senderBal -= amount;
+    _setBalance(sender, senderBal);
+    receiverBal += amount;
+    _setBalance(recipient, receiverBal);
+    return amount;
+}
+
+function _setAllowance(owner: string, spender: string, amount: u32): void {
+    Storage.set_data(_allowKey(owner, spender), amount.toString());
+}
+
+function _getAllowance(owner: string, spender: string): string {
+    return Storage.get_data_or_default(_allowKey(owner, spender), "0")
+}
+
+function _setBalance(address: string, balance: u32): void {
+    Storage.set_data(_balKey(address), balance.toString());
+}
+
+function _balKey(address: string): string {
+    return "bal" + address;
+}
+
+function _allowKey(address: string, spender: string): string {
+    return "allow" + address + spender;
 }
