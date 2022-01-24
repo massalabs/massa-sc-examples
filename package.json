@@ -6,7 +6,10 @@
   "license": "MIT",
   "scripts": {
     "token": "asc --transform json-as/transform assembly/token.ts --target release --exportRuntime --textFile build/token.wat --binaryFile build/token.wasm",
-    "create_token": "node massa_tools/include_base64.js assembly/create_token.ts && asc --transform json-as/transform --traceResolution assembly/create_token.m.ts --target release --exportRuntime --textFile build/create_token.wat --binaryFile build/create_token.wasm && rm assembly/create_token.m.ts"
+    "helloworld": "asc --transform json-as/transform assembly/helloworld.ts --target release --exportRuntime --textFile build/helloworld.wat --binaryFile build/helloworld.wasm",
+    "tokenspender": "asc --transform json-as/transform assembly/tokenspender.ts --target release --exportRuntime --textFile build/tokenspender.wat --binaryFile build/tokenspender.wasm",
+    "create_token": "node massa_tools/include_base64.js assembly/create_token.ts && asc --transform json-as/transform assembly/create_token.m.ts --target release --exportRuntime --textFile build/create_token.wat --binaryFile build/create_token.wasm && rm assembly/create_token.m.ts",
+    "test_tokenspend": "node massa_tools/include_base64.js assembly/test_tokenspend.ts && asc --transform json-as/transform assembly/test_tokenspend.m.ts --target release --exportRuntime --textFile build/test_tokenspend.wat --binaryFile build/test_tokenspend.wasm && rm assembly/test_tokenspend.m.ts"
   },
   "devDependencies": {
     "assemblyscript": "^0.19.20",
