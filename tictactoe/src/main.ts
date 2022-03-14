@@ -1,9 +1,9 @@
 import { Storage, Context, include_base64, call, print, create_sc } from "massa-sc-std";
 import { JSON } from "json-as";
-import { PlayArgs } from "./tic_tac_toe";
+import { PlayArgs } from "./smart-contract";
 
 function createContract(): string {
-    const bytes = include_base64('./build/tictactoe_play.wasm');
+    const bytes = include_base64('./build/tic_tac_toe.wasm');
     const sc_address = create_sc(bytes);
     return sc_address;
 }

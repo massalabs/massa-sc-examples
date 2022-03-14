@@ -1,6 +1,6 @@
 import { Storage, Context, include_base64, call, print, create_sc } from "massa-sc-std";
 import { JSON } from "json-as";
-import { SetOwnerArgs, SetResolverArgs, SetApprovalForAllArgs, IsApprovedForAllArgs } from "./dns";
+import { SetOwnerArgs, SetResolverArgs, SetApprovalForAllArgs, IsApprovedForAllArgs } from "./smart-contract";
 
 const acct1 = "9mvJfA4761u1qT8QwSWcJ4gTDaFP5iSgjQzKMaqTbrWCFo1QM"
 const acct2 = "YzydYazD1taJFcBQDquuHvv4bdiaaEStK1wCqnLtQkXC9HxkM"
