@@ -672,7 +672,7 @@
   "resolved" "https://registry.npmjs.org/as-string-sink/-/as-string-sink-0.4.2.tgz"
   "version" "0.4.2"
 
-"assemblyscript@^0.18.31", "assemblyscript@^0.19.20":
+"assemblyscript@^0.18.31", "assemblyscript@^0.19.23":
   "integrity" "sha512-fwOQNZVTMga5KRsfY80g7cpOl4PsFQczMwHzdtgoqLXaYhkhavufKb0sB0l3T1DUxpAufA0KNhlbpuuhZUwxMA=="
   "resolved" "https://registry.npmjs.org/assemblyscript/-/assemblyscript-0.19.23.tgz"
   "version" "0.19.23"
@@ -1882,7 +1882,8 @@
     "tmpl" "1.0.5"
 
 "massa-sc-std@https://github.com/massalabs/massa-sc-std#5c90b49":
-  "resolved" "git+ssh://git@github.com/massalabs/massa-sc-std.git#5c90b49d6d2c95e3c6d3d6e66d91a703bad30945"
+  "integrity" "sha512-JbCBg398t70MAjH71DlWW8dJhCKFNGv5HEYLfKP7ZpCcl+HHPUQNOh3Do/rBWrqvpGVvXtQfdI0SBEZF23BLmA=="
+  "resolved" "git+ssh://git@github.com/massalabs/massa-sc-std.git"
   "version" "2.0.0"
 
 "merge-stream@^2.0.0":
