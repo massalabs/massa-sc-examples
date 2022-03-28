@@ -47,7 +47,7 @@
  (export "__collect" (func $~lib/rt/itcms/__collect))
  (export "__rtti_base" (global $~lib/rt/__rtti_base))
  (export "memory" (memory $0))
- (export "receive" (func $export:assembly/receivemessage/receive))
+ (export "receive" (func $export:assembly/receive_message/receive))
  (start $~start)
  (func $~lib/rt/itcms/visitRoots
   (local $0 i32)
@@ -2769,7 +2769,7 @@
   i32.const 1440
   global.set $~lib/rt/itcms/fromSpace
  )
- (func $export:assembly/receivemessage/receive (param $0 i32)
+ (func $export:assembly/receive_message/receive (param $0 i32)
   (local $1 i32)
   (local $2 i32)
   (local $3 i32)

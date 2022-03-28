@@ -672,7 +672,7 @@
   "resolved" "https://registry.npmjs.org/as-string-sink/-/as-string-sink-0.4.2.tgz"
   "version" "0.4.2"
 
-"assemblyscript@^0.18.31", "assemblyscript@^0.19.23":
+"assemblyscript@^0.18.31", "assemblyscript@^0.19.20":
   "integrity" "sha512-fwOQNZVTMga5KRsfY80g7cpOl4PsFQczMwHzdtgoqLXaYhkhavufKb0sB0l3T1DUxpAufA0KNhlbpuuhZUwxMA=="
   "resolved" "https://registry.npmjs.org/assemblyscript/-/assemblyscript-0.19.23.tgz"
   "version" "0.19.23"

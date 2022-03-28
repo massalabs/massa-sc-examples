@@ -6,7 +6,7 @@
 import { send_message, print, create_sc, include_base64 } from "massa-sc-std"
 
 export function main(name: string): void {
-    const bytes = include_base64('./build/receivemessage.wasm');
+    const bytes = include_base64('./build/receive_message.wasm');
     const address = create_sc(bytes);
     send_message(address, "receive", 1, 1, 20, 20, 100_000, 1, 100, "hello my good friend!");
     print("receiver created and message sent")
