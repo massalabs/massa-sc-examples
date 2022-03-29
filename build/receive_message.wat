@@ -8,6 +8,7 @@
  (type $none_=>_i32 (func (result i32)))
  (type $i32_=>_i32 (func (param i32) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
+ (import "massa" "assembly_script_generate_event" (func $~lib/massa-sc-std/index/assembly_script_generate_event (param i32)))
  (import "massa" "assembly_script_print" (func $~lib/massa-sc-std/index/assembly_script_print (param i32)))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
@@ -2798,10 +2799,11 @@
    local.tee $1
    i64.const 0
    i64.store
+   local.get $1
    block $__inlined_func$~lib/string/String#concat (result i32)
     local.get $1
     i32.const 1056
-    i32.store offset=4
+    i32.store
     local.get $1
     i32.const 4
     i32.sub
@@ -2862,10 +2864,10 @@
     global.set $~lib/memory/__stack_pointer
     local.get $3
    end
-   local.set $0
-   global.get $~lib/memory/__stack_pointer
+   local.tee $0
+   i32.store offset=4
    local.get $0
-   i32.store
+   call $~lib/massa-sc-std/index/assembly_script_generate_event
    local.get $0
    call $~lib/massa-sc-std/index/assembly_script_print
    global.get $~lib/memory/__stack_pointer

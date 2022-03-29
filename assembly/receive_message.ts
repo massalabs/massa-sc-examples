@@ -2,8 +2,10 @@
  * Smart contract containing a message handler function
  **/
 
-import { print } from "massa-sc-std"
+import { print, generate_event } from "massa-sc-std"
 
 export function receive(data: string): void {
-    print("message received: " + data);
+    let response: string = "message received: " + data;
+    generate_event(response);
+    print(response);
 }
