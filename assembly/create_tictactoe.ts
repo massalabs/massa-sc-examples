@@ -3,7 +3,7 @@ import { JSON } from "json-as";
 import { PlayArgs } from "./tic_tac_toe";
 
 function createContract(): string {
-    const bytes = include_base64('./build/tictactoe_play.wasm');
+    const bytes = include_base64('./build/tictactoe.wasm');
     const sc_address = create_sc(bytes);
     return sc_address;
 }

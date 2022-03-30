@@ -21,7 +21,7 @@
     "as-base58": "^0.1.1",
     "as-hmac-sha2": "^1.0.2",
     "json-as": "^0.2.6",
-    "massa-sc-std": "https://github.com/massalabs/massa-sc-std#5c90b49d6d2c95e3c6d3d6e66d91a703bad30945",
+    "massa-sc-std": "^2.0.0",
     "visitor-as": "^0.6.0"
   }
 }
