@@ -1,2 +1,4 @@
 node_modules
 package-lock.json
+build/*.wat
+build/*.wasm.map
