@@ -27,16 +27,10 @@ function loadSC(): string {
  * @return {i32} - ?
  */
 export function main(_args: string): i32 {
-  print('init');
   const scAddress = loadSC();
-  print('loaded');
   const coin = new Wrapper(scAddress);
-  print('wrapped');
   const coinName = coin.name();
-  print('named');
   const bal = coin.balanceOf('123456');
-  print('baled');
   print(scAddress + ' balance: ' + bal.toString() + ' of token: ' + coinName);
-  print('end');
   return 0;
 }
