@@ -116,8 +116,8 @@ export function recordExists(name: string): string {
     return "1";
 }
 
-function _recordKey(address: string): string {
-    return "record" + address;
+function _recordKey(name: string): string {
+    return "record" + name;
 }
 
 function _ownerKey(address: string): string {

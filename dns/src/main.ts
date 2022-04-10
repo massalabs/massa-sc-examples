@@ -6,7 +6,7 @@ const acct1 = "9mvJfA4761u1qT8QwSWcJ4gTDaFP5iSgjQzKMaqTbrWCFo1QM"
 const acct2 = "YzydYazD1taJFcBQDquuHvv4bdiaaEStK1wCqnLtQkXC9HxkM"
 
 function createDns(): string {
-    const bytes = include_base64('./build/dns.wasm');
+    const bytes = include_base64('./build/smart-contract.wasm');
     const dns = create_sc(bytes);
     const addresses = JSON.parse<string[]>(Context.get_call_stack());
     const my_address = addresses[0];

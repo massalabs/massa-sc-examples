@@ -9,6 +9,15 @@
     "helloworld": "asc --transform json-as/transform assembly/helloworld.ts --target release --exportRuntime --textFile build/helloworld.wat --binaryFile build/helloworld.wasm",
     "tokenspender": "asc --transform json-as/transform assembly/tokenspender.ts --target release --exportRuntime --textFile build/tokenspender.wat --binaryFile build/tokenspender.wasm",
     "create_token": "node massa_tools/include_base64.js assembly/create_token.ts && asc --transform json-as/transform assembly/create_token.m.ts --target release --exportRuntime --textFile build/create_token.wat --binaryFile build/create_token.wasm && rm assembly/create_token.m.ts",
+    "dns": "asc --transform json-as/transform assembly/dns.ts --target release --exportRuntime --binaryFile build/dns.wasm",
+    "create_dns": "node massa_tools/include_base64.js assembly/create_dns.ts && asc --transform json-as/transform assembly/create_dns.m.ts --target release --exportRuntime --binaryFile build/create_dns.wasm && rm assembly/create_dns.m.ts",
+    "set_dns": "asc --transform json-as/transform assembly/set_dns.ts --target release --exportRuntime --binaryFile build/set_dns.wasm",
+    "tictactoe": "asc --transform json-as/transform assembly/tic_tac_toe.ts --target release --exportRuntime --textFile build/tic_tac_toe.wat --binaryFile build/tic_tac_toe.wasm",
+    "create_tictactoe": "node massa_tools/include_base64.js assembly/create_tictactoe.ts && asc --transform json-as/transform assembly/create_tictactoe.m.ts --target release --exportRuntime --binaryFile build/create_tictactoe.wasm",
+    "tictactoe_restart": "asc --transform json-as/transform assembly/tictactoe_restart.ts --target release --exportRuntime --binaryFile build/tictactoe_restart.wasm",
+    "tictactoe_play": "asc --transform json-as/transform assembly/tictactoe_play.ts --target release --exportRuntime --binaryFile build/tictactoe_play.wasm",
+    "upload_site": "node massa_tools/include_base64.js assembly/upload_site.ts && asc --transform json-as/transform assembly/upload_site.m.ts --target release --exportRuntime --binaryFile build/upload_site.wasm",
+    "testou": "asc --transform json-as/transform assembly/test.ts --target release --exportRuntime --binaryFile build/test.wasm",
     "test_tokenspend": "node massa_tools/include_base64.js assembly/test_tokenspend.ts && asc --transform json-as/transform assembly/test_tokenspend.m.ts --target release --exportRuntime --textFile build/test_tokenspend.wat --binaryFile build/test_tokenspend.wasm && rm assembly/test_tokenspend.m.ts"
   },
   "devDependencies": {
@@ -19,7 +28,7 @@
     "as-base58": "^0.1.1",
     "as-hmac-sha2": "^1.0.2",
     "json-as": "^0.2.6",
-    "massa-sc-std": "https://github.com/z80dev/massa-sc-std",
+    "massa-sc-std": "2.0.0",
     "visitor-as": "^0.6.0"
   }
 }

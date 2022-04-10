@@ -1,6 +1,6 @@
 {
-  "name": "massa-sc-mrc",
-  "description": "Example of a MRC implementation using Massa smart-contracts",
+  "name": "massa-sc-dns",
+  "description": "Example of a DNS implementation using Massa smart contracts",
   "author": "Massa Labs <info@massa.net>",
   "license": "MIT",
   "private": false,
