@@ -1,0 +1,19 @@
+{
+  "name": "massa-sc-helloworld",
+  "description": "Massa helloworld smart-contract",
+  "author": "Massa Labs <info@massa.net>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "massa-sc-scripts build",
+    "bundle": "massa-sc-scripts bundle",
+    "clean": "massa-sc-scripts clean"
+  },
+  "dependencies": {
+    "assemblyscript": "^0.19.20",
+    "json-as": "^0.2.6",
+    "massa-sc-scripts": "3.1.0",
+    "massa-sc-std": "2.0.0",
+    "visitor-as": "^0.6.0"
+  }
+}

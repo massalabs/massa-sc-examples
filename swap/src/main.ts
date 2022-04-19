@@ -1,6 +1,6 @@
 import { call, print } from "massa-sc-std";
 import { JSON } from "json-as";
-import { TransferFromArgs } from "./token";
+import { TransferFromArgs } from "../../mrc/src/smart-contract";
 
 @json
 export class SwapArgs {
