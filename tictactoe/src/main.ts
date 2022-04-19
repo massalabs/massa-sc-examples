@@ -3,7 +3,7 @@ import { JSON } from "json-as";
 import { PlayArgs } from "./smart-contract";
 
 function createContract(): string {
-    const bytes = include_base64('./build/tic_tac_toe.wasm');
+    const bytes = include_base64('./build/smart-contract.wasm');
     const sc_address = create_sc(bytes);
     return sc_address;
 }
