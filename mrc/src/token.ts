@@ -74,14 +74,14 @@ export function balanceOf(address: string): string {
 
 export function transfer(_args: string): string {
     const args = JSON.parse<TransferArgs>(_args);
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const sender = addresses[0];
     return _transfer(sender, args.to, args.amount).toString();
 }
 
 export function allow(_args: string): string {
     const args = JSON.parse<AllowArgs>(_args);
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const owner = addresses[0];
     _setAllowance(owner, args.spender, args.amount);
     return args.amount.toString();
@@ -93,7 +93,7 @@ export function allowance(_args: string): string {
 }
 
 export function transferFrom(_args: string): void {
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const spender = addresses[addresses.length - 2];
     const args = JSON.parse<TransferFromArgs>(_args);
     const allowed = U32.parseInt(_getAllowance(args.owner, spender));

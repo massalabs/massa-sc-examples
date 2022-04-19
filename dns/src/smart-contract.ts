@@ -17,7 +17,7 @@ export class SetOwnerArgs {
  */
 export function setOwner(_args: string): void {
     const args = JSON.parse<SetOwnerArgs>(_args);
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const node_owner = owner(args.name);
     const msg_sender = addresses[addresses.length - 2]
     const is_approved = JSON.parse<bool>(isApprovedForAll(JSON.stringify<IsApprovedForAllArgs>({owner: node_owner, operator: msg_sender})));
@@ -39,7 +39,7 @@ export class SetResolverArgs {
  */
 export function setResolver(_args: string): void {
     const args = JSON.parse<SetResolverArgs>(_args);
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const node_owner = Storage.get_data_or_default(_recordKey(args.name), Storage.get_data("OWNER"));
     const msg_sender = addresses[addresses.length - 2]
     const is_approved = JSON.parse<bool>(isApprovedForAll(JSON.stringify<IsApprovedForAllArgs>({owner: node_owner, operator: msg_sender})));
@@ -80,7 +80,7 @@ export class SetApprovalForAllArgs {
  */
 export function setApprovalForAll(_args: string): void {
     const args = JSON.parse<SetApprovalForAllArgs>(_args);
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const msg_sender = addresses[addresses.length - 2];
     const key = _approveKey(msg_sender, args.operator);
     Storage.set_data(key, JSON.stringify(args.approved));

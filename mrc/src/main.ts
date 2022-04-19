@@ -18,7 +18,7 @@ function createToken(name: string, supply: u32, mintRecipient: string): string {
 }
 
 export function main(_args: string): i32 {
-    const addresses = JSON.parse<string[]>(Context.get_call_stack());
+    const addresses = Context.get_call_stack();
     const my_address = addresses[0];
     const token1 = createToken("seacoin", 10000, my_address);
     let bal = call(token1, "balanceOf", my_address, 0);
