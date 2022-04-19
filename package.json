@@ -5,11 +5,12 @@
   "repository": "git@github.com:z80dev/massa-sc-examples.git",
   "license": "MIT",
   "scripts": {
-    "token": "asc --transform json-as/transform assembly/token.ts --target release --exportRuntime --textFile build/token.wat --binaryFile build/token.wasm",
-    "helloworld": "asc --transform json-as/transform assembly/helloworld.ts --target release --exportRuntime --textFile build/helloworld.wat --binaryFile build/helloworld.wasm",
-    "tokenspender": "asc --transform json-as/transform assembly/tokenspender.ts --target release --exportRuntime --textFile build/tokenspender.wat --binaryFile build/tokenspender.wasm",
-    "create_token": "node massa_tools/include_base64.js assembly/create_token.ts && asc --transform json-as/transform assembly/create_token.m.ts --target release --exportRuntime --textFile build/create_token.wat --binaryFile build/create_token.wasm && rm assembly/create_token.m.ts",
-    "test_tokenspend": "node massa_tools/include_base64.js assembly/test_tokenspend.ts && asc --transform json-as/transform assembly/test_tokenspend.m.ts --target release --exportRuntime --textFile build/test_tokenspend.wat --binaryFile build/test_tokenspend.wasm && rm assembly/test_tokenspend.m.ts"
+    "token": "massa-sc-scripts build-sc assembly/token.ts",
+    "hello_world": "massa-sc-scripts build-sc assembly/helloworld.ts",
+    "token_swap": "massa-sc-scripts build-sc assembly/tokenswap.ts",
+    "create_token": "yarn run token && massa-sc-scripts build-sc assembly/create_token.ts",
+    "tic_tac_toe": "massa-sc-scripts build-sc assembly/tic_tac_toe.ts build/tictactoe.wasm",
+    "create_tic_tac_toe": "yarn run tic_tac_toe && massa-sc-scripts build-sc assembly/create_tictactoe.ts"
   },
   "devDependencies": {
     "assemblyscript": "^0.19.20",
@@ -20,6 +21,7 @@
     "as-hmac-sha2": "^1.0.2",
     "json-as": "^0.2.6",
     "massa-sc-std": "^2.0.0",
+    "massa-sc-scripts": "4.0.1",
     "visitor-as": "^0.6.0"
   }
 }
