@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "massa-sc-scripts build-sc src/smart-contract.ts && massa-sc-scripts build-sc src/main.ts",
+    "build": "massa-sc-scripts build-sc src/smart-contract.ts && massa-sc-scripts build-sc src/deploy.ts && massa-sc-scripts build-sc src/play.ts",
     "clean": "massa-sc-scripts clean"
   },
   "dependencies": {
