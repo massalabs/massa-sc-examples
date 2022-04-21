@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>title</title>
+    <style>
+        h1 {
+            color: blue;
+        }
+
+        p {
+            color: red;
+        }
+
+        #table {
+            width: 1000px;
+            aspect-ratio: 1 / 1;
+        }
+
+        #table div {
+            float: left;
+            padding: 0;
+            margin: 0;
+            width: 10px;
+            aspect-ratio: 1 / 1;
+            display: block;
+        }
+
+        .alive {
+            background: black;
+        }
+
+        .dead {
+            background: white;
+        }
+    </style>
+        <script type='text/javascript' src='bundle.js'></script>
+        <script type='text/javascript' src='varint.min.js'></script>
+        <script type='text/javascript' src='bs58check.min.js'></script>
+        <script type='text/javascript' src='rpc.js'></script>
+        <script type='text/javascript' src='secp.min.js'></script>
+        <script type='text/javascript' src='script.js'></script>
+</head>
+
+<body>
+    <div id='table'></div>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "massa_gol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests",
+    "build:sc": "rm -f ./build/site.zip && cd ../html && zip site.zip * && cd - && mv ../html/site.zip build/site.zip && yarn run asc assembly/index.ts --target release  --transform json-as/transform  --exportRuntime  --binaryFile build/sc.wasm",
+    "build:deploy": "massa-sc-scripts build-sc assembly/deploy.ts build/deploy.wasm",
+    "build": "yarn run build:sc && yarn run build:deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "assemblyscript": "^0.19.23",
+    "assemblyscript-json": "^1.1.0",
+    "massa-sc-std": "3.1.2",
+    "mscl-as-transformer": "0.0.1",
+    "massa-sc-scripts": "4.0.1"
+  },
+  "dependencies": {
+    "json-as": "^0.2.6"
+  }
+}
