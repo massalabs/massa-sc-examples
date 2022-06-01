@@ -1,13 +1,17 @@
 /** ***********************
- * Smart contract that pushes a SC containing a message handler
+ * Smart contract that pushes a SC containing the message handler
  * function and sends an asynchronous message to that same SC
  **/
 
-import { send_message, print, create_sc, include_base64 } from "massa-sc-std"
+import { include_base64, create_sc, send_message, print, generate_event, get_current_period } from "massa-sc-std"
 
 export function main(name: string): void {
     const bytes = include_base64('./build/smart-contract.wasm');
     const address = create_sc(bytes);
-    send_message(address, "receive", 1, 1, 20, 1, 100_000, 1, 100, "hello my good friend!");
-    print("receiver created and message sent")
+    const info = "receiver address: " + address;
+    const current = get_current_period();
+    const next = current + 3;
+    send_message(address, "receive_and_send", current, 0, next, 0, 100_000, 0, 0, "first message");
+    generate_event(info);
+    print(info)
 }
