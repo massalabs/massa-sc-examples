@@ -13,9 +13,9 @@ export function receive_and_send(data: string): void {
     generate_event("Gregory is " + age.toString() + " years old, happy birthday!");
 
     let kids_count: number = parseInt(Storage.get_data_or_default("kids_count", "0")) + 1;
-    if (age % 2 == 0) {
-        let kid: string = "kid number " + kids_count.toString();
-        Storage.set_data(kid, "human");
+    if (age >= 16 && age % 2 == 0) {
+        let kid: string = "Kid number " + kids_count.toString();
+        Storage.set_data(kid, "Human");
         Storage.set_data("kids_count", kids_count.toString());
         generate_event(kid + " is born, so cute!");
     }
