@@ -1,7 +1,7 @@
 /* Tic Tac Toe Implementation for Massa Labs
  *
  * */
-import { Storage } from "massa-sc-std";
+import { Storage, generate_event } from "massa-sc-std";
 import { JSON } from "json-as";
 
 @json
@@ -69,11 +69,13 @@ function _checkWin(player: string): void {
     }
 
     if (roundWon) {
+        generate_event(player + " player has won round");
         Storage.set_data("gameWinner", player);
     }
 
     let roundDraw = !vec_game_state.includes("n");
     if (roundDraw) {
+        generate_event("round resulted in a draw");
         Storage.set_data("gameWinner", "draw");
     }
 }

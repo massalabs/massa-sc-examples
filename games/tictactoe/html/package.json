@@ -1,0 +1,88 @@
+{
+  "name": "@massalabs/create-react-app-massa",
+  "version": "1.0.0",
+  "target": "esnext",
+  "description": "massa's create-react-app template",
+  "author": "Massa Labs <info@massa.net>",
+  "contributors": [
+    "Evgeni Pirianov",
+    "Yvan Sraka <yvan@sraka.xyz>"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/massalabs/create-react-app-massa",
+  "private": false,
+  "keywords": [
+    "web3",
+    "js",
+    "ts",
+    "react",
+    "massa",
+    "web"
+  ],
+  "dependencies": {
+    "@massalabs/massa-web3": "^1.9.4",
+    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/react": "^12.1.4",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^16.11.26",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "assert": "^2.0.0",
+    "browserify-fs": "^1.0.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "events": "^3.3.0",
+    "https-browserify": "^1.0.0",
+    "madge": "^5.0.1",
+    "os-browserify": "^0.3.0",
+    "path": "^0.12.7",
+    "process": "^0.11.10",
+    "querystring-es3": "^0.2.1",
+    "react": "^18.0.0",
+    "react-app-rewired": "^2.2.1",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.0",
+    "readable-stream": "^3.6.0",
+    "stream": "^0.0.2",
+    "stream-http": "^3.2.0",
+    "timers-browserify": "^2.0.12",
+    "typescript": "^4.6.3",
+    "url": "^0.11.0",
+    "util": "^0.12.4",
+    "util-browser": "^0.0.2",
+    "web-vitals": "^2.1.4",
+    "webpack-cli": "^4.9.2"
+  },
+  "devDependencies": {
+    "process": "^0.11.10"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "fix-lint": "tslint -c tslint.json '**/*.ts' --fix"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
