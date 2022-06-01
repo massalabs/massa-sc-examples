@@ -8,12 +8,11 @@ import { include_base64, create_sc, send_message, print, generate_event, get_cur
 export function main(name: string): void {
     const bytes = include_base64('./build/smart-contract.wasm');
     const address = create_sc(bytes);
+    const message = "Gregory was born today! He lives at " + address;
 
     const start_p = get_current_period();
-    const end_p = start_p + 3;
-    send_message(address, "receive_and_send", start_p, 0, end_p, 31, 100_000, 0, 0, "hey, wake up!");
-
-    const info = "receiver address: " + address;
-    generate_event(info);
-    print(info)
+    const end_p = start_p + 5;
+    send_message(address, "receive_and_send", start_p, 0, end_p, 31, 100_000, 0, 0, message);
+    generate_event(message);
+    print(message)
 }
