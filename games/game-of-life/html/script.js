@@ -1,12 +1,12 @@
 const dim = 100;
 
 const baseAccount = {
-    publicKey: "5Jwx18K2JXacFoZcPmTWKFgdG1mSdkpBAUnwiyEqsVP9LKyNxR",
-    privateKey: "2SPTTLK6Vgk5zmZEkokqC3wgpKgKpyV5Pu3uncEGawoGyd4yzC",
-    address: "9mvJfA4761u1qT8QwSWcJ4gTDaFP5iSgjQzKMaqTbrWCFo1QM"
+    publicKey: "zkTGqfwJp43tY4FPgRXC7fr2xML3kDQ8bch15SpnDehuxWiKS",
+    privateKey: "25CHWGN5DZemFnEdPyYfDkyYzEwierr3vCuP3Z4tiChfQpBP41",
+    address: "A1MrqLgWq5XXDpTBH6fzXHUg7E8M5U2fYDAF3E1xnUSzyZuKpMh"
 };
 
-const sc_addr = "2tFAuCCADiM5rmnjB4jfUpbBf2aHcjXq1uYQCznuLErkHrweEj";
+const sc_addr = "A1MrqLgWq5XXDpTBH6fzXHUg7E8M5U2fYDAF3E1xnUSzyZuKpMh";
 
 var candidates = [];
 
@@ -42,7 +42,7 @@ function set_dots(call_params) {
     let gasPriceEncoded = new Uint8Array(window.varint.encode(gasPrice));
 
     let targetAddr = sc_addr;
-    let targetAddrEncoded = window.bs58check.decode(targetAddr);
+    let targetAddrEncoded = window.bs58check.decode(targetAddr.slice(1)).slice(1);
 
     let functionName = "set_dots";
     let functionNameEncoded = new TextEncoder("utf-8").encode(functionName);
@@ -54,7 +54,7 @@ function set_dots(call_params) {
 
     let fee = 0
     let feeEncoded = new Uint8Array(window.varint.encode(fee));
-    let expirePeriod = Math.round((Date.now() - 1650378686182) / 16000) + 10 - 1
+    let expirePeriod = Math.round((Date.now() - 1654704000000) / 16000) + 10 - 1
     let expirePeriodEncoded = new Uint8Array(window.varint.encode(expirePeriod));
 
     let publicKeyEncoded = window.bs58check.decode(baseAccount.publicKey);
@@ -66,12 +66,14 @@ function set_dots(call_params) {
     // cast private key
     let privateKeyBase58Decoded = window.bs58check.decode(baseAccount.privateKey);
 
-    window.secp.utils.sha256(bytesCompact).then(function (hash) {
-        window.secp.sign(hash, privateKeyBase58Decoded, {
-            der: false,
-            recovered: true
-        }).then(function (signature) {
-            let signatureEncoded = window.bs58check.encode(signature[0]);
+    hash = window.nobleHashes.blake3(bytesCompact);
+    console.log(hash);
+    window.secp.schnorr.sign(hash, privateKeyBase58Decoded).then(
+        // console.log(signature)
+        function (signature) {
+            console.log('signature');
+            console.log(signature);
+            let signatureEncoded = window.bs58check.encode(signature);
             JsonRPCRequest('send_operations',
                 [[
                     {
@@ -95,9 +97,9 @@ function set_dots(call_params) {
                     }
                 ]]
                 , onresponse, onerror)
-        })
-    });
-}
+        }
+    )
+};
 
 function refresh() {
     for (let i = 0; i < candidates.length; ++i) {
@@ -105,7 +107,7 @@ function refresh() {
         let params = candidates[i]["params"];
     }
     function onresponse(s) {
-        let state = s[0]["candidate_sce_ledger_info"]["datastore"]["aKQ1e23hiG8AbQY1uKcqDfJ1VAdYrJdzXVktL9ZArrM4nHjZ4"];
+        let state = s[0]["candidate_sce_ledger_info"]["datastore"]["XaPM2RY4V9Pj4WfZvvb2EAPnhqAA4m1NQ6EiubQon3d5oqu4z"];
         let res = "";
         for (let vi = 0; vi < state.length; ++vi) {
             res += String.fromCharCode(state[vi]);

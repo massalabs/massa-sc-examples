@@ -16,7 +16,7 @@ export function main(_args: string): i32 {
     print("gol SC deployed at addr: " + addr);
     const website = include_base64('./build/site.zip');
     Storage.set_data_for(addr, "massa_web", website);
-    generate_event("gol SC deployed website");
+    generate_event("gol SC deployed website at addr: " + addr);
     print("gol website deployed at addr: " + addr);
     
     /*const resolver_address = "2AQGtYuuHHkQwgVriY6fnwGfnLFUDyDws2D1Ja5N79yNiby3pR"

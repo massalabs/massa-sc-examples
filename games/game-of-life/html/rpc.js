@@ -31,7 +31,7 @@ function JsonRPCRequest(resource, data, completion_callback, error_callback) {
     });
   
     // Use labnet IP
-    xhr.open("POST", "http://145.239.66.206:33035");
+    xhr.open("POST", "https://test.massa.net/api/v2");
     xhr.setRequestHeader("Content-Type", "application/json");
   
     xhr.send(body);
