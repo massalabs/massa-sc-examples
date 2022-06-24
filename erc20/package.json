@@ -1,0 +1,33 @@
+{
+  "name": "msce-erc20",
+  "version": "0.0.1",
+  "description": "Massa ERC20 smart contract implementation example.",
+  "main": "index.js",
+  "scripts": {
+    "test": "asp",
+    "asbuild:create": "asc assembly/create.ts -t build/erc20_create.wat -o build/erc20_create.wasm",
+    "asbuild:use": "node include_base64.js assembly/use.ts && asc assembly/use.m.ts --target release --exportRuntime --textFile build/erc20_use.wat -o build/erc20_use.wasm",
+    "asbuild": "npm run asbuild:create && npm run asbuild:use",
+    "fmt": "prettier --write '{*,**/*}.{js,ts,jsx,tsx,json}'",
+    "lint:fix": "eslint --fix --ext .ts . && yarn fmt",
+    "lint": "eslint --ext .ts . && prettier --check '{*,**/*}.{js,ts,jsx,tsx,json}'"
+  },
+  "author": "Grégory Libert <greg_libert@yahoo.fr>",
+  "license": "ISC",
+  "devDependencies": {
+    "@as-pect/cli": "^6.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "assemblyscript": "^0.20.12",
+    "eslint": "^8.12.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mscl-as-transformer": "https://gitpkg.now.sh/massalabs/massa-sc-library/tool/as-transformer?main",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "mscl-token": "https://gitpkg.now.sh/massalabs/massa-sc-library/token?standard-token-implementation"
+  }
+}
