@@ -1,4 +1,4 @@
-import {fileToBase64, print, createSC, Address, abi} from 'massa-sc-std/assembly/index';
+import {fileToBase64, print, createSC, Address} from 'massa-sc-std/assembly/index';
 import {TokenWrapper} from 'mscl-token/assembly/index';
 
 /**
