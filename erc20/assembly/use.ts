@@ -1,5 +1,5 @@
-import {include_base64, print, create_sc} from 'massa-sc-std';
-import {Wrapper} from 'mscl-token/erc20/erc20w';
+import {fileToBase64, print, createSC, Address, abi} from 'massa-sc-std/assembly/index';
+import {TokenWrapper} from 'mscl-token/assembly/index';
 
 /**
  * Loads a smart contract into Massa blockchain.
@@ -9,11 +9,15 @@ import {Wrapper} from 'mscl-token/erc20/erc20w';
  * `create_sc` takes that smart contract, sends it to the blockchain
  * and returns it address.
  *
- * @return {string} - Address of the smart contract loaded into the blockchain.
+ * @return {Address} - Address of the smart contract loaded into the blockchain.
  */
-function loadSC(): string {
-  const b = include_base64('./build/erc20_create.wasm');
-  const a = create_sc(b);
+function loadSC(): Address {
+  print("A");
+  const b = fileToBase64('./build/erc20_create.wasm');
+  print("B");
+  abi.call("1234", 'toto', '', 0);
+  const a = createSC(b);
+  print("C");
   return a;
 }
 
@@ -27,10 +31,35 @@ function loadSC(): string {
  * @return {i32} - ?
  */
 export function main(_args: string): i32 {
+  print("1");
   const scAddress = loadSC();
-  const coin = new Wrapper(scAddress);
+
+  abi.call(scAddress.toByteString(), 'name', '', 0);
+  //call(scAddress, 'name', '?', 0);
+
+  print("2");
+  const coin = new TokenWrapper(scAddress);
+  print("3");
+  print(scAddress.toByteString());
+
   const coinName = coin.name();
-  const bal = coin.balanceOf('123456');
-  print(scAddress + ' balance: ' + bal.toString() + ' of token: ' + coinName);
+  print("4");
+
+  const coinTotalSUpply = coin.totalSupply();
+  print("4b");
+
+  const coinSymbol = coin.symbol();
+    print("5");
+  
+  const bal = coin.balanceOf(
+    Address.fromByteString("A1MrqLgWq5XXDpTBH6fzXHUg7E8M5U2fYDAF3E1xnUSzyZuKpMh")
+    );
+    print("6");
+
+ // print(scAddress.toByteString() + //' balance: ' + bal.value().toString() + 
+  //' of token: ' + coinName + ' total supply: ' + coin.symbol());
+
+  print("7");
+  
   return 0;
 }

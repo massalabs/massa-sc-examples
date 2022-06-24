@@ -1,4 +1,4 @@
-export * from 'mscl-token/erc20/erc20';
+//export * from '../node_modules/mscl-token/assembly/erc20/erc20';
 
 // For this example we just want to rename the token
 // Everything else will be kept as defined in the mscl-token/erc20 module
