@@ -15,7 +15,6 @@ function loadSC(): Address {
   print("A");
   const b = fileToBase64('./build/erc20_create.wasm');
   print("B");
-  abi.call("1234", 'toto', '', 0);
   const a = createSC(b);
   print("C");
   return a;
@@ -33,9 +32,6 @@ function loadSC(): Address {
 export function main(_args: string): i32 {
   print("1");
   const scAddress = loadSC();
-
-  abi.call(scAddress.toByteString(), 'name', '', 0);
-  //call(scAddress, 'name', '?', 0);
 
   print("2");
   const coin = new TokenWrapper(scAddress);
