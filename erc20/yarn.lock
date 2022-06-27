@@ -276,9 +276,9 @@ assemblyscript-json@^1.1.0:
   integrity sha512-UbE8ts8csTWQgd5TnSPN7MRV9NveuHv1bVnKmDLoo/tzjqxkmsZb3lu59Uk8H7SGoqdkDSEE049alx/nHnSdFw==
 
 assemblyscript@^0.20.12:
-  version "0.20.12"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.20.12.tgz#eb57f25c81c4846c01a14201fd7d049efb33a80f"
-  integrity sha512-qE+vB2WZQVFQk5AYZ6568sqWV39zw3cmvmo0k0tL0EiqkbrWHhKw+X+S+6/NJdCrgW6ENgZNxxExe4/fNHBLCw==
+  version "0.20.13"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.20.13.tgz#28da2a392172953610b0407c02ee0248b7c723e8"
+  integrity sha512-F4ACXdBdXCBnPEzRCl/ovFFPGmKXQPvWW4cM6U21eRezaCoREqxA0hjSUOYTz7txY3MJclyBfjwMSEJ5e9HKsw==
   dependencies:
     binaryen "108.0.0-nightly.20220528"
     long "^5.2.0"
@@ -598,9 +598,9 @@ flat-cache@^3.0.4:
     rimraf "^3.0.2"
 
 flatted@^3.1.0:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.5.tgz#76c8584f4fc843db64702a6bd04ab7a8bd666da3"
-  integrity sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.6.tgz#022e9218c637f9f3fc9c35ab9c9193f05add60b2"
+  integrity sha512-0sQoMh9s0BYsm+12Huy/rkKxVu4R1+r96YX5cG44rHV0pQ6iC3Q+mkoMFaGWObMFYQxCVT+ssG1ksneA2MI9KQ==
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -847,7 +847,7 @@ ms@2.1.2:
 
 "mscl-token@https://gitpkg.now.sh/massalabs/massa-sc-library/token?standard-token-implementation":
   version "0.0.1"
-  resolved "https://gitpkg.now.sh/massalabs/massa-sc-library/token?standard-token-implementation#7bbdf522119880f90d74b80058178aafbccaaac2"
+  resolved "https://gitpkg.now.sh/massalabs/massa-sc-library/token?standard-token-implementation#0ed70b2ab43eb17ace20f832a3357b26693f6058"
   dependencies:
     massa-sc-std "https://github.com/massalabs/massa-sc-std.git#31-cleaner-functions"
     mscl-type "https://gitpkg.now.sh/massalabs/massa-sc-library/type?main"

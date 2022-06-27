@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "asp",
-    "asbuild:create": "asc assembly/create.ts -t build/erc20_create.wat -o build/erc20_create.wasm",
-    "asbuild:use": "node include_base64.js assembly/use.ts && asc assembly/use.m.ts --target release --exportRuntime --textFile build/erc20_use.wat -o build/erc20_use.wasm",
+    "asbuild:create": "asc assembly/create.ts -t build/erc20_create.wat -o build/erc20_create.wasm --exportRuntime --runtime stub",
+    "asbuild:use": "node include_base64.js assembly/use.ts && asc assembly/use.m.ts --target release --exportRuntime --runtime stub --textFile build/erc20_use.wat -o build/erc20_use.wasm",
     "asbuild": "npm run asbuild:create && npm run asbuild:use",
     "fmt": "prettier --write '{*,**/*}.{js,ts,jsx,tsx,json}'",
     "lint:fix": "eslint --fix --ext .ts . && yarn fmt",
