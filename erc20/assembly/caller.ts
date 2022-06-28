@@ -3,7 +3,7 @@ import {
   print,
   createSC,
   Address} from 'massa-sc-std/assembly/index';
-import {TokenWrapper} from 'mscl-token/assembly/index';
+import {TokenWrapper} from 'mscl-token/assembly/std/wrapper';
 
 /**
  * Loads a smart contract into Massa blockchain.
@@ -22,7 +22,7 @@ function loadSC(): Address {
   //   with assemblyscript 0.20 (see https://github.com/massalabs/massa-sc-library/pull/29).
   // Therefore, this transformation is done at compilation time
   //   (see asbuild:use script in package.json).
-  const bytecode = fileToBase64('./build/erc20_create.wasm');
+  const bytecode = fileToBase64('./build/myToken.wasm');
 
   // Adds a new smart contract to the ledger and returns its address.
   return createSC(bytecode);
@@ -48,16 +48,19 @@ export function main(_: string): i32 { // eslint-disable-line @typescript-eslint
 
   const coinTotalSupply = coin.totalSupply();
 
+  const symbol = coin.symbol();
+
   const bal = coin.balanceOf(
       Address.fromByteString(
           'A1MrqLgWq5XXDpTBH6fzXHUg7E8M5U2fYDAF3E1xnUSzyZuKpMh'
       )
   );
 
-  print(
+  print('\n' +
       'Smart contract addess: ' + scAddress.toByteString() + '\n' +
       'Balance: ' + bal.value().toString() + '\n' +
       'Token: ' + coinName + '\n' +
+      'Symbol: ' + symbol + '\n' +
       'Total supply: ' +coinTotalSupply.value().toString());
 
   return 0;

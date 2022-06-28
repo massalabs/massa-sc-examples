@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "asp",
-    "asbuild:create": "asc assembly/create.ts -t build/erc20_create.wat -o build/erc20_create.wasm --exportRuntime --runtime stub",
-    "asbuild:use": "node include_base64.js assembly/use.ts && asc assembly/use.m.ts --target release --exportRuntime --runtime stub --textFile build/erc20_use.wat -o build/erc20_use.wasm",
-    "asbuild": "npm run asbuild:create && npm run asbuild:use",
+    "asbuild:token": "asc assembly/myToken.ts -t build/myToken.wat -o build/myToken.wasm --exportRuntime --runtime stub",
+    "asbuild:caller": "node include_base64.js assembly/caller.ts && asc assembly/caller.m.ts --target release --exportRuntime --runtime stub --textFile build/callerToken.wat -o build/callerToken.wasm",
+    "asbuild": "npm run asbuild:token && npm run asbuild:caller",
     "fmt": "prettier --write '{*,**/*}.{js,ts,jsx,tsx,json}'",
     "lint:fix": "eslint --fix --ext .ts . && yarn fmt",
     "lint": "eslint --ext .ts . && prettier --check '{*,**/*}.{js,ts,jsx,tsx,json}'"
@@ -28,6 +28,6 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "mscl-token": "https://gitpkg.now.sh/massalabs/massa-sc-library/token?standard-token-implementation"
+    "mscl-token": "https://gitpkg.now.sh/massalabs/massa-sc-library/token?main"
   }
 }
