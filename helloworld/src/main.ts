@@ -1,5 +1,5 @@
-import { print } from "massa-sc-std";
+import { generate_event } from "massa-sc-std";
 
 export function main(_args: string): void {
-    print("Hello world!");
+    generate_event("Hello world!");
 }
