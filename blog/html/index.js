@@ -1,37 +1,46 @@
-let web3Client = null;
-async function initializeClient() {
-  const baseAccount = {
-    publicKey: "P1hG8zRRJF2v3qkwyZ2fnHJeaVw9uT4huCkwcWJVvgypEz6D2aR",
-    secretKey: "S12tw4YShWtjWfy7YBQ9Erbcg6DYgWnMgb5hGjn9hAKGtgrLNa7L",
-    address: "A12PWTzCKkkE9P5Supt3Fkb4QVZ3cdfB281TGaup7Nv1DY12a6F1",
-  };
-  window.massa.ClientFactory.createDefaultClient(
-    "https://test.massa.net/api/v2",
-    false,
-    baseAccount
-  ).then(function(client) {
-    web3Client = client;
-});
-}
+const baseAccount = {
+  publicKey: "P1hG8zRRJF2v3qkwyZ2fnHJeaVw9uT4huCkwcWJVvgypEz6D2aR",
+  secretKey: "S12tw4YShWtjWfy7YBQ9Erbcg6DYgWnMgb5hGjn9hAKGtgrLNa7L",
+  address: "A12PWTzCKkkE9P5Supt3Fkb4QVZ3cdfB281TGaup7Nv1DY12a6F1",
+};
+
+// async function initializeClient() {
+//   window.massa.ClientFactory.createDefaultClient(
+//     "https://test.massa.net/api/v2",
+//     false,
+//     baseAccount
+//   ).then(function(client) {
+//     web3Client = client;
+// });
+// }
+
+var web3Client = null;
 
 const blog_sc_address = "A17bNPYtupgBMtCs4odeEmyqaddkbLFpNhAmo1MBmEAHMRCbfju";
 
 async function publish() {
   const txt = document.getElementById("publish-post").value;
   console.log(txt)
-  web3Client.smartContracts().callSmartContract({
-          fee: 0,
-          gasPrice: 0,
-          maxGas: 200000,
-          parallelCoins: 0,
-          sequentialCoins: 0,
-          targetAddress: blog_sc_address,
-          functionName: "post",
-          parameter: txt,
-      }, baseAccount).then(function(tx_id) {
-    alert('Your post was successfully submitted. Operation id:\n' + tx_id);
-    console.log(tx_id);
-  });
+  window.massa.ClientFactory.createDefaultClient(
+    "https://test.massa.net/api/v2",
+    false,
+    baseAccount
+  ).then((web3Client) => {
+    web3Client.smartContracts().callSmartContract({
+      fee: 0,
+      gasPrice: 0,
+      maxGas: 200000,
+      parallelCoins: 0,
+      sequentialCoins: 0,
+      targetAddress: blog_sc_address,
+      functionName: "post",
+      parameter: txt,
+  }, baseAccount).then(function(tx_id) {
+        alert('Your post was successfully submitted. Operation id:\n' + tx_id);
+        console.log(tx_id);
+      }
+    );
+  })
 }
 
 function readpost(i) {
