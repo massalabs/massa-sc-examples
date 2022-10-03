@@ -12,6 +12,6 @@ export function main(name: string): void {
 
     const start_p = get_current_period();
     const end_p = start_p + 5;
-    send_message(address, "receive_and_send", start_p, 0, end_p, 31, 100_000, 0, 0, message);
+    send_message(address, "receive_and_send", start_p, 0, end_p, 31, 100_000, 0, 1_000_000_000, message);
     generate_event(message);
 }
