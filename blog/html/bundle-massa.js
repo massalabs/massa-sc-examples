@@ -372,6 +372,7 @@ class BaseClient {
     /** compact bytes payload per operation */
     compactBytesForOperation(data, opTypeId, account, expirePeriod) {
         const feeEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(this.scaleAmount(data.fee)));
+        console.log(feeEncoded);
         const expirePeriodEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(expirePeriod));
         const typeIdEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(opTypeId.valueOf()));
         switch (opTypeId) {
@@ -392,10 +393,8 @@ class BaseClient {
             case OperationTypes_1.OperationTypeId.CallSC: {
                 // max gas
                 const maxGasEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(data.maxGas));
-                // parallel coins to send
-                const parallelCoinsEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(data.parallelCoins));
-                // sequential coins to send
-                const sequentialCoinsEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(data.sequentialCoins));
+                // coins to send
+                const coinsEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(data.coins));
                 // gas price
                 const gasPriceEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(data.gasPrice));
                 // target address
@@ -406,7 +405,8 @@ class BaseClient {
                 // parameter
                 const parametersEncoded = new Uint8Array(buffer_1.Buffer.from(data.parameter, "utf8"));
                 const parametersLengthEncoded = buffer_1.Buffer.from((0, Xbqcrypto_1.varintEncode)(parametersEncoded.length));
-                return buffer_1.Buffer.concat([feeEncoded, expirePeriodEncoded, typeIdEncoded, maxGasEncoded, parallelCoinsEncoded, sequentialCoinsEncoded, gasPriceEncoded, targetAddressEncoded, functionNameLengthEncoded, functionNameEncoded, parametersLengthEncoded, parametersEncoded]);
+                return buffer_1.Buffer.concat([feeEncoded, expirePeriodEncoded, typeIdEncoded, maxGasEncoded, coinsEncoded, gasPriceEncoded, targetAddressEncoded,
+                    functionNameLengthEncoded, functionNameEncoded, parametersLengthEncoded, parametersEncoded]);
             }
             case OperationTypes_1.OperationTypeId.Transaction: {
                 // transfer amount
@@ -440,6 +440,7 @@ const IProvider_1 = require("../interfaces/IProvider");
 /** Massa Web3 Client wrapping all public, private, wallet and smart-contracts-related functionalities */
 class Client {
     constructor(clientConfig, baseAccount) {
+        this.clientConfig = clientConfig;
         this.publicApiClient = new PublicApiClient_1.PublicApiClient(clientConfig);
         this.privateApiClient = new PrivateApiClient_1.PrivateApiClient(clientConfig);
         this.walletClient = new WalletClient_1.WalletClient(clientConfig, this.publicApiClient, baseAccount);
@@ -480,6 +481,11 @@ class Client {
         this.walletClient.setProviders(providers);
         this.smartContractsClient.setProviders(providers);
     }
+    /** get currently set providers */
+    getProviders() {
+        return this.clientConfig.providers;
+    }
+    /** sets a new default provider */
     setNewDefaultProvider(provider) {
         const providers = new Array({
             url: provider,
@@ -931,7 +937,7 @@ class SmartContractsClient extends BaseClient_1.BaseClient {
         this.getOperationStatus = this.getOperationStatus.bind(this);
         this.callSmartContract = this.callSmartContract.bind(this);
         this.readSmartContract = this.readSmartContract.bind(this);
-        this.getParallelBalance = this.getParallelBalance.bind(this);
+        this.getContractBalance = this.getContractBalance.bind(this);
     }
     /** create and send an operation containing byte code */
     deploySmartContract(contractData, executor) {
@@ -1019,16 +1025,16 @@ class SmartContractsClient extends BaseClient_1.BaseClient {
             }
         });
     }
-    /** Returns the parallel balance which is the smart contract side balance  */
-    getParallelBalance(address) {
+    /** Returns the balance of the smart contract  */
+    getContractBalance(address) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const addresses = yield this.publicApiClient.getAddresses([address]);
             if (addresses.length === 0)
                 return null;
             const addressInfo = addresses.at(0);
             return {
-                candidate: addressInfo.candidate_sce_ledger_info.balance,
-                final: addressInfo.final_sce_ledger_info.balance
+                candidate: addressInfo.candidate_balance,
+                final: addressInfo.final_balance
             };
         });
     }
@@ -1294,7 +1300,7 @@ class WalletClient extends BaseClient_1.BaseClient {
         this.sendTransaction = this.sendTransaction.bind(this);
         this.sellRolls = this.sellRolls.bind(this);
         this.buyRolls = this.buyRolls.bind(this);
-        this.getAccountSequentialBalance = this.getAccountSequentialBalance.bind(this);
+        this.getAccountBalance = this.getAccountBalance.bind(this);
     }
     /** set the default (base) account */
     setBaseAccount(baseAccount) {
@@ -1539,16 +1545,16 @@ class WalletClient extends BaseClient_1.BaseClient {
         const secretKeyBase58Decoded = secretKeyVersionBase58Decoded.slice(1);
         return secretKeyBase58Decoded;
     }
-    /** Returns the account sequential balance - the consensus side balance  */
-    getAccountSequentialBalance(address) {
+    /** Returns the account balance  */
+    getAccountBalance(address) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const addresses = yield this.publicApiClient.getAddresses([address]);
             if (addresses.length === 0)
                 return null;
             const addressInfo = addresses.at(0);
             return {
-                candidate: addressInfo.ledger_info.candidate_ledger_info.balance,
-                final: addressInfo.ledger_info.final_ledger_info.balance
+                candidate: addressInfo.candidate_balance,
+                final: addressInfo.final_balance
             };
         });
     }

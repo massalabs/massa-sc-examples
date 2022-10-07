@@ -1,6 +1,6 @@
 # An Introduction to Massa
 
-### Current blockchains that scale to high transaction throughputs are either centralized or unsafe.
+**Current blockchains that scale to high transaction throughputs are either centralized or unsafe.**
 
 For Massa, we designed a new architecture, called the Blockclique, that scales transaction throughput up to 10,000 transactions per second without sacrificing decentralization nor security. Our architecture is based on transaction sharding in a multithreaded block graph. In this blog post we introduce the main concepts of the Blockclique. You can also dive into the technical paper or interact with the live testnet at massa.net/testnet. We look forward to hearing your feedback!
 
@@ -36,7 +36,8 @@ This problem is illustrated in the video below, in which we simulate a network o
 
 Several cryptocurrencies have increased the number of transactions per second by changing the block size or block frequency. For example, Bitcoin Cash increased the block size by a factor of 8, increasing the number of transactions per second by the same amount. However this number remains quite low. In order to increase significantly the number of transactions processed it is thus necessary to rely on other approaches.
 
-Restricting the network size?
+### Restricting the network size?
+
 One way of lowering the time needed to transfer blocks in a network is to limit the network size. For example in EOS, only 21 authorized block producers are allowed to process transactions, which yields about 3000–4000 tx/s. In Ripple, a single company decides who can become a validator and produce blocks, so that the protocol can reach about 1500 tx/s.
 
 However, restricting the network size is incompatible with the idea of an open decentralized network in which any node can participate without permission. As Ethereum developers coined it, there seems to be a scalability trilemma in current blockchain architectures: a tradeoff between decentralization, scalability and security.
@@ -48,37 +49,42 @@ Recently, there has been several attempts at scaling decentralized currencies th
 
 Another line of work seeks to extend the block tree structure into a block graph structure by allowing blocks to have more than one parent. The first directed acyclic block graph (block DAG) structures are described in [Lewenberg, 2015], [Sompolinsky, 2015] and [Sompolinsky, 2016]. In those protocols however, transactions from one block can be incompatible with transactions from another parallel block because the transactions themselves are not sharded. An extra voting process is required to order transactions and choose which ones are executed.
 
-The blockclique solution used in Massa
+## The blockclique solution used in Massa
+
 Blockclique is a new architecture combining transaction sharding and a multithreaded block DAG. It solves the scalability issue by parallelizing the data structure and adapting the consensus rule.
 
-Blockclique data structure and consensus rule
+### Blockclique data structure and consensus rule
+
 In the Blockclique architecture, blocks can be created in a fixed number of threads. A block created in a specific thread references a parent block in each of the threads. The resulting data structure is a multithreaded directed acyclic graph of blocks (multithreaded DAG).
 
 However, an address could attempt to spend the same coins twice by executing transactions in two parallel threads at the same time. Blockclique prevents such double-spending by allowing a given address to spend coins only in a specific thread (defined by the first bits of the address). Blocks from a given thread therefore only contain transactions with input addresses belonging to that thread. This process is known as transaction sharding. Still, a transaction output can be any address, regardless of the thread of the input addresses.
 
-A unique property emerges from this combination of transaction sharding and block DAG: nodes can create blocks in parallel whose enclosed transactions are compatible by construction.
+**A unique property emerges from this combination of transaction sharding and block DAG: nodes can create blocks in parallel whose enclosed transactions are compatible by construction.**
 
 In this new block structure, nodes can still create forks in particular threads by creating two incompatible blocks in the same thread with the same parent in that thread. We thus extend the Nakamoto rule to allow nodes to reach a consensus about the global set of compatible blocks (called “clique”) of maximum fitness. This consensus rule ensures that each thread behaves like a normal blockchain and that blocks found in one thread also take into account earlier blocks in other threads, while allowing slight desynchronizations between threads.
 
 In contrast to previous blockchains based on a DAG architecture, the multithreaded block DAG with transaction sharding and an adapted consensus rule allows to fully benefit from block parallelization and does not require giving special privileges to some nodes.
 
-Simulation results
+### Simulation results
+
 We tested our ideas through simulations, that we open-sourced here. Using network parameters similar to the ones found in Ethereum (average upload bandwidth of 32 Mb/s and average latency of 100 ms, thousands of nodes), we showed that by using 32 parallel threads and a Proof-of-Stake Sybil-resistance mechanism, our architecture can withstand up to 10,000 tx/s with transaction confirmation times in the order of 40s!
 
-This improvement can be understood as follows:
+*This improvement can be understood as follows:*
 
-in standard blockchains nodes must have the latest block to start working on the next block (otherwise they would create a fork)
-in Blockclique, it is not necessary to have all the latest blocks to work on a new one. Nodes create blocks in parallel threads without leading to a fork.
-the Blockclique architecture ensures the sequential consistency of coin debits for each address, while allowing coin credits to be slightly de-synchronized
+- in standard blockchains nodes must have the latest block to start working on the next block (otherwise they would create a fork)
+- in Blockclique, it is not necessary to have all the latest blocks to work on a new one. Nodes create blocks in parallel threads without leading to a fork.
+- the Blockclique architecture ensures the sequential consistency of coin debits for each address, while allowing coin credits to be slightly de-synchronized
 
 Of course there is much more to these results. We tested a large set of parameters, showed that our architecture is resilient to different kinds of attacks and even proposed improvements to existing consensus schemes. We encourage you to read the technical paper if you are interested in more details!
 
-Give it a try!
+### Give it a try!
+
 Our testnet is live! On test.massa.net, you will see the created blocks in real time.
 On this explorer, you can also interact with the testnet by creating a wallet and receiving or sending coins.
 If you have a computer with reliable internet, please run a node! You can follow the steps on our Github.
 
-Conclusion
+## Conclusion
+
 We have shown that it is possible to solve the scaling issue of blockchains using transaction sharding in a multithreaded block graph. Massa reaches thousands of transactions per second without jeopardizing the decentralization nor the security of the blockchain. One thing that we did not mention is that our architecture is compatible with smart-contracts that can be implemented within one thread or adapted to support multithreading.
 
 We believe that Massa can fulfill the promises of a scalable, secure and truly decentralized blockchain. We hope that you are as excited as we are and we’d love to hear your feedback! Please come to our Telegram, Discord or Reddit to give your thoughts!

@@ -1,39 +1,8 @@
-const baseAccount = {
-  publicKey: "P1hG8zRRJF2v3qkwyZ2fnHJeaVw9uT4huCkwcWJVvgypEz6D2aR",
-  secretKey: "S12tw4YShWtjWfy7YBQ9Erbcg6DYgWnMgb5hGjn9hAKGtgrLNa7L",
-  address: "A12PWTzCKkkE9P5Supt3Fkb4QVZ3cdfB281TGaup7Nv1DY12a6F1",
-};
-
-const blog_sc_address = "A17bNPYtupgBMtCs4odeEmyqaddkbLFpNhAmo1MBmEAHMRCbfju";
-
-function publish() {
-  const txt = document.getElementById("publish-post").value;
-  window.massa.ClientFactory.createDefaultClient(
-    "https://test.massa.net/api/v2",
-    false,
-    baseAccount
-  ).then((web3Client) => {
-    web3Client.smartContracts().callSmartContract({
-      fee: 0,
-      gasPrice: 0,
-      maxGas: 200000,
-      parallelCoins: 0,
-      sequentialCoins: 0,
-      targetAddress: blog_sc_address,
-      functionName: "post",
-      parameter: txt,
-  }, baseAccount).then(function(tx_id) {
-        alert('Your post was successfully submitted. Operation id:\n' + tx_id);
-      }
-    );
-  })
-}
-
 post_nb = null;
 function preview() {
   const post_key = "N_BLOG_POSTS"
   window.massa.ClientFactory.createDefaultClient(
-    "https://test.massa.net/api/v2",
+    rpc_url,
     false,
     baseAccount
   ).then((web3Client) => {
