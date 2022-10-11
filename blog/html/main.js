@@ -1,5 +1,5 @@
 const rpc_url = "https://test.massa.net/api/v2";
-const blog_sc_address = "A12GZTeri2dMRuYXSxsKUJwXfRBE68SKFRdEdT2vTu4jvstubuFf";
+const blog_sc_address = "A1H5JrALo6N59QcusT2Kx9uPUyU44W6jQKuj9L6wTsxAnbUotCr";
 
 const baseAccount = {
   publicKey: "P139zsq8KmUGrXNgDgiHWKpCCbwxnH2pVvCPLdHkvf9PvJQGzoJ",
