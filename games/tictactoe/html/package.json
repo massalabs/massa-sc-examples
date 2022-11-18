@@ -20,7 +20,7 @@
     "web"
   ],
   "dependencies": {
-    "@massalabs/massa-web3": "^1.10.11",
+    "@massalabs/massa-web3": "1.10.13",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",

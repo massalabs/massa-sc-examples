@@ -7,16 +7,17 @@ import {
   IDatastoreEntryInput,
   IContractStorageData,
 } from "@massalabs/massa-web3";
+import Args from "@massalabs/massa-web3/dist/utils/arguments";
 
 const baseAccount = {
-  publicKey: "P12np2KVkfZsCmSW2ehsoPAm7jboY7xpPJBgNYPEmE4zwUqob5j3",
-  secretKey: "S1CYhaTrp3cfccK4Su1hStXWrm4WoimKzUMUStdr2EHm1fCfqrM",
-  address: "A1nsqw9mCcYLyyMJx5f4in4NXDoe4B1LzV9pQdvX5Wrxq9ehf6h",
+  publicKey: "P12f2K8YoeqZCzWASs2wktFYYGtaHGYaeSukFBrgEnw9d3J1WsMZ",
+  secretKey: "S17Zw8KN3QSzsWGof7PTgkTvyGYbZLNMZmjC4urr6ZziLonThqk",
+  address: "A1qZL4iJYRDRo9EtDauJuWNj56FNXWhtKinv15GEakraBa91dEA",
 } as IAccount;
 
 type TNodeStatus = INodeStatus | null;
 
-const sc_addr = "A12W9Ta7QvkamhCa7HKQ4hbm4dcFV4Atcgbae8GMqnRuJd2i4EbE"
+const sc_addr = "A12egHo2xkg2s68WJzu8CofoZ9vwz2M3dYhcsxZ6PCqqXoJCST4q"
 
 function NodeInfo() {
   const [nodeStatus, setNodeStatus] = useState<TNodeStatus>(null);
@@ -106,7 +107,8 @@ function Board() {
   }
 
   function handleClick(i: number) {
-    var call_params_str = `${i}`
+    var call_params = new Args();
+    call_params.addU32(BigInt(i));
     ClientFactory.createDefaultClient(
       DefaultProviderUrls.TESTNET,
       false,
@@ -127,11 +129,11 @@ function Board() {
           /// Target function name. No function is called if empty.
           functionName: "play",
           /// Parameter to pass to the target function
-          parameter: call_params_str
+          parameter: call_params.serialize()
         },
         baseAccount
       ).then(function (txid: any) {
-        console.log("handleClick ", call_params_str, txid);
+        console.log("handleClick ", call_params, txid);
       });
     });
   }
