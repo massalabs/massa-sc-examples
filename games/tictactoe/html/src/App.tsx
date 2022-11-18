@@ -216,9 +216,6 @@ class Game extends React.Component {
         <div className="game-board">
           <Board />
         </div>
-        <div className="node-info">
-          <NodeInfo />
-        </div>
       </div>
     );
   }
