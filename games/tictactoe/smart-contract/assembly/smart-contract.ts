@@ -1,7 +1,7 @@
 /* Tic Tac Toe Implementation for Massa Labs
  *
  * */
-import { Storage, generateEvent } from "@massalabs/massa-as-sdk";
+import { Storage, generateEvent, Args } from "@massalabs/massa-as-sdk";
 
 export function initialize(_args: string): void {
     Storage.set("currentPlayer", "X");
@@ -10,7 +10,8 @@ export function initialize(_args: string): void {
 }
 
 export function play(args: string): void {
-    let index: i32 = i32(parseInt(args));
+    let args_object = new Args(args);
+    let index = args_object.nextU32();
     let game_winner = Storage.get("gameWinner");
     if (game_winner == "n") {
         let player = Storage.get("currentPlayer");
