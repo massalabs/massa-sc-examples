@@ -5,9 +5,9 @@
 
 import { sendMessage, createSC, currentPeriod, generateEvent, fileToByteArray, toBytes } from "@massalabs/massa-as-sdk"
 
-export function main(name: string): void {
+export function main(): void {
     // Deploy our smart contract
-    const bytes = fileToByteArray('./build/smart-contract.wasm');
+    const bytes: StaticArray<u8> = fileToByteArray('./build/smart-contract.wasm');
     const address = createSC(bytes);
 
     // Generate an event to give the address of our deployed SC
@@ -16,9 +16,9 @@ export function main(name: string): void {
     // Setup the 'message' we will send to our deployed SC
     let functionName = "receive"
     let current_period = currentPeriod();
-    let validityStartPeriod = current_period + 2;
+    let validityStartPeriod = current_period + 20;
     let validityStartThread = 1 as u8;
-    let validityEndPeriod = current_period + 20;
+    let validityEndPeriod = current_period + 40;
     let validityEndThread = 1 as u8;
     let maxGas = 50_000; // gas for smart contract execution
     let rawFee = 0;
