@@ -16,9 +16,9 @@ export function main(): void {
     // Setup the 'message' we will send to our deployed SC
     let functionName = "receive"
     let current_period = currentPeriod();
-    let validityStartPeriod = current_period + 20;
+    let validityStartPeriod = current_period + 1;
     let validityStartThread = 1 as u8;
-    let validityEndPeriod = current_period + 40;
+    let validityEndPeriod = current_period + 20;
     let validityEndThread = 1 as u8;
     let maxGas = 50_000; // gas for smart contract execution
     let rawFee = 0;
