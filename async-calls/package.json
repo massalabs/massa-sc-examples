@@ -4,7 +4,7 @@
     "description": "",
     "scripts": {
         "test": "npx astester --imports node_modules/@massalabs/massa-as-sdk/astester.imports.js ./assembly/**/*.spec.ts",
-        "build": "asc assembly/smart-contract.ts --target release --exportRuntime --outFile build/smart-contract.wasm && asc --transform @massalabs/as-transformer/file2base64.js --target release --exportRuntime assembly/main.ts --outFile build/main.wasm",
+        "build": "asc assembly/smart-contract.ts --target release --exportRuntime --outFile build/smart-contract.wasm && asc --transform @massalabs/as-transformer/file2bytearray.js --target release --exportRuntime assembly/main.ts --outFile build/main.wasm",
         "lint": "eslint --resolve-plugins-relative-to \"./assembly/**/*.{ts,json}\" --fix",
         "prettier": "as-prettier \"./*.{ts,js,json,md}\" \"./{src,__tests}/**/*.{ts,js,json,md}\" --write",
         "fmt": "npm run lint && npm run prettier"
@@ -15,7 +15,7 @@
     "devDependencies": {
         "@massalabs/as": "^1.0.2",
         "@massalabs/as-tester": "^0.0.2-dev",
-        "@massalabs/as-transformer": "0.1.1-dev.20221130133235",
+        "@massalabs/as-transformer": "0.1.1-dev",
         "@massalabs/massa-as-sdk": "^1.2.0",
         "@massalabs/massa-web3": "^1.10.0",
         "@types/node": "^18.11.3",
