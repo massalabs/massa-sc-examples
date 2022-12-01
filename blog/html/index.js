@@ -8,6 +8,7 @@ function preview() {
   ).then((web3Client) => {
     web3Client.publicApi().getDatastoreEntries([{address: blog_sc_address, key: post_key}]).then(
       function(n_posts_str) {
+        console.log(n_posts_str);
         let n_posts = parseInt(n_posts_str[0].candidate);
         let posts_list = document.getElementById("post");
         posts_list.innerHTML = "";
@@ -28,9 +29,15 @@ function preview() {
 
           for (let i = 0; i < n_posts; i++) {
             const post_key = "POST_" + i.toString()
-            web3Client.publicApi().getDatastoreEntries([{address: blog_sc_address, key: post_key}]).then(
+            web3Client.publicApi().getDatastoreEntries([
+              {address: blog_sc_address, key: "POST_" + i.toString() + "_author"},
+              {address: blog_sc_address, key: "POST_" + i.toString() + "_date"},
+              {address: blog_sc_address, key: "POST_" + i.toString() + "_tags"},
+              {address: blog_sc_address, key: "POST_" + i.toString() + "_content"},
+            ]).then(
               function(post) {
-                let data = post[0].candidate.substring(0, 50) + "...";
+                console.log(post[3])
+                let data = post[3].candidate.substring(0, 50) + "...";
                 psts_a[i].href= "blog.html?i=" + i.toString();
                 psts_h[i].appendChild(document.createTextNode('Post ' + i.toString()))
                 psts_p[i].appendChild(document.createTextNode(data));

@@ -2,14 +2,19 @@
   "name": "blog",
   "version": "0.1.0",
   "scripts": {
-    "build": "massa-sc-scripts build-sc && massa-sc-scripts build-sc src/main.ts build/main.wasm",
+    "build": "asc src/smart-contract.ts --transform json-as/transform --target release --exportRuntime --runtime stub --outFile build/smart-contract.wasm && asc src/main.ts --transform json-as/transform --transform transformer/file2base64.js --target release --exportRuntime --runtime stub --outFile build/main.wasm",
     "clean": "massa-sc-scripts clean"
   },
   "dependencies": {
-    "assemblyscript": "^0.19.20",
-    "json-as": "^0.2.6",
-    "massa-sc-scripts": "4.0.1",
-    "massa-sc-std": "3.1.2",
-    "visitor-as": "^0.6.0"
+    "@massalabs/as": "^1.0.2",
+    "@massalabs/massa-as-sdk": "^1.1.0",
+    "assemblyscript": "^0.21.2",
+    "json-as": "^0.5.3",
+    "massa-sc-scripts": "4.0.7",
+    "mscl-as-transformer": "0.0.1",
+    "visitor-as": "^0.10.2"
+  },
+  "devDependencies": {
+    "transformer": "https://gitpkg.now.sh/massalabs/as/transformer?main"
   }
 }

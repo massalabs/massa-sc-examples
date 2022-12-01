@@ -1,7 +1,7 @@
 function readpost() {
   const params = new URLSearchParams(document.location.search);
   const post_nb = params.get("i");
-  const post_key = "POST_" + post_nb;
+  const post_key = "POST_" + post_nb + "_content";
 
   window.massa.ClientFactory.createDefaultClient(
     rpc_url,
