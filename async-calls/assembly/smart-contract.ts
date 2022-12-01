@@ -2,10 +2,10 @@
  * Smart contract containing a message handler function
  **/
 
-import { print, generateEvent } from "@massalabs/massa-as-sdk"
+import { print, generateEvent, fromBytes } from "@massalabs/massa-as-sdk"
 
-export function receive(data: string): void {
-    let response: string = "message received: " + data;
+export function receive(data: StaticArray<u8>): void {
+    let response: string = "message received: " + fromBytes(data);
     generateEvent(response);
     print(response);
 }
