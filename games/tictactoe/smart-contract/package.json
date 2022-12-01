@@ -1,11 +1,11 @@
 {
-    "name": "hello-world",
+    "name": "tictactoe",
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
         "test": "npx astester --imports node_modules/@massalabs/massa-as-sdk/astester.imports.js ./assembly/**/*.spec.ts",
-        "build:main": "asc --transform @massalabs/as-transformer/file2base64.js assembly/main.ts --target release --exportRuntime -o build/main.wasm",
+        "build:main": "asc --transform @massalabs/as-transformer/file2ByteArray.js assembly/main.ts --target release --exportRuntime -o build/main.wasm",
         "build:smart-contract": "asc assembly/smart-contract.ts --target release --exportRuntime -o build/smart-contract.wasm",
         "build": "npm run build:smart-contract && npm run build:main",
         "lint": "eslint --resolve-plugins-relative-to \"./assembly/**/*.{ts,json}\" --fix",
@@ -18,9 +18,9 @@
     "devDependencies": {
         "@massalabs/as": "^1.0.2",
         "@massalabs/as-tester": "^0.0.2-dev",
-        "@massalabs/as-transformer": "^0.0.2-dev",
-        "@massalabs/massa-as-sdk": "^1.1.1",
-        "@massalabs/massa-web3": "^1.10.0",
+        "@massalabs/as-transformer": "^0.1.0",
+        "@massalabs/massa-as-sdk": "1.2.0",
+        "@massalabs/massa-web3": "^1.11.0",
         "@types/node": "^18.11.3",
         "@typescript-eslint/eslint-plugin": "^5.40.1",
         "@typescript-eslint/parser": "^5.40.1",
