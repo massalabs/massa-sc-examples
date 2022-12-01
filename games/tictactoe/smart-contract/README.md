@@ -1,6 +1,6 @@
 # Tic-tac-toe smart-contract
 
-You'll find in this repository the tic-tac-toe smart contract.
+You'll find in this repository the tic-tac-toe smart contracts.
 
 ## Smart contracts
 
