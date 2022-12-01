@@ -1,30 +1,30 @@
 /* Tic Tac Toe Implementation for Massa Labs
  *
  * */
-import { Storage, generateEvent, Args } from "@massalabs/massa-as-sdk";
+import { Storage, generateEvent, Args, toBytes, fromBytes } from "@massalabs/massa-as-sdk";
 
-export function initialize(_args: string): void {
-    Storage.set("currentPlayer", "X");
-    Storage.set("gameState", "n,n,n,n,n,n,n,n,n");
-    Storage.set("gameWinner", "n");
+export function initialize(_args: StaticArray<u8>): void {
+    Storage.set(toBytes("currentPlayer"), toBytes('X'));
+    Storage.set(toBytes("gameState"), toBytes("n,n,n,n,n,n,n,n,n"));
+    Storage.set(toBytes("gameWinner"), toBytes('n'));
 }
 
-export function play(args: string): void {
+export function play(args: StaticArray<u8>): void {
     let args_object = new Args(args);
     let index = args_object.nextU32();
-    let game_winner = Storage.get("gameWinner");
+    let game_winner = fromBytes(Storage.get(toBytes("gameWinner")));
     if (game_winner == "n") {
-        let player = Storage.get("currentPlayer");
-        let game_state = Storage.get("gameState");
+        let player = fromBytes(Storage.get(toBytes("currentPlayer")));
+        let game_state = fromBytes(Storage.get(toBytes("gameState")));
         let vec_game_state = game_state.split(",");
         if (vec_game_state[index] == "n") {
             vec_game_state[index] = player;
-            Storage.set("gameState", vec_game_state.join());
+            Storage.set(toBytes("gameState"), toBytes(vec_game_state.join()));
             if (player == "X") {
-                Storage.set("currentPlayer", "O");
+                Storage.set(toBytes("currentPlayer"), toBytes("O"));
             }
             else {
-                Storage.set("currentPlayer", "X");
+                Storage.set(toBytes("currentPlayer"), toBytes("X"));
             }
             _checkWin(player)
         }
@@ -43,7 +43,7 @@ function _checkWin(player: string): void {
         [2, 4, 6]
     ];
 
-    let game_state = Storage.get("gameState");
+    let game_state = fromBytes(Storage.get(toBytes("gameState")));
     let vec_game_state = game_state.split(",");
 
     let roundWon = false;
@@ -63,12 +63,12 @@ function _checkWin(player: string): void {
 
     if (roundWon) {
         generateEvent(player + " player has won round");
-        Storage.set("gameWinner", player);
+        Storage.set(toBytes("gameWinner"), toBytes(player));
     }
 
     let roundDraw = !vec_game_state.includes("n");
     if (roundDraw) {
         generateEvent("round resulted in a draw");
-        Storage.set("gameWinner", "draw");
+        Storage.set(toBytes("gameWinner"), toBytes("draw"));
     }
 }

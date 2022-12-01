@@ -5,9 +5,9 @@ import {
   IAccount,
   DefaultProviderUrls,
   IDatastoreEntryInput,
-  IContractStorageData,
+  IDatastoreEntry,
+  Args
 } from "@massalabs/massa-web3";
-import Args from "@massalabs/massa-web3/dist/utils/arguments";
 
 const baseAccount = {
   publicKey: "P12f2K8YoeqZCzWASs2wktFYYGtaHGYaeSukFBrgEnw9d3J1WsMZ",
@@ -17,7 +17,7 @@ const baseAccount = {
 
 type TNodeStatus = INodeStatus | null;
 
-const sc_addr = "A12egHo2xkg2s68WJzu8CofoZ9vwz2M3dYhcsxZ6PCqqXoJCST4q"
+const sc_addr = "A1Lvu1hvWXRzHh5Ci1Ke4GR4Kf9R1a1oCSYuHSkSR64D7c5CuzV"
 
 function NodeInfo() {
   const [nodeStatus, setNodeStatus] = useState<TNodeStatus>(null);
@@ -83,10 +83,11 @@ function Board() {
       false,
       baseAccount
     ).then(function (web3Client) {
-      web3Client.publicApi().getDatastoreEntries([{ address: sc_addr, key: "gameState" } as IDatastoreEntryInput])
-        .then(function (res: IContractStorageData[]) {
+      web3Client.publicApi().getDatastoreEntries([{ address: sc_addr, key: Array.from(Buffer.from("gameState", "utf16le")) } as IDatastoreEntryInput, { address: sc_addr, key: Array.from(Buffer.from("gameWinner", "utf16le")) } as IDatastoreEntryInput])
+        .then(function (res: IDatastoreEntry[]) {
           if (res && res[0]) {
-            let gameState = res[0].candidate!.split(',')
+            let candidate = Buffer.from(res[0].candidate_value!).toString("utf16le");
+            let gameState = candidate.split(',')
 
             let xIsNext = true;
             let squares = Array(9).fill(null);
@@ -120,8 +121,6 @@ function Board() {
           fee: 0,
           /// The maximum amount of gas that the execution of the contract is allowed to cost.
           maxGas: 70000000,
-          /// The price per unit of gas that the caller is willing to pay for the execution.
-          gasPrice: 0,
           /// Extra coins that are spent from the caller's balance and transferred to the target
           coins: 0,
           /// Target smart contract address
@@ -150,8 +149,6 @@ function Board() {
           fee: 0,
           /// The maximum amount of gas that the execution of the contract is allowed to cost.
           maxGas: 70000000,
-          /// The price per unit of gas that the caller is willing to pay for the execution.
-          gasPrice: 0,
           /// Extra coins that are spent from the caller's balance and transferred to the target
           coins: 0,
           /// Target smart contract address
@@ -159,7 +156,7 @@ function Board() {
           /// Target function name. No function is called if empty.
           functionName: "initialize",
           /// Parameter to pass to the target function
-          parameter: ""
+          parameter: new Args().serialize()
         },
         baseAccount
       ).then(function (txid) {
