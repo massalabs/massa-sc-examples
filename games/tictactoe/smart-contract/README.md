@@ -11,8 +11,7 @@ You'll find in this repository the tic-tac-toe smart contracts.
 
 ## Build:
 
-The following command will build your contract and create the deployer associated:
-It assumes your contract entrypoint is `assembly/main.ts`
+The following command will build your contract. It assumes your contract entrypoint is `assembly/main.ts`
 
 ```shell
 npm run build
