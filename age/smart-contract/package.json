@@ -1,0 +1,36 @@
+{
+    "name": "age",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build:main": "asc --transform @massalabs/as-transformer/file2ByteArray.js assembly/main.ts --target release --exportRuntime -o build/main.wasm",
+        "build:smart-contract": "asc assembly/smart-contract.ts --target release --exportRuntime -o build/smart-contract.wasm",
+        "build": "npm run build:smart-contract && npm run build:main",
+        "lint": "eslint --resolve-plugins-relative-to \"./assembly/**/*.{ts,json}\" --fix",
+        "prettier": "as-prettier \"./*.{ts,js,json,md}\" \"./{src,__tests}/**/*.{ts,js,json,md}\" --write",
+        "fmt": "npm run lint && npm run prettier"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@massalabs/as": "^1.0.2",
+        "@massalabs/as-transformer": "^0.1.0",
+        "@massalabs/massa-as-sdk": "1.2.0",
+        "@types/node": "^18.11.3",
+        "@typescript-eslint/eslint-plugin": "^5.40.1",
+        "@typescript-eslint/parser": "^5.40.1",
+        "assemblyscript": "^0.21.7",
+        "assemblyscript-prettier": "^1.0.5",
+        "dotenv": "^16.0.3",
+        "eslint": "^8.25.0",
+        "ts-node": "^10.9.1",
+        "tslib": "^2.4.0",
+        "typescript": "^4.8.4"
+    },
+    "overrides": {
+        "assemblyscript": "^0.21.7"
+    },
+    "type": "module"
+}
