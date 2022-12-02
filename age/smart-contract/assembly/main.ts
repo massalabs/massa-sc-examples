@@ -1,15 +1,17 @@
-import { generateEvent, fileToByteArray, createSC, call, Address, transferCoins, Args } from "@massalabs/massa-as-sdk";
+// The entry file of your WebAssembly module.
+import { Storage, Args, toBytes } from "@massalabs/massa-as-sdk";
 
-function createContract(): Address {
-    const bytes: StaticArray<u8> = fileToByteArray('./build/smart-contract.wasm');
-    const sc_address = createSC(bytes);
-    transferCoins(sc_address, 100_000_000_000);
-    return sc_address;
+export function initialize(_args: StaticArray<u8>): void {
+    let age = new Args();
+    age.add(1 as u32);
+    Storage.set(toBytes("alice"), age.serialize());
 }
 
-export function main(_args: StaticArray<u8>): void {
-    const sc_address = createContract();
-    call(sc_address, "initialize", new Args(), 0);
-    generateEvent("Created age smart-contract at:" + sc_address.toByteString());
-    return;
+export function change_age(args: StaticArray<u8>): void {
+    let args_deserialized = new Args(args);
+    let name = args_deserialized.nextString();
+    let age = args_deserialized.nextU32();
+    let age_encoded = new Args();
+    age_encoded.add(age);
+    Storage.set(toBytes(name), age_encoded.serialize());
 }

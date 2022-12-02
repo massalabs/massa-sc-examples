@@ -14,5 +14,10 @@
             "converge": false,
             "noAssert": false
         }
+    },
+    "options": {
+        "exportRuntime": true,
+        "bindings": "esm",
+        "transform": ["@massalabs/as-transformer/file2ByteArray.js", "@massalabs/as-tester/check_replacer.js"]
     }
 }

@@ -1,0 +1,48 @@
+[
+	{
+		"slot": {
+			"period": 0,
+			"thread": 0
+		},
+		"execution_steps": [
+			{
+				"name": "setup_initial_address",
+				"config": {
+					"type": "write_ledger_entry",
+					"address": "X6Jqk749Dk8=",
+					"balance": 789000
+				}
+			},
+			{
+				"name": "execute_main",
+				"config": {
+					"type": "execute_sc",
+					"path": "../build/deployer.wasm",
+					"function": "main",
+					"parameter": "",
+					"gas": 100000,
+					"call_stack": [
+						{
+							"address": "X6Jqk749Dk8=",
+							"coins": 100
+						}
+					]
+				}
+			},
+			{
+				"name": "read_events_after_execution",
+				"config": {
+					"type": "read_events",
+					"start": {
+						"period": 0,
+						"thread": 0
+					},
+					"end": {
+						"period": 4,
+						"thread": 16
+					}
+				}
+			}
+		]
+	}
+]

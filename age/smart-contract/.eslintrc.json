@@ -3,7 +3,11 @@
         "browser": true,
         "es2022": true
     },
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:json/recommended"
+    ],
     "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -15,6 +19,15 @@
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
-        "@typescript-eslint/no-unnecessary-type-assertion": "off"
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn", // or "error"
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ]
     }
 }
