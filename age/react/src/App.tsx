@@ -44,6 +44,20 @@ function Content() {
     }
   }
 
+  async function initialize() {
+    let args = new Args();
+    if (web3client) {
+      const age = await web3client.smartContracts().callSmartContract({
+        fee: 0,
+        maxGas: 1000000,
+        coins: 10_000_000_000,
+        targetAddress: sc_addr,
+        functionName: "initialize",
+        parameter: args.serialize()
+      });
+    }
+  }
+
   async function funcGetAge() {
     if (web3client) {
       let res = await web3client.publicApi().getDatastoreEntries([{ key: Array.from(Buffer.from("alice", "utf16le")), address: sc_addr }]);
@@ -62,6 +76,7 @@ function Content() {
       <button onClick={async () => await funcSetAge(age! + 1)}>Age++</button>
       <button onClick={async () => await funcSetAge(age! - 1)}>Age--</button>
       {web3client ? (<button onClick={async () => {await funcGetAge()} } >load</button>): (<div>loading</div>)}
+      {web3client ? (<button onClick={async () => {await initialize()} } >initialize</button>): (<div>loading</div>)}
     </div>
   )
 }

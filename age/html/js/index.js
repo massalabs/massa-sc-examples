@@ -9,7 +9,7 @@ const baseAccount = {
 
 let client = null
 
-const sc_addr = "A12VVvTD8bdj1LDwc2uuFNKxT26AxQGv8aDgpWS9EVjekEwTZSab"
+const sc_addr = "A124zgkBHPz98F679iYJ56Y2hrMY6ZaVzYKApg2jLuwBBpe9KdQS"
 
 // initialize a testnet client
 massa.ClientFactory.createDefaultClient(
@@ -53,6 +53,22 @@ function funcSetAge(number) {
             coins: 0,
             targetAddress: sc_addr,
             functionName: "change_age",
+            parameter: args.serialize()
+        }).then((res) => {
+            console.log(res)
+        });
+    }
+}
+
+function initialize() {
+    let args = new Args();
+    if (client) {
+        client.smartContracts().callSmartContract({
+            fee: 0,
+            maxGas: 1000000,
+            coins: 10_000_000_000,
+            targetAddress: sc_addr,
+            functionName: "initialize",
             parameter: args.serialize()
         }).then((res) => {
             console.log(res)
