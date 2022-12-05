@@ -34,5 +34,5 @@ if (!contractWasm) {
 }
 
 checkWasmFile(contractWasm);
-console.log(`Compile deployer for smartcontract: ${contractWasm}\n`);
+console.log(`Compile deployer for smart contract: ${contractWasm}\n`);
 await buildDeployer(contractWasm);

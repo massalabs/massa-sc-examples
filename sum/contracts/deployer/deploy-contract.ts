@@ -6,7 +6,8 @@ if (!wasmFile) {
 }
 
 checkWasmFile(wasmFile);
-console.log(`Deploying smartcontract: ${wasmFile}\n`);
+console.log(`Deploying smart contract: ${wasmFile}\n`);
 const deployer = new Deployer();
 await deployer.init();
 await deployer.deployContract(wasmFile);
+

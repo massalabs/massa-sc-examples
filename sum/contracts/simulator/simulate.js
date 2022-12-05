@@ -3,20 +3,23 @@ import { exit } from "process";
 
 const TESTER_RELEASE_URL =
     "https://github.com/massalabs/massa-sc-tester/releases/download";
-const VERSION = "v0.3.1";
-let cmd;
+const VERSION = "v0.3.2";
 
 if (process.argv[2] && process.argv[2] === "--install") {
-    let fileName;
+    let fileName = "release_";
     switch (process.platform) {
         case "win32":
-            fileName = "release_windows.zip";
+            fileName += "windows.zip";
             break;
         case "darwin":
-            fileName = "release_macos.tar.gz";
+            if(process.arch === "amd64") {
+                fileName += "macos-amd64.tar.gz";
+            } else {
+                fileName += "macos-arm64.tar.gz";
+            }
             break;
         case "linux":
-            fileName = "release_linux.tar.gz";
+            fileName += "linux.tar.gz";
             break;
         default:
             console.error(`OS not supported`);
@@ -27,9 +30,9 @@ if (process.argv[2] && process.argv[2] === "--install") {
 
     let cmd;
     if (process.platform === "win32") {
-        cmd = `powershell -Command "Invoke-WebRequest -Uri ${url} -OutFile ${fileName}"| Expand-Archive -Path ${fileName} -DestinationPath ./simulator`;
+        cmd = `curl ${url} -Lo ${fileName} && tar -xzf ${fileName} -C ./simulator --strip-components=1 && del ${fileName}`;
     } else {
-        cmd = `wget -qO- ${url} | tar xz -C ./simulator --strip-components 1`;
+        cmd = `curl ${url} -sL | tar xz -C ./simulator --strip-components 1`;
     }
 
     execSync(cmd);
@@ -37,6 +40,7 @@ if (process.argv[2] && process.argv[2] === "--install") {
     exit(0);
 }
 
+let cmd;
 switch (process.platform) {
     case "win32":
         cmd = "cd simulator && massa-sc-tester.exe execution_config.json";

@@ -1,8 +1,8 @@
-import { generateEvent, createSC, fileToBase64 } from "@massalabs/massa-as-sdk";
+import { generateEvent, createSC, fileToByteArray } from "@massalabs/massa-as-sdk";
 
-export function main(_args: string): i32 {
-    const b64wasm = fileToBase64("##Wasm_file_path##");
-    const contractAddr = createSC(b64wasm);
+export function main(_args: StaticArray<u8>): StaticArray<u8> {
+    const bytes: StaticArray<u8> = fileToByteArray("##Wasm_file_path##");
+    const contractAddr = createSC(bytes);
 
     let msg: string;
     if (contractAddr.isValid()) {
@@ -12,5 +12,5 @@ export function main(_args: string): i32 {
     }
     generateEvent(`${msg} ${contractAddr.toByteString()}`);
 
-    return 0;
+    return [];
 }
