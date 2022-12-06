@@ -18,7 +18,7 @@ You can now run `npm run build` to compile your AssemblyScript files.
 
 By default it will build `assembly/main.ts`.
 
-To use librairies as massa-as-sdk and @massalabs/as you need to import the required function, for instance :
+To use libraries like @massalabs/massa-as-sdk and @massalabs/as, you need to import the required function, for instance:
 
 ```jsx
 import { generateEvent } from "@massalabs/massa-as-sdk";
