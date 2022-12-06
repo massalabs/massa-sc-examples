@@ -11,7 +11,7 @@ export class Deployer {
 
     async init() {
         if (!process.env.WALLET_PRIVATE_KEY) {
-            throw new Error("WALLET_PRIVATE_KEY is not set. Did you create environment file \".env\" ?");
+            throw new Error("WALLET_PRIVATE_KEY is not set. Did you create an environment file `.env`?");
         }
 
         this.deployerAccount = await WalletClient.getAccountFromSecretKey(process.env.WALLET_PRIVATE_KEY);
