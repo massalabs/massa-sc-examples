@@ -33,7 +33,7 @@ function Content() {
     args.addString("alice");
     args.addU32(BigInt(age));
     if (web3client) {
-      const age = await web3client.smartContracts().callSmartContract({
+      await web3client.smartContracts().callSmartContract({
         fee: 0,
         maxGas: 1000000,
         coins: 0,
@@ -47,7 +47,7 @@ function Content() {
   async function initialize() {
     let args = new Args();
     if (web3client) {
-      const age = await web3client.smartContracts().callSmartContract({
+      await web3client.smartContracts().callSmartContract({
         fee: 0,
         maxGas: 1000000,
         coins: 10_000_000_000,

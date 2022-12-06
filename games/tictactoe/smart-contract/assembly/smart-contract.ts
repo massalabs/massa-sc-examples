@@ -1,4 +1,4 @@
-/* Tic Tac Toe Implementation for Massa Labs
+/* Age SC Implementation for Massa Labs
  *
  * */
 import { Storage, generateEvent, Args, toBytes, fromBytes } from "@massalabs/massa-as-sdk";
