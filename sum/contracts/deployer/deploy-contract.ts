@@ -2,7 +2,7 @@ import { Deployer, checkWasmFile } from "./deployer";
 
 let wasmFile = process.argv[2];
 if (!wasmFile) {
-    wasmFile = "build/deployer.wasm";
+  wasmFile = "build/deployer.wasm";
 }
 
 checkWasmFile(wasmFile);

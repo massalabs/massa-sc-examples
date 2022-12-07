@@ -7,6 +7,8 @@ Deploy the sum smart contract:
 
 Call it:
 
+Update the address line 5 of `caller.ts` file.
+
     npm run build:smart-contract -- assembly/caller.ts -o build/caller.wasm
     npm run deploy build/caller.wasm
 

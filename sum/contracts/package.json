@@ -10,7 +10,7 @@
         "build:smart-contract": "asc",
         "build": "npm run build:smart-contract && npm run build:deployer",
         "deploy": "ts-node deployer/deploy-contract.ts",
-        "lint": "eslint --resolve-plugins-relative-to . \"./**/*.{ts,json}\" \"./*.{ts,json}\" --fix",
+        "lint": "eslint . --fix",
         "prettier": "as-prettier assembly --write",
         "fmt": "npm run lint && npm run prettier"
     },
@@ -30,6 +30,8 @@
         "assemblyscript-prettier": "^1.0.5",
         "dotenv": "^16.0.3",
         "eslint": "^8.27.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-json": "^3.1.0",
         "ts-node": "^10.9.1",
         "tslib": "^2.4.0",
