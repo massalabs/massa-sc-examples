@@ -38,15 +38,13 @@ export class Deployer {
   }
 
   async deployContract(contractWasm: string) {
-    const binaryArrayBuffer: Buffer = fs.readFileSync(contractWasm, {});
-    const binaryFileContents = new Uint8Array(binaryArrayBuffer);
-    const base64: string = Buffer.from(binaryFileContents).toString("base64");
+    const contractDataBase64 = fs.readFileSync(contractWasm, "base64");
     // Deploy SC & retrieve operation ID
     const operationId = await this.web3Client.smartContracts().deploySmartContract(
       {
         fee: 0,
         maxGas: 1_000_000_000,
-        contractDataBase64: base64,
+        contractDataBase64,
       },
       this.deployerAccount,
     );
