@@ -1,1 +1,1 @@
-/// <reference types='tester/assembly/global' />
+/// <reference types='@massalabs/as-tester/assembly/global' />
