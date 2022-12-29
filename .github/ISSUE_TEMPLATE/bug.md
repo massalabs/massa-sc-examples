@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report to report a bug and help us to improve Thyra
+about: Create a bug report to report a bug and help us to improve  sc-examples
 title: ''
 labels: 'issue:bug'
 assignees: ''
