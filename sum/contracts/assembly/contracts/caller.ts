@@ -6,19 +6,19 @@ import { Address, call, callerHasWriteAccess } from '@massalabs/massa-as-sdk';
  *
  * @param _ - not used
  */
-export function constructor(args: StaticArray<u8>): StaticArray<u8> {
+export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
   if (!callerHasWriteAccess()) {
     return [];
   }
-  main(args);
+  main(binaryArgs);
   return [];
 }
 
-export function main(args: StaticArray<u8>): StaticArray<u8> {
+export function main(binaryArgs: StaticArray<u8>): StaticArray<u8> {
   const address = new Address(
-    new Args(args)
+    new Args(binaryArgs)
       .nextString()
       .expect('Address argument is missing or invalid'),
   );
