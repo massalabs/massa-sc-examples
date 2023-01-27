@@ -17,7 +17,10 @@ jobs:
           node-version: 18
 
       - name: Install
-        run: npm ci
+        run: |
+          pwd
+          ls -la
+          npm ci
 
       - name: Code quality
         run: npm run fmt:check
