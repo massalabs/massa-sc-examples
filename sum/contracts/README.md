@@ -1,92 +1,68 @@
 # Massa Smart Contract example: Sum
 
-Deploy the sum smart contract:
-
-    npm run build
-    npm run deploy
-
-Call it:
-
-Update the address line 5 of `caller.ts` file.
-
-    npm run build:smart-contract -- assembly/caller.ts -o build/caller.wasm
-    npm run deploy build/caller.wasm
-
-## How to use
-
-You now have your own AssemblyScript project setup, with Massa's sdk installed.
-
-You can now run `npm run build` to compile your AssemblyScript files.
-
-By default it will build `assembly/main.ts`.
-
-To use libraries like @massalabs/massa-as-sdk and @massalabs/as, you need to import the required function, for instance:
-
-```jsx
-import { generateEvent } from "@massalabs/massa-as-sdk";
-export function HelloWorld(): void {
-    generateEvent(`Hello World`);
-}
-```
-
-## How to …
-
-### Include another smart contract inside a smart contract ?
-
-You can include a smart contact inside of another smart contract following the [AS Transformer documentation](https://github.com/massalabs/as/tree/main/transformer).
-
-### ... use a linter
-
-There is no specific, well-maintained Assemblyscript linter in the ecosystem.
-
-Since Assemblyscript is a subset of Typescript, the recommendation is to use a Typescript linter.
-
-The reference today remains ESLint, therefore the initialization script performs:
-
-- the installation of the dependencies necessary for its execution;
-- a minimalist configuration of ESlint and prettier (the one used by MassaLabs for its projects).
-
-Keep in mind that many false positives will remain undetected by ESLint such as :
-
-- Closures
-- Spreads
-
-### ... deploy a smart contract
-
-Prerequisites :
-
-- You must add a .env file at the root of the repository with the following keys set to valid values :
-  - WALLET_PRIVATE_KEY="wallet_private_key"
-  - JSON_RPC_URL_PUBLIC=<https://test.massa.net/api/v2:33035>
-  - JSON_RPC_URL_PRIVATE=<https://test.massa.net/api/v2:33035>
-
-These keys will be the ones used by the deployer script to interact with the blockchain.
-
-The following command will build your contract and create the deployer associated:
-It assumes your contract entrypoint is `assembly/main.ts`
-
-```shell
-npm run build
-```
-
-Then deploy your contract with:
+Run the deployment script:
 
 ```shell
 npm run deploy
 ```
 
-This command will deploy your smart contract on Massa's network corresponding to the given node.
+This will compile the smart contracts, deploy the `sum.ts` smart contract, and execute the `caller.ts` smart contract.
 
-### ... Run unit tests
+## Build
 
-Check examples in `./assembly/__test__/example.spec.ts`
+By default this will build all files in `assembly/contracts` directory.
 
-Check the documentation on "https://github.com/massalabs/as/tree/main/tester"
+```shell
+npm run build
+```
 
-Run the following commands :
+## Deploy a smart contract
 
-- To run test from all spec.ts files in your assembly folder
+Prerequisites :
+
+- You must add a `.env` file at the root of the repository with the following keys set to valid values :
+  - WALLET_PRIVATE_KEY="wallet_private_key"
+  - JSON_RPC_URL_PUBLIC=<https://test.massa.net/api/v2:33035>
+
+These keys will be the ones used by the deployer script to interact with the blockchain.
+
+The following command will build contracts in `assembly/contracts` directory and execute the deployment script
+`src/deploy.ts`. This script will deploy on the node specified in the `.env` file.
+
+```shell
+npm run deploy
+```
+
+You can modify `src/deploy.ts` to change the smart contract being deployed, and to pass arguments to the constructor
+function:
+
+- line 31: specify what contract you want to deploy
+- line 33: create the `Args` object to pass to the constructor of the contract you want to deploy
+
+When the deployment operation is executed on-chain, the
+[constructor](https://github.com/massalabs/massa-sc-toolkit/blob/main/packages/sc-project-initializer/commands/init/assembly/contracts/main.ts#L14)
+function of the smart contract being deployed will
+be called with the arguments provided in the deployment script.
+
+The deployment script uses [massa-sc-deployer library](https://www.npmjs.com/package/@massalabs/massa-sc-deployer)
+to deploy smart contracts.
+
+You can edit this script and use [massa-web3 library](https://www.npmjs.com/package/@massalabs/massa-web3)
+to create advanced deployment procedure.
+
+For more information, please visit our ReadTheDocs about
+[Massa smart-contract development](https://docs.massa.net/en/latest/web3-dev/smart-contracts.html).
+
+## Unit tests
+
+The test framework documentation is available here: [as-pect docs](https://as-pect.gitbook.io/as-pect)
 
 ```shell
 npm run test
+```
+
+## Format code
+
+```shell
+npm run fmt
 ```
