@@ -1,5 +1,5 @@
-import { Args } from "@massalabs/as-types";
-import { generateEvent } from "@massalabs/massa-as-sdk";
+import { Args } from '@massalabs/as-types';
+import { generateEvent } from '@massalabs/massa-as-sdk';
 
 function add(a: i32, b: i32): i32 {
   return a + b;

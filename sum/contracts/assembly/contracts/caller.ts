@@ -18,7 +18,9 @@ export function constructor(args: StaticArray<u8>): StaticArray<u8> {
 
 export function main(args: StaticArray<u8>): StaticArray<u8> {
   const address = new Address(
-    new Args(args).nextString().expect('Address argument is missing or invalid'),
+    new Args(args)
+      .nextString()
+      .expect('Address argument is missing or invalid'),
   );
   call(address, 'sum', new Args().add(21 as i32).add(20 as i32), 0);
   return [];
