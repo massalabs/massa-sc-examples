@@ -1,5 +1,5 @@
-import { Args, i32ToBytes } from '@massalabs/as-types';
-import { generateEvent } from '@massalabs/massa-as-sdk';
+import { Args, i32ToBytes, stringToBytes } from '@massalabs/as-types';
+import { Storage, generateEvent } from '@massalabs/massa-as-sdk';
 
 function add(a: i32, b: i32): i32 {
   return a + b;
@@ -13,5 +13,6 @@ export function sum(binaryArgs: StaticArray<u8>): StaticArray<u8> {
   generateEvent(
     `Sum (${a.toString()}, ${b.toString()}) = ${result.toString()}`,
   );
-  return i32ToBytes(a + b);
+  Storage.set(stringToBytes('last result'), i32ToBytes(result));
+  return i32ToBytes(result);
 }
