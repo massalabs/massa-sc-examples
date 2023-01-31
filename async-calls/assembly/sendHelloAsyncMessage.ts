@@ -1,7 +1,7 @@
 import { Args, stringToBytes } from "@massalabs/as-types";
 /** ***********************
- * Smart contract that pushes another SC containing a message handler
- * sendHelloMessage sends an asynchronous message to a previous deployed contract containing a message handler function
+ *
+ * SendHelloAsyncMessage sends an asynchronous message to a previous deployed contract containing a message handler function
  **/
 
 import {
@@ -28,12 +28,14 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
 
 /**
 
- * @param binaryArgs - The address of the sum contract encoded with `Args`
+ * @param binaryArgs - The address of the receive message contract encoded with `Args`
 
  * @returns empty array
 
  */
-export function sendHelloMessage(binaryArgs: StaticArray<u8>): StaticArray<u8> {
+export function sendHelloAsyncMessage(
+    binaryArgs: StaticArray<u8>
+): StaticArray<u8> {
     // Setup the 'message' we will send to our deployed SC
     const functionName = "receive";
     const current_period = currentPeriod();
