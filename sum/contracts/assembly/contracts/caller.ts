@@ -29,7 +29,7 @@ export function main(binaryArgs: StaticArray<u8>): StaticArray<u8> {
     address,
     'sum',
     new Args().add(21 as i32).add(20 as i32),
-    0,
+    100_000_000,
   );
   const result = bytesToI32(binaryResult);
   generateEvent('result from the contract ' + result.toString());

@@ -46,7 +46,7 @@ const __dirname = path.dirname(path.dirname(__filename));
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'caller.wasm')),
-        coins: 0,
+        coins: 100_000_000,
         args: new Args().addString(address),
       } as ISCData,
     ],
