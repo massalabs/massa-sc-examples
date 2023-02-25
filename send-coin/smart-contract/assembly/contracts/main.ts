@@ -1,7 +1,6 @@
 // The entry file of your WebAssembly module.
 import {
   Address,
-  balance,
   balanceOf,
   callerHasWriteAccess,
   generateEvent,
@@ -25,6 +24,16 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
     .nextString()
     .expect('Name argument is missing or invalid');
   generateEvent(`Constructor called with name ${name}.`);
+
+  /**
+   *  To initialize without html use this part and change the wallet address to the target
+   * 
+   *  let dest = new Args()
+        .add('A12QEkHuWm7ru1MJyGzPRM5CDGETVnJyx8mNKevUJhMEpwWNJYQM')
+        .serialize();
+      sendCoin(dest);
+   */
+
   return [];
 }
 
@@ -35,14 +44,10 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
 
 export function sendCoin(args: StaticArray<u8>): StaticArray<u8> {
   // Creating target address
+
   let addr = new Args(args);
   let targetAddress = new Address(
     addr.nextString().expect('Address argument is missing or invalid'),
-  );
-
-  // Checking the balance of the smart contract address
-  generateEvent(
-    `Balance of the deployed smart contract: ${balance().toString()}`,
   );
 
   // Specifiyng the amount and sending the coins
@@ -51,13 +56,11 @@ export function sendCoin(args: StaticArray<u8>): StaticArray<u8> {
   transferCoins(targetAddress, amount);
 
   // Checking the balance of the target address and the smart contract address
+
   generateEvent(
     `${amount} coins has been sent. Balance of the target address: ${balanceOf(
       targetAddress.toString(),
     ).toString()}`,
-  );
-  generateEvent(
-    `Remaining balance of the deployed smart contract: ${balance().toString()}`,
   );
   return [];
 }

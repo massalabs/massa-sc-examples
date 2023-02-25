@@ -1,7 +1,7 @@
 const baseAccount = {
-  address: "Your Wallet Address",
-  secretKey: "Your Secret Key",
-  publicKey: "Your Public key",
+  address: "A12NSDKGBRyddRhraQGHCgY7XCxUpYjsnkKGqvDoUJHATREcBpco",
+  secretKey: "S1waNKtVExLZZFmFdoYmAaxzFWrTU17GmYMPKejsDiXzA5hfx3Z",
+  publicKey: "P12KZymkagdS1bZbREw2D4dzdNYQK7ENcPg2Q8tYM6AbKPMRAJ2J",
 };
 
 let client = null;
@@ -25,11 +25,12 @@ function strEncodeUTF16(str) {
   }
 }
 
-let sc_addr = "A12BBJ2tdd5UmWXnccvBJT8qVoG1a4VseP5iNN7RDbQkpVKBHoq9";
+let sc_addr = "A1BnRULBZGEKDHNkb3S5Cbx7JX5D7AsKgzmep2bRD1Jt48531Tf";
 
 function initialize() {
-  let args = new massa.Args();
-  args = document.getElementById("addr").value;
+  const massaArgs = new massa.Args();
+  const inputAddress = document.getElementById("addr").value;
+  massaArgs.addString(inputAddress);
 
   if (client) {
     client
@@ -40,7 +41,7 @@ function initialize() {
           maxGas: 200000,
           targetAddress: sc_addr,
           targetFunction: "sendCoin",
-          parameter: args.serialize(), // this is based on input arguments
+          parameter: massaArgs.serialize(), // this is based on input arguments
         },
         baseAccount
       )
