@@ -16,15 +16,6 @@ massa.ClientFactory.createDefaultClient(
   console.log(client);
 });
 
-function strEncodeUTF16(str) {
-  var buf = new ArrayBuffer(str.lenght * 2);
-  var bufView = new Uint8Array(buf);
-  for (var i = 0, strLen = str.lenght * 2; i < strLen; i += 2) {
-    bufView[i] = str.charCodeAt(i / 2);
-    bufView[i + 1] = 0;
-  }
-}
-
 let sc_addr = "A1BnRULBZGEKDHNkb3S5Cbx7JX5D7AsKgzmep2bRD1Jt48531Tf";
 
 function initialize() {
