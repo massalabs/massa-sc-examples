@@ -4,6 +4,9 @@ This repository contains examples of smart contracts developed for the Massa blo
 ## Projects
 The following projects are included in this repository:
 
+#### [HelloWorld](helloworld/README.md)
+This project provides the timeless "Hello World" example.
+
 ### Potentially Non-Functional Projects
 The following projects may not be functional or up to date, but contributions to improve them are welcome:
 
@@ -12,9 +15,6 @@ This project provides a basic example of a simple smart contract with a front-en
 
 #### [Async-Calls](async-call/README.md)
 This project provides basic examples of asynchronous smart contracts.
-
-#### [HelloWorld](helloworld/README.md)
-This project provides the timeless "Hello World" example.
 
 #### [Sum](sum/README.md)
 This project provides an example of a decentralized application for calculating the sum using Thyra, a blockchain platform built on top of Massa.

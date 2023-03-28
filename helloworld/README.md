@@ -1,116 +1,74 @@
-## How to use
+# Hello, World!
 
-You now have your own AssemblyScript project setup, with Massa's sdk installed.
+This is a simple smart contract project that demonstrates how to use the massa smart-contract toolkit to test, compile and deploy a smart contract to the Massa blockchain.
 
-You can now run `npm run build` to compile your AssemblyScript files.
+## Installation
+To use this project, you'll need to have Node.js and NPM installed on your system. You can download Node.js from the official website [here](https://nodejs.org/en/download).
 
-By default it will build `assembly/main.ts`.
+Once you have Node.js and NPM installed, you can clone the project from GitHub using the following command:
 
-To use librairies as massa-as-sdk and @massalabs/as you need to import the required function, for instance :
-
-```jsx
-import { generateEvent } from "@massalabs/massa-as-sdk";
-export function HelloWorld(): void {
-    generateEvent(`Hello World`);
-}
+```bash
+git clone git@github.com:massalabs/massa-sc-examples.git
 ```
 
-## How to …
+After cloning the project, navigate to the project directory and install the required dependencies using NPM:
 
-### Include another smart contract inside a smart contract ?
+```bash
+cd massa-sc-examples/helloworld
+npm install
+```
 
-You can follow the following documentation :
+This will install the required packages specified in the package.json file, including massa-sc-compiler, massa-sc-deployer, massa-as-sdk.
 
-https://github.com/massalabs/as/tree/main/transformer
+## Usage
 
-## ... use the simulator
+### Testing
+To run the unit tests for the project, use the following command:
 
-**_The simulator_** (massa-sc-tester https://github.com/massalabs/massa-sc-tester) mimics the behavior at ledger level of the Massa Blockchain.
-It can also handle smart contracts deployment & smart contract calls. It means that all storage & coin balances modification are taken into account
-.
-It provides :
+```shell
+npm run test
+```
 
--   A mocked ledger => `ledger.json` :
+This will run the [AssemblyScript test file](/assembly/__tests__/massa-example.spec.ts) using as-pect.
 
-    -   contains by **_address_** : **_coin balances_** , **_bytecode contents_** and **_datastore_**
-    -   can be initialized by any mock
-    -   will be modified after execution
-
--   An execution `.json` ("execution.config.json") file :
-
-    -   Consumed by the `massa-sc-tester.exe`
-    -   List all steps to be executed by the simulator (full example at https://github.com/massalabs/massa-sc-tester/blob/main/execution_config.json to know all examples )
-    -   Can read & execute `.wasm` smart contracts
-
--   A `trace.json` file overriden at each execution :
-
-    -   Log smart contract events
-    -   Log transaction information
-
-    To run the steps detailed in the `execution_config.json` :
-
-The example already set up can be run with :
-
--   Compiling the example smart contracts
-    ```
-    $ npm run build
-    ```
--   Running the simulate script
-    ```
-    $ npm run simulate
-    ```
-
-### ... use a linter
-
-There is no specific, well-maintained Assemblyscript linter in the ecosystem.
-
-Since Assemblyscript is a subset of Typescript, the recommendation is to use a Typescript linter.
-
-The reference today remains ESLint, therefore the initialization script performs:
-
--   the installation of the dependencies necessary for its execution;
--   a minimalist configuration of ESlint and prettier (the one used by MassaLabs for its projects).
-
-Keep in mind that many false positives will remain undetected by ESLint such as :
-
--   Closures
--   Spreads
-
-### ... deploy a smart contract
-
-Prerequisites :
-
--   You must add a .env file at the root of the repository with the following keys set to valid values :
-    -   WALLET_PRIVATE_KEY="wallet_private_key"
-    -   JSON_RPC_URL_PUBLIC=https://test.massa.net/api/v2:33035
-    -   JSON_RPC_URL_PRIVATE=https://test.massa.net/api/v2:33035
-
-These keys will be the ones used by the deployer script to interact with the blockchain.
-
-The following command will build your contract and create the deployer associated:
-It assumes your contract entrypoint is `assembly/main.ts`
+### Building
+To compile the AssemblyScript smart contracts in the assembly/contracts directory, use the following command:
 
 ```shell
 npm run build
 ```
 
-Then deploy your contract with:
+The wasm file will be generated in the build directory.
+
+### Deploying
+Before deploying the smart contracts, you need to update the .env file at the root of the repository with the following keys set to valid values:
+
+- WALLET_PRIVATE_KEY: Your wallet private key
+- JSON_RPC_URL_PUBLIC: The URL of the JSON-RPC endpoint for the Massa blockchain.
+
+Once you have set these values, you can deploy the smart contracts using the following command:
+
 ```shell
 npm run deploy
 ```
-This command will deploy your smart contract on Massa's network corresponding to the given node.
+
+## Contributing
+This project was generated using the sc-project-initializer tool provided by Massa, following the instructions in the Massa documentation [here](https://docs.massa.net/en/latest/web3-dev/smart-contracts/getting-started.html#setting-up-a-new-project).
 
 
-### ... Run unit tests
+To modify the project, the following files were updated:
 
-Check examples in `./assembly/__test__/example.spec.ts`
+- README.md: Updated with project-specific information and usage instructions.
+- assembly/contracts/main.ts: Updated with smart contract code.
+- assembly/__test__/massa-example.spec.ts: Updated with a simple test case.
 
-Check the documentation on "https://github.com/massalabs/as/tree/main/tester"
+If you wish to contribute to this project, please follow these guidelines:
 
-Run the following commands :
+1. Fork the repository and create a new branch for your changes.
+2. Make your changes to the appropriate files.
+3. Test your changes thoroughly.
+4. Commit your changes with a clear and descriptive commit message.
+5. Push your changes to your forked repository.
+6. Open a pull request against the original repository.
 
--   To run test from all spec.ts files in your assembly folder
-
-```shell
-npm run test
-```
+Thank you for your contributions!

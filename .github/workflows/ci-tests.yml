@@ -1,0 +1,22 @@
+name: Unit tests
+on: [push]
+jobs:
+  unit-tests-helloworld:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      working-directory: helloworld
+      run: npm install
+
+    - name: Test
+      working-directory: helloworld
+      run: npm run test
