@@ -9,8 +9,8 @@ on:
 jobs:
   deploy-helloworld:
     defaults:
-    run:
-      working-directory: helloworld
+      run:
+        working-directory: helloworld
 
     runs-on: ubuntu-latest
 
