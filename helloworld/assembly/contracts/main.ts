@@ -12,6 +12,12 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
     return [];
   }
 
+  main([]);
+
+  return [];
+}
+
+export function main(_: StaticArray<u8>): StaticArray<u8> {
   // The `generateEvent` function is used to emit an event on the blockchain.
   // In this case, we're emitting an event with the message "Hello, World!".
   generateEvent('Hello, World!');
