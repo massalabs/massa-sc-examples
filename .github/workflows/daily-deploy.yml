@@ -30,7 +30,7 @@ jobs:
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "data: 'Hello,fake World!'"; then
+          if npm run deploy |& grep -q "'Hello, World!'"; then
             echo "Deployment successful!"
           else
             echo "Deployment failed."
