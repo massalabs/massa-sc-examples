@@ -31,9 +31,9 @@ jobs:
       - name: Deploy
         run: |
           if npm run deploy |& grep -q "'Hello, World!'"; then
-            echo "Deployment successful!"
+            echo "Hello world event received."
           else
-            echo "Deployment failed."
+            echo "No hello world event."
             exit 1
           fi
         env:

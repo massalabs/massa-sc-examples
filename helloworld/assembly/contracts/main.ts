@@ -5,21 +5,14 @@ import { callerHasWriteAccess, generateEvent } from '@massalabs/massa-as-sdk';
  *
  * @param _ - not used
  */
-export function constructor(_: StaticArray<u8>): StaticArray<u8> {
+export function constructor(_: StaticArray<u8>): void {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
   if (!callerHasWriteAccess()) {
-    return [];
+    return;
   }
 
-  main([]);
-
-  return [];
-}
-
-export function main(_: StaticArray<u8>): StaticArray<u8> {
   // The `generateEvent` function is used to emit an event on the blockchain.
   // In this case, we're emitting an event with the message "Hello, World!".
   generateEvent('Hello, World!');
-  return [];
 }
