@@ -1,7 +1,7 @@
 name: Unit tests
 on: [push]
 jobs:
-  unit-tests-helloworld:
+  unit-tests-blog:
     defaults:
       run:
         working-directory: blog_v2
