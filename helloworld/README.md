@@ -56,7 +56,7 @@ npm run deploy
 This project was generated using the sc-project-initializer tool provided by Massa, following the instructions in the Massa documentation [here](https://docs.massa.net/en/latest/web3-dev/smart-contracts/getting-started.html#setting-up-a-new-project).
 
 
-To modify the project, the following files were updated:
+To modify the project, the following files need to be updated:
 
 - README.md: Updated with project-specific information and usage instructions.
 - assembly/contracts/main.ts: Updated with smart contract code.
