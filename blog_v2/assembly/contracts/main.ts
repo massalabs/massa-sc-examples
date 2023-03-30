@@ -14,6 +14,7 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
       }
     var n_blog_posts = 0;
     Storage.set("N_BLOG_POSTS", n_blog_posts.toString());
+    generateEvent(`Blog initiated`);
     return [];
 }
 
