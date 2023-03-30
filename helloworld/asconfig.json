@@ -1,5 +1,4 @@
 {
-    "entries": ["assembly/main.ts"],
     "targets": {
         "debug": {
             "outFile": "build/main.wasm",
@@ -17,7 +16,6 @@
     },
     "options": {
         "exportRuntime": true,
-        "bindings": "esm",
-        "transform": ["@massalabs/as-transformer/file2base64.js"]
+        "bindings": "esm"
     }
 }
