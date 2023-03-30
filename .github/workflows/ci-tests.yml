@@ -1,0 +1,26 @@
+name: Unit tests
+on: [push]
+jobs:
+  unit-tests-blog:
+    defaults:
+      run:
+        working-directory: blog_v2
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: ./blog_v2/package-lock.json
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Test
+      run: npm run test
