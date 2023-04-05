@@ -3,8 +3,9 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
-import { Args, fromMAS } from '@massalabs/massa-web3';
+import { Args, IEvent, fromMAS } from '@massalabs/massa-web3';
 import { NoArg } from '@massalabs/as-types';
+
 
 dotenv.config();
 
@@ -24,12 +25,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(path.dirname(__filename));
 
 (async () => {
-  await deploySC(
+  let deployed = await deploySC(
     publicApi,
     deployerAccount,
     [
       {
-        data: readFileSync(path.join(__dirname, 'build', 'main.wasm')),
+        data: readFileSync(path.join(__dirname, 'build', 'sum.wasm')),
         coins: fromMAS(0.5),
         args: new Args([]),
       } as ISCData,
@@ -38,5 +39,26 @@ const __dirname = path.dirname(path.dirname(__filename));
     4_200_000_000n,
     true,
   );
+  const data = (deployed.events?.find((e) => e.data) as IEvent).data;
+  const address = data.split('Contract deployed at address: ')[1].trim().replace(' ', '');
+
+  await deploySC(
+    publicApi,
+    deployerAccount,
+    [
+      {
+        data: readFileSync(path.join(__dirname, 'build', 'run.wasm')),
+        coins: fromMAS(0.5),
+        args: new Args().addString(address),
+      } as ISCData,
+    ],
+    0n,
+    4_200_000_000n,
+    true,
+  );
   process.exit(0);
+
 })();
+
+
+

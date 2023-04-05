@@ -6,7 +6,7 @@ Run the deployment script:
 npm run deploy
 ```
 
-This will compile the smart contracts, deploy the `sum.ts` smart contract, and execute the `caller.ts` smart contract.
+This will compile the smart contracts, deploy the `sum.ts` smart contract, and execute the `run.ts` smart contract.
 
 ## Build
 
