@@ -1,5 +1,0 @@
-node_modules
-build
-.env
-simulator/massa-sc-tester
-simulator/massa-sc-tester.exe

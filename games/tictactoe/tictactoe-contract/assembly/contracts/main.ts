@@ -1,4 +1,6 @@
-import { generateEvent, fileToByteArray, createSC, call, Address, transferCoins, Args } from "@massalabs/massa-as-sdk";
+import { generateEvent, fileToByteArray, createSC, call, Address, transferCoins } from "@massalabs/massa-as-sdk";
+import { Args } from '@massalabs/as-types';
+
 
 function createContract(): Address {
     const bytes: StaticArray<u8> = fileToByteArray('./build/smart-contract.wasm');
@@ -10,6 +12,6 @@ function createContract(): Address {
 export function main(_args: StaticArray<u8>): void {
     const sc_address = createContract();
     call(sc_address, "initialize", new Args(), 0);
-    generateEvent("Created tictactoe smart-contract at:" + sc_address.toByteString());
+    generateEvent("Created tictactoe smart-contract at:" + sc_address.toString());
     return;
 }
