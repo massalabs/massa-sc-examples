@@ -13,9 +13,9 @@ function add(a: u32, b: u32): u32 {
 /**
  * This function sums 2 u32 and returns the result.
  * It also generates an event resuming the operation and save the last result in the blockchain.
- * 
+ *
  * @param binaryArgs - the 2 u32 we want to sum serialized in bytes
- * 
+ *
  * @returns the sum of the 2 u32 serialized in bytes
  */
 export function sum(binaryArgs: StaticArray<u8>): StaticArray<u8> {

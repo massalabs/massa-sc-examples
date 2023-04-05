@@ -1,6 +1,10 @@
-import { Address, Storage, call, callerHasWriteAccess } from '@massalabs/massa-as-sdk';
+import {
+  Address,
+  Storage,
+  call,
+  callerHasWriteAccess,
+} from '@massalabs/massa-as-sdk';
 import { NoArg, Args } from '@massalabs/as-types';
-
 
 /**
  * This function is meant to be called only one time: when the contract is deployed.
@@ -14,7 +18,10 @@ export function constructor(sumAddress: StaticArray<u8>): StaticArray<u8> {
     return [];
   }
   const args = new Args(sumAddress);
-  Storage.set('address', args.nextString().expect('Argument address is missing or invalid'));
+  Storage.set(
+    'address',
+    args.nextString().expect('Argument address is missing or invalid'),
+  );
   main([]);
   return [];
 }
@@ -25,11 +32,9 @@ export function constructor(sumAddress: StaticArray<u8>): StaticArray<u8> {
  */
 export function main(_: StaticArray<u8>): StaticArray<u8> {
   const address = new Address(Storage.get('address'));
-  const a:i32 = 2;
-  const b:i32 = 3; 
-  const values = new Args()
-  .add(a)
-  .add(b);
+  const a: i32 = 2;
+  const b: i32 = 3;
+  const values = new Args().add(a).add(b);
   call(address, 'sum', values, 5000000);
   return [];
 }

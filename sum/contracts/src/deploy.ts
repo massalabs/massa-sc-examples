@@ -6,7 +6,6 @@ import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
 import { Args, IEvent, fromMAS } from '@massalabs/massa-web3';
 import { NoArg } from '@massalabs/as-types';
 
-
 dotenv.config();
 
 const publicApi = process.env.JSON_RPC_URL_PUBLIC;
@@ -40,7 +39,10 @@ const __dirname = path.dirname(path.dirname(__filename));
     true,
   );
   const data = (deployed.events?.find((e) => e.data) as IEvent).data;
-  const address = data.split('Contract deployed at address: ')[1].trim().replace(' ', '');
+  const address = data
+    .split('Contract deployed at address: ')[1]
+    .trim()
+    .replace(' ', '');
 
   await deploySC(
     publicApi,
@@ -57,8 +59,4 @@ const __dirname = path.dirname(path.dirname(__filename));
     true,
   );
   process.exit(0);
-
 })();
-
-
-
