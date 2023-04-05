@@ -43,7 +43,7 @@ function App() {
 
       <Form>
         <Form.Group className="mb-3" controlId="formIntA">
-          <Form.Label>Integer B</Form.Label>
+          <Form.Label>Integer A</Form.Label>
           <Form.Control
             type="number"
             min="0"
