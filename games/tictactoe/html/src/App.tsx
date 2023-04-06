@@ -4,29 +4,31 @@ import {
   INodeStatus,
   IAccount,
   DefaultProviderUrls,
+  IDatastoreEntryInput,
+  IDatastoreEntry,
+  Args
 } from "@massalabs/massa-web3";
 
 const baseAccount = {
-  publicKey: "5Jwx18K2JXacFoZcPmTWKFgdG1mSdkpBAUnwiyEqsVP9LKyNxR",
-  privateKey: "2SPTTLK6Vgk5zmZEkokqC3wgpKgKpyV5Pu3uncEGawoGyd4yzC",
-  address: "9mvJfA4761u1qT8QwSWcJ4gTDaFP5iSgjQzKMaqTbrWCFo1QM",
+  publicKey: "P12f2K8YoeqZCzWASs2wktFYYGtaHGYaeSukFBrgEnw9d3J1WsMZ",
+  secretKey: "S17Zw8KN3QSzsWGof7PTgkTvyGYbZLNMZmjC4urr6ZziLonThqk",
+  address: "A1qZL4iJYRDRo9EtDauJuWNj56FNXWhtKinv15GEakraBa91dEA",
 } as IAccount;
 
 type TNodeStatus = INodeStatus | null;
 
-const web3Client = ClientFactory.createDefaultClient(
-  DefaultProviderUrls.LABNET,
-  false,
-  baseAccount
-);
-
-const sc_addr = "uponGHM3vUwVymTrjib5XGnez24FnGU1nJnyMRYXNcPwPH8ZU"
+const sc_addr = "A1Lvu1hvWXRzHh5Ci1Ke4GR4Kf9R1a1oCSYuHSkSR64D7c5CuzV"
 
 function NodeInfo() {
   const [nodeStatus, setNodeStatus] = useState<TNodeStatus>(null);
 
   const getNodeStatusAsync = async () => {
     try {
+      let web3Client = await ClientFactory.createDefaultClient(
+        DefaultProviderUrls.TESTNET,
+        false,
+        baseAccount
+      );
       const nodeStatus: INodeStatus = await web3Client
         .publicApi()
         .getNodeStatus();
@@ -66,146 +68,144 @@ function Square(props: any) {
   );
 }
 
-class Board extends React.Component<any, any> {
-  interval: NodeJS.Timer | undefined;
+function Board() {
+  let [squares, setSquares] = React.useState(Array(9).fill(null));
+  let [xIsNext, setXIsNext] = React.useState(true);
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: true,
-    };
-  }
+  useEffect(() => {
+    const interval = setInterval(() => refresh(), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  componentDidMount() {
-    this.interval = setInterval(() => this.refresh(), 1000);
-  }
+  function refresh() {
+    ClientFactory.createDefaultClient(
+      DefaultProviderUrls.TESTNET,
+      false,
+      baseAccount
+    ).then(function (web3Client) {
+      web3Client.publicApi().getDatastoreEntries([{ address: sc_addr, key: Array.from(Buffer.from("gameState", "utf16le")) } as IDatastoreEntryInput, { address: sc_addr, key: Array.from(Buffer.from("gameWinner", "utf16le")) } as IDatastoreEntryInput])
+        .then(function (res: IDatastoreEntry[]) {
+          if (res && res[0]) {
+            let candidate = Buffer.from(res[0].candidate_value!).toString("utf16le");
+            let gameState = candidate.split(',')
 
-  componentWillUnmount() {
-    if (this.interval) clearInterval(this.interval);
-  }
-
-  refresh() {
-    web3Client.smartContracts().getDatastoreEntry(sc_addr, "gameState").then((res) => {
-      if (res) {
-        let gameState = res.candidate.split(',')
-
-        let xIsNext = true;
-        let squares = Array(9).fill(null);
-        for(let vi= 0 ; vi < gameState.length ; ++vi) {
-          if (gameState[vi] === 'n') {
-            squares[vi] = null;
+            let xIsNext = true;
+            let squares = Array(9).fill(null);
+            for (let vi = 0; vi < gameState.length; ++vi) {
+              if (gameState[vi] === 'n') {
+                squares[vi] = null;
+              }
+              else {
+                squares[vi] = gameState[vi];
+                xIsNext = !xIsNext;
+              }
+            }
+            setSquares(squares);
+            setXIsNext(xIsNext);
           }
-          else {
-            squares[vi] = gameState[vi];
-            xIsNext = !xIsNext;
-          }
-        }
-        this.setState({
-          squares: squares,
-          xIsNext: xIsNext,
         });
-      }
     });
   }
 
-  handleClick(i: number) {
-    var call_params_str = `{"index":${i}}`
-
-    web3Client.smartContracts().callSmartContract(
-      {
+  function handleClick(i: number) {
+    var call_params = new Args();
+    call_params.addU32(BigInt(i));
+    ClientFactory.createDefaultClient(
+      DefaultProviderUrls.TESTNET,
+      false,
+      baseAccount
+    ).then(function (web3Client) {
+      web3Client.smartContracts().callSmartContract(
+        {
           /// storage fee for taking place in books
           fee: 0,
           /// The maximum amount of gas that the execution of the contract is allowed to cost.
           maxGas: 70000000,
-          /// The price per unit of gas that the caller is willing to pay for the execution.
-          gasPrice: 0,
-          /// Extra coins that are spent from the caller's parallel balance and transferred to the target
-          parallelCoins: 0,
-          /// Extra coins that are spent from the caller's sequential balance and transferred to the target
-          sequentialCoins: 0,
+          /// Extra coins that are spent from the caller's balance and transferred to the target
+          coins: 0,
           /// Target smart contract address
           targetAddress: sc_addr,
           /// Target function name. No function is called if empty.
           functionName: "play",
           /// Parameter to pass to the target function
-          parameter: call_params_str
-      },
-      baseAccount
-    ).then(function(txid) {
-        console.log("handleClick ", call_params_str, txid);
+          parameter: call_params.serialize()
+        },
+        baseAccount
+      ).then(function (txid: any) {
+        console.log("handleClick ", call_params, txid);
+      });
     });
   }
 
-  reset() {
-    web3Client.smartContracts().callSmartContract(
-      {
+  function reset() {
+    ClientFactory.createDefaultClient(
+      DefaultProviderUrls.TESTNET,
+      false,
+      baseAccount
+    ).then(function (web3Client) {
+      web3Client.smartContracts().callSmartContract(
+        {
           /// storage fee for taking place in books
           fee: 0,
           /// The maximum amount of gas that the execution of the contract is allowed to cost.
           maxGas: 70000000,
-          /// The price per unit of gas that the caller is willing to pay for the execution.
-          gasPrice: 0,
-          /// Extra coins that are spent from the caller's parallel balance and transferred to the target
-          parallelCoins: 0,
-          /// Extra coins that are spent from the caller's sequential balance and transferred to the target
-          sequentialCoins: 0,
+          /// Extra coins that are spent from the caller's balance and transferred to the target
+          coins: 0,
           /// Target smart contract address
           targetAddress: sc_addr,
           /// Target function name. No function is called if empty.
           functionName: "initialize",
           /// Parameter to pass to the target function
-          parameter: ""
-      },
-      baseAccount
-    ).then(function(txid) {
+          parameter: new Args().serialize()
+        },
+        baseAccount
+      ).then(function (txid) {
         console.log("handleClick ", "", txid);
+      });
     });
   }
 
-  renderSquare(i: number) {
+  function renderSquare(i: number) {
     return (
       <Square
-        value={this.state.squares[i]}
-        onClick={() => this.handleClick(i)}
+        value={squares[i]}
+        onClick={() => handleClick(i)}
         squareIndex={i}
       />
     );
   }
 
-  render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
-    if (winner) {
-      status = "Winner: " + winner;
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
-    }
-
-    return (
-      <div>
-        <div className="status">{status}</div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-        <div className="restart-button">
-        <button onClick={() => this.reset()}>Restart Game</button>
-        </div>
-      </div>
-    );
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
   }
+
+  return (
+    <div>
+      <div className="status">{status}</div>
+      <div className="board-row">
+        {renderSquare(0)}
+        {renderSquare(1)}
+        {renderSquare(2)}
+      </div>
+      <div className="board-row">
+        {renderSquare(3)}
+        {renderSquare(4)}
+        {renderSquare(5)}
+      </div>
+      <div className="board-row">
+        {renderSquare(6)}
+        {renderSquare(7)}
+        {renderSquare(8)}
+      </div>
+      <div className="restart-button">
+        <button onClick={() => reset()}>Restart Game</button>
+      </div>
+    </div>
+  );
 }
 
 class Game extends React.Component {
@@ -214,9 +214,6 @@ class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Board />
-        </div>
-        <div className="node-info">
-          <NodeInfo />
         </div>
       </div>
     );

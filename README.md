@@ -1,10 +1,37 @@
-# massa-sc-examples
+# Massa Smart Contract Examples
+This repository contains examples of smart contracts developed for the Massa blockchain. The examples illustrate various functionalities of smart contracts, ranging from simple synchronous operations to more complex asynchronous operations and even autonomous contracts.
 
-This repository contains examples of smart-contracts Massa
+## Projects
+The following projects are included in this repository:
 
-- [async-calls](https://github.com/massalabs/massa-sc-examples/tree/main/async-calls) contains a basic examples of asynchronous smart-contract.
-- [dns](https://github.com/massalabs/massa-sc-examples/tree/main/dns) contains an example implementation [Ethereum Name Service](https://ens.domains/) for Massa.
-- [helloworld](https://github.com/massalabs/massa-sc-examples/tree/main/helloworld) contains the timeless helloworld example.
-- [mrc](https://github.com/massalabs/massa-sc-examples/tree/main/mrc) contains an example implementation of a MRC20 for Massa (equivalent of Ethereum's [ERC20](https://fr.wikipedia.org/wiki/ERC20)).
-- [website](https://github.com/massalabs/massa-sc-examples/tree/main/website) contains an example of how to use Massa's smart-contract system to host a decentralized website
-- [swap](https://github.com/massalabs/massa-sc-examples/tree/main/swap) (*WIP*) contains a swap implementation.
+#### [HelloWorld](helloworld/README.md)
+This project provides the timeless "Hello World" example.
+
+### Potentially Non-Functional Projects
+The following projects may not be functional or up to date, but contributions to improve them are welcome:
+
+#### [Age](age/README.md)
+This project provides a basic example of a simple smart contract with a front-end implemented in plain JavaScript and ReactJS.
+
+#### [Async-Calls](async-call/README.md)
+This project provides basic examples of asynchronous smart contracts.
+
+#### [Sum](sum/README.md)
+This project provides an example of a decentralized application for calculating the sum using Thyra, a blockchain platform built on top of Massa.
+
+#### [Tic-Tac-Toe](games/tictactoe/README.md)
+This project provides a fully functional Tic-Tac-Toe game, with both a smart contract and a user interface built in ReactJS. The game can be deployed to Thyra.
+
+#### [Ticker](ticker/README.md)
+This project provides a simple use case of an autonomous smart contract that simulates an oracle on-chain.
+
+If you'd like to contribute to one of these projects, please read the [CONTRIBUTING file](CONTRIBUTING.md) and submit a pull request.
+
+## How to use
+Each project contains detailed instructions on how to run the smart contract and user interface. Simply navigate to the project folder of your choice and follow the instructions provided in the README file.
+
+## Contributions
+We welcome contributions to this repository, including bug fixes, improvements, and new examples. Please see the [CONTRIBUTING file](CONTRIBUTING.md) for more information on how to contribute.
+
+## License
+This repository is licensed under the [MIT License](LICENSE).

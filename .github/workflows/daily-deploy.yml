@@ -7,10 +7,10 @@ on:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy-blog:
+  deploy-helloworld:
     defaults:
       run:
-        working-directory: blog_v2
+        working-directory: helloworld
 
     runs-on: ubuntu-latest
 
@@ -23,17 +23,17 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./blog_v2/package-lock.json
+          cache-dependency-path: ./helloworld/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "`Blog initiated`"; then
-            echo "Blog initiated event received."
+          if npm run deploy |& grep -q "'Hello, World!'"; then
+            echo "Hello world event received."
           else
-            echo "No Blog initiated event."
+            echo "No hello world event."
             exit 1
           fi
         env:
