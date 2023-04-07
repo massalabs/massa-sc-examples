@@ -46,7 +46,7 @@ export function deletePost(binaryArgs: StaticArray<u8>): void {
 }
 
 // This function is used within the contract to generate the key of a post that will be stored in the storage
-function blogKey(postIndex: string): string {
+export function blogKey(postIndex: string): string {
   return "POST_" + postIndex;
 }
 
