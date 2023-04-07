@@ -49,7 +49,7 @@ describe('Post function with valid post', () => {
     main.post(args.serialize());
     const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
     expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
-    const storedPost = Storage.get(main._blogKey(updatedNBlogPosts.toString()));
+    const storedPost = Storage.get<string>(main._blogKey(updatedNBlogPosts.toString()));
     expect(storedPost).toBe("First Post");
   });
 });
