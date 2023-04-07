@@ -23,7 +23,7 @@ describe('main function', () => {
 // Testing the _blogKey function with a valid post index
 describe('Blog Key', () => {
   test('blogkey', () => {
-    expect<string>(main._blogKey('1')).toBe("POST_1");
+    expect<string>(main.blogKey('1')).toBe("POST_1");
   });
 });
 
@@ -49,7 +49,7 @@ describe('Post function with valid post', () => {
     main.post(args.serialize());
     const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
     expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
-    const storedPost = Storage.get<string>(main._blogKey(updatedNBlogPosts.toString()));
+    const storedPost = Storage.get<string>(main.blogKey(updatedNBlogPosts.toString()));
     expect(storedPost).toBe("First Post");
   });
 });
@@ -58,11 +58,11 @@ describe('Post function with valid post', () => {
 describe('Delete Post function with valid post index', () => {
   test('delete existing post', () => {
     // Using a valid post index : 1
-    const postKey = main._blogKey('1');
+    const postKey = main.blogKey('1');
     const args = new Args();
     args.add("1" as string);
     main.deletePost(args.serialize());
-    const deletedPost = Storage.get<i32>(postKey);
+    const deletedPost = Storage.get<string>(postKey);
     expect<string>(deletedPost).toBe(""); // Check if the post has been deleted
   });
 });

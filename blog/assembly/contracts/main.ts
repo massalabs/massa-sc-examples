@@ -30,7 +30,7 @@ export function post(binaryArgs: StaticArray<u8>): void {
   nBlogPosts += 1;
   // Store the post in the storage of the contract with the key POST_postIndex
   // The keys will have the following syntaxes: POST_1.0, POST_2.0, POST_3.0, etc.
-  Storage.set(_blogKey(nBlogPosts.toString()), post);
+  Storage.set(blogKey(nBlogPosts.toString()), post);
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
   Storage.set("N_BLOG_POSTS", nBlogPosts.toString());
 }
@@ -42,11 +42,11 @@ export function deletePost(binaryArgs: StaticArray<u8>): void {
     .nextString()
     .expect('Post index argument is missing or invalid');
     // Delete the post from the storage of the contract by setting its value to an empty string
-  Storage.set(_blogKey(postIndex), "");
+  Storage.set(blogKey(postIndex), "");
 }
 
 // This function is used within the contract to generate the key of a post that will be stored in the storage
-function _blogKey(postIndex: string): string {
+function blogKey(postIndex: string): string {
   return "POST_" + postIndex;
 }
 
