@@ -19,7 +19,6 @@ describe('main function', () => {
   });
 });
 
-
 // Testing the _blogKey function with a valid post index
 describe('Blog Key', () => {
   test('blogkey', () => {
