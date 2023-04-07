@@ -1,5 +1,5 @@
 import { NoArg, Args } from '@massalabs/as-types';
-import * as main from '../blog/assembly/contracts/main';
+import * as main from '../contracts/main';
 import { Storage } from '@massalabs/massa-as-sdk';
 
 // The describe function is used to group related tests together.
@@ -18,6 +18,7 @@ describe('main function', () => {
     ).not.toThrow();
   });
 });
+
 
 // Testing the _blogKey function with a valid post index
 describe('Blog Key', () => {
