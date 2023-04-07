@@ -1,5 +1,5 @@
 import { NoArg, Args } from '@massalabs/as-types';
-import * as main from '../contracts/main';
+import * as main from '../blog/assembly/contracts/main';
 import { Storage } from '@massalabs/massa-as-sdk';
 
 // The describe function is used to group related tests together.
@@ -23,12 +23,11 @@ describe('main function', () => {
 // Testing the _blogKey function with a valid post index
 describe('Blog Key', () => {
   test('blogkey', () => {
-    expect(main._blogKey('1')).toBe("POST_1");
+    expect<string>(main._blogKey('1')).toBe("POST_1");
   });
 });
 
 // Testing the post function with an invalid post
-
 describe('Post function with invalid post', () => {
   test('post', () => {
     expect(() => {
@@ -46,29 +45,25 @@ describe('Post function with valid post', () => {
   test('post', () => {
     const args = new Args();
     args.add("First Post" as string); 
-
     const initialNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
     main.post(args.serialize());
     const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
-
-    expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
+    expect<f64>(updatedNBlogPosts).toBe(initialNBlogPosts + 1);   
     const storedPost = Storage.get(main._blogKey(updatedNBlogPosts.toString()));
-    expect(storedPost).toBe("First Post");
+    expect<string>(storedPost).toBe("First Post");
   });
 });
 
 
-// Testing the delete post function with a valid post index
 describe('Delete Post function with valid post index', () => {
   test('delete existing post', () => {
     // Using a valid post index : 1
     const postKey = main._blogKey('1');
-
     const args = new Args();
     args.add("1" as string);
     main.deletePost(args.serialize());
-    
-    expect(Storage.get(postKey)).toBe(""); // Check if the post has been deleted
+    const deletedPost = Storage.get(postKey);
+    expect<string>(deletedPost).toBe(""); // Check if the post has been deleted
   });
 });
 
