@@ -62,7 +62,7 @@ describe('Delete Post function with valid post index', () => {
     const args = new Args();
     args.add("1" as string);
     main.deletePost(args.serialize());
-    const deletedPost = Storage.get<string>(postKey);
+    const deletedPost = Storage.get<i32>(postKey);
     expect<string>(deletedPost).toBe(""); // Check if the post has been deleted
   });
 });
