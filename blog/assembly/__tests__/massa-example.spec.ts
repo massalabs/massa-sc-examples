@@ -1,5 +1,6 @@
-import { NoArg } from '@massalabs/as-types';
-import { constructor } from '../contracts/main';
+import { NoArg, Args } from '@massalabs/as-types';
+import * as main from '../contracts/main';
+import { Storage } from '@massalabs/massa-as-sdk';
 
 // The describe function is used to group related tests together.
 // In this case, we're grouping tests related to the `main` function.
@@ -12,8 +13,72 @@ describe('main function', () => {
     expect(
       // Using the `() => void` function type is mandatory according to the `as-pect` documentation.
       () => {
-        constructor(NoArg.serialize());
+        main.constructor(NoArg.serialize());
       },
     ).not.toThrow();
+  });
+});
+
+
+// Testing the _blogKey function with a valid post index
+describe('Blog Key', () => {
+  test('blogkey', () => {
+    expect(main._blogKey('1')).toBe("POST_1");
+  });
+});
+
+// Testing the post function with an invalid post
+
+describe('Post function with invalid post', () => {
+  test('post', () => {
+    expect(() => {
+      main.post(new Args()
+      // the function expects a post index as a string, but we're passing a number
+        .add(1 as u32)
+        .serialize(),);
+    }).toThrow("Argument invalid");
+  });
+});
+
+
+// Testing the post function with a valid post : First Post
+describe('Post function with valid post', () => {
+  test('post', () => {
+    const args = new Args();
+    args.add("First Post" as string); 
+
+    const initialNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
+    main.post(args.serialize());
+    const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
+
+    expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
+    const storedPost = Storage.get(main._blogKey(updatedNBlogPosts.toString()));
+    expect(storedPost).toBe("First Post");
+  });
+});
+
+
+// Testing the delete post function with a valid post index
+describe('Delete Post function with valid post index', () => {
+  test('delete existing post', () => {
+    // Using a valid post index : 1
+    const postKey = main._blogKey('1');
+
+    const args = new Args();
+    args.add("1" as string);
+    main.deletePost(args.serialize());
+    
+    expect(Storage.get(postKey)).toBe(""); // Check if the post has been deleted
+  });
+});
+
+describe('Delete Post function with invalid post index', () => {
+  test('delete existing post', () => {
+    expect(() => {
+      main.deletePost(new Args()
+      // the function expects a post index as a string, but we're passing a number
+        .add(1 as u32)
+        .serialize(),);
+    }).toThrow("Argument invalid");
   });
 });
