@@ -48,9 +48,9 @@ describe('Post function with valid post', () => {
     const initialNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
     main.post(args.serialize());
     const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
-    expect<f64>(updatedNBlogPosts).toBe(initialNBlogPosts + 1);   
+    expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
     const storedPost = Storage.get(main._blogKey(updatedNBlogPosts.toString()));
-    expect<string>(storedPost).toBe("First Post");
+    expect(storedPost).toBe("First Post");
   });
 });
 
@@ -63,7 +63,7 @@ describe('Delete Post function with valid post index', () => {
     args.add("1" as string);
     main.deletePost(args.serialize());
     const deletedPost = Storage.get(postKey);
-    expect<string>(deletedPost).toBe(""); // Check if the post has been deleted
+    expect(deletedPost).toBe(""); // Check if the post has been deleted
   });
 });
 
