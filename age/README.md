@@ -1,6 +1,6 @@
 # Age Smart Contract
 
-This is a simple smart contract project that demonstrates how to make a simple mutli-function smart contract using massa tools.
+This is a simple smart contract project that demonstrates how to make a simple multi-function smart contract using massa tools.
 
 ## Installation
 To use this project, you'll need to have Node.js >= v16.0  and NPM installed on your system. You can download Node.js from the official website [here](https://nodejs.org/en/download).
