@@ -1,4 +1,4 @@
-import { Storage, callerHasWriteAccess, generateEvent } from '@massalabs/massa-as-sdk';
+import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
 
 /**
@@ -9,14 +9,14 @@ import { Args } from '@massalabs/as-types';
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
-  if (!callerHasWriteAccess()) {
+  if (!Context.isDeployingContract()) {
     return [];
   }
   const nBlogPosts = 0;
   // Set the initial value of N_BLOG_POSTS to 0 in the storage of the contract
   Storage.set("N_BLOG_POSTS", nBlogPosts.toString());
   // This function is used to emit an event to the blockchain
-  generateEvent(`Blog initiated`);
+  generateEvent('Blog initiated');
   return [];
 }
 
