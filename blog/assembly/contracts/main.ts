@@ -1,4 +1,4 @@
-import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
+import { Storage, callerHasWriteAccess, generateEvent } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
 
 /**
@@ -9,7 +9,7 @@ import { Args } from '@massalabs/as-types';
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
-  if (!Context.isDeployingContract()) {
+  if (!callerHasWriteAccess()) {
     return [];
   }
   const nBlogPosts = 0;
