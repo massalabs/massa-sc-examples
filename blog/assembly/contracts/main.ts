@@ -20,25 +20,25 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   return [];
 }
 
-export function post(binaryArgs: StaticArray<u8>): void {
-  const argsDeser = new Args(binaryArgs);
+export function post(_args: StaticArray<u8>): void {
+  const args = new Args(_args);
   // Get the post from the arguments and check if it is valid (not null)
-  const post = argsDeser
+  const post = args
     .nextString()
     .expect('Post argument is missing or invalid');
-  let nBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
-  nBlogPosts += 1;
+  let numberOfPosts = parseInt(Storage.get("N_BLOG_POSTS"));
+  numberOfPosts += 1;
   // Store the post in the storage of the contract with the key POST_postIndex
   // The keys will have the following syntaxes: POST_1.0, POST_2.0, POST_3.0, etc.
-  Storage.set(blogKey(nBlogPosts.toString()), post);
+  Storage.set(blogKey(numberOfPosts.toString()), post);
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
-  Storage.set("N_BLOG_POSTS", nBlogPosts.toString());
+  Storage.set("N_BLOG_POSTS", numberOfPosts.toString());
 }
 
-export function deletePost(binaryArgs: StaticArray<u8>): void {
-  const argsDeser = new Args(binaryArgs);
+export function deletePost(_args: StaticArray<u8>): void {
+  const args = new Args(_args);
   // Get the post index from the arguments and check if it is valid, we expect a string of the form "1.0" or "2.0", etc.
-  const postIndex = argsDeser
+  const postIndex = args
     .nextString()
     .expect('Post index argument is missing or invalid');
     // Delete the post from the storage of the contract by setting its value to an empty string
