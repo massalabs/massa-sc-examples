@@ -44,11 +44,13 @@ describe('Post function with invalid post', () => {
 describe('Post function with valid post', () => {
   test('post', () => {
     const args = new Args();
-    args.add("First Post" as string); 
-    const initialNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
+    args.add("First Post" as string);
+
     main.post(args.serialize());
-    const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS"));
-    expect(updatedNBlogPosts).toBe(initialNBlogPosts + 1);
+
+    const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
+    expect(updatedNBlogPosts).toBe(1);
+    // Check if the post has been properly stored in the storage of the contract
     const storedPost = Storage.get<string>(main.blogKey(updatedNBlogPosts.toString()));
     expect(storedPost).toBe("First Post");
   });

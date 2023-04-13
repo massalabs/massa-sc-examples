@@ -1,4 +1,4 @@
-import { Storage, callerHasWriteAccess, generateEvent } from '@massalabs/massa-as-sdk';
+import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
 
 /**
@@ -9,7 +9,7 @@ import { Args } from '@massalabs/as-types';
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
-  if (!callerHasWriteAccess()) {
+  if (!Context.isDeployingContract()) {
     return [];
   }
   const nBlogPosts = 0;
@@ -26,10 +26,14 @@ export function post(_args: StaticArray<u8>): void {
   const post = args
     .nextString()
     .expect('Post argument is missing or invalid');
-  let numberOfPosts = parseInt(Storage.get("N_BLOG_POSTS"));
+
+  let numberOfPosts = 0;
+  if (Storage.get<string>("N_BLOG_POSTS") !== "") {
+    numberOfPosts = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
+  }
   numberOfPosts += 1;
   // Store the post in the storage of the contract with the key POST_postIndex
-  // The keys will have the following syntaxes: POST_1.0, POST_2.0, POST_3.0, etc.
+  // The keys will have the following syntaxes: POST_1, POST_2, POST_3, etc.
   Storage.set(blogKey(numberOfPosts.toString()), post);
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
   Storage.set("N_BLOG_POSTS", numberOfPosts.toString());
@@ -49,5 +53,3 @@ export function deletePost(_args: StaticArray<u8>): void {
 export function blogKey(postIndex: string): string {
   return "POST_" + postIndex;
 }
-
-
