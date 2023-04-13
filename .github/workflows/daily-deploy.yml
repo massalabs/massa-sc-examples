@@ -4,23 +4,25 @@ on:
   push:
   workflow_dispatch:
   schedule:
-    - cron: "0 7 * * *" 
+    - cron: "0 7 * * *"
 
 jobs:
   deploy:
-    strategy:
-      matrix:
-        include:
-          - project_name: blog
-            project_event: "Blog initiated"
-          - project_name: helloworld
-            project_event: "Hello, World!"
-
     defaults:
       run:
-        working-directory: ${{ matrix.project_name }}
+        working-directory: ${{ matrix.project }}
 
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: ['helloworld', 'blog']
+        event: ["'Hello, World!'", "`Blog initiated`"]
+        include:
+          - project: helloworld
+            event: "'Hello, World!'"
+          - project: blog
+            event: "`Blog initiated`"
 
     steps:
       - name: Checkout code
@@ -31,17 +33,17 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./${{ matrix.project_name }}/package-lock.json
+          cache-dependency-path: ./${{ matrix.project }}/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "${{ matrix.project_event }}"; then
-            echo "${{ matrix.project_event }} event received."
+          if npm run deploy |& grep -q "${{ matrix.event }}"; then
+            echo "${{ matrix.project }} event received."
           else
-            echo "No ${{ matrix.project_event }} event."
+            echo "No ${{ matrix.project }} event."
             exit 1
           fi
         env:
