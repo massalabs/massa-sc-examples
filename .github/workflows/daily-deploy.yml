@@ -16,13 +16,11 @@ jobs:
 
     strategy:
       matrix:
-        project: ['helloworld', 'blog']
-        event: ["'Hello, World!'", "`Blog initiated`"]
         include:
           - project: helloworld
             event: "'Hello, World!'"
           - project: blog
-            event: "`Blog initiated`"
+            event: "'Blog initiated'"
 
     steps:
       - name: Checkout code
