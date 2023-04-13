@@ -1,4 +1,4 @@
-name: Daily Deploy
+name: Daily Deploy 
 
 on:
   push:
