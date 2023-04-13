@@ -63,7 +63,7 @@ describe('getAge tests', () => {
 });
 
 describe('constructor tests', () => {
-  test('test access control denied', () => {
+  test('Storage correctly initialized', () => {
     const result = constructor(
       new Args().add('A31242RFFFZ32R23F1SDF').serialize(),
     );
@@ -72,6 +72,6 @@ describe('constructor tests', () => {
 
     const result2 = getAge(new Args().add('alice').serialize());
 
-    expect(result2).toStrictEqual([]);
+    expect(result2).toStrictEqual(new Args().add(1 as u32).serialize());
   });
 });
