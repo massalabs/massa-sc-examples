@@ -6,13 +6,19 @@
  *
  * The contract has three functions:
  *
- * - The constructor sets up the storage by creating an initial entry for a person with a default age value. This function is always called once on contract deployment.
+ * - The constructor sets up the storage by creating an initial entry for a person with a default age value.
+ *  This function is always called once on contract deployment.
  *
- * - The change_age function allows you to update a person's age by providing their name and a new age value. If the entry for the given name does not exist, the person is created. This function generates an event that indicates the changes that are made.
+ * - The change_age function allows you to update a person's age by providing their name and a new age value.
+ *  If the entry for the given name does not exist, the person is created.
+ *  This function generates an event that indicates the changes that are made.
  *
- * - The get_age function retrieves the age of a person by their name. If the entry for the given name does not exist, the execution is aborted. This function returns the serialized 'age' found, and generates an event that indicates the retrieval.
+ * - The get_age function retrieves the age of a person by their name.
+ *  If the entry for the given name does not exist, the execution is aborted.
+ *  This function returns the serialized 'age' found, and generates an event that indicates the retrieval.
  *
- * The smart contract interacts with the Massa blockchain using the massa-as-sdk, which provides functions for storage, access control, event generation and more.
+ * The smart contract interacts with the Massa blockchain using the massa-as-sdk,
+ * which provides functions for storage, access control, event generation and more.
  * @see [massa-as-sdk](https://github.com/massalabs/massa-as-sdk)
  *
  */
@@ -36,17 +42,18 @@ import {
  * @returns none
  *
  */
-
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
-  if (!callerHasWriteAccess())
+  if (!callerHasWriteAccess()) {
     // First we check if the caller (in this case you when you deploy the contract) has write access on storage.
     return [];
+  }
 
   let name = new Args().add('alice'); // We create our 'name' key for the person's entry.
   let age = new Args().add(1 as u32); // We create our 'age' value for the person's entry.
 
   Storage.set(name.serialize(), age.serialize()); // Here we apply our key/value pair to the storage.
-  // The Storage only stores bytes, so we need to serialize our arguments before storing them (that's why we are using 'Args' as container).
+  // The Storage only stores bytes.
+  // We need to serialize our arguments before storing them (that's why we are using 'Args' as container).
   return [];
 }
 
@@ -62,11 +69,12 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
  * @returns none
  *
  */
-export function change_age(_args: StaticArray<u8>): StaticArray<u8> {
+export function changeAge(_args: StaticArray<u8>): StaticArray<u8> {
   let args = new Args(_args); // First we deserialize our arguments.
 
   // We use 'next[Type]()' to retrieve the next argument in the serialized arguments.
-  let name = args.nextString().expect('Missing name argument.'); // We use 'expect()' to check if the argument exists, if not we abort the execution.
+  let name = args.nextString().expect('Missing name argument.');
+  // We use 'expect()' to check if the argument exists, if not we abort the execution.
   let age = args.nextU32().expect('Missing age argument.');
 
   // Then we create our key/value pair and store it.
@@ -75,7 +83,8 @@ export function change_age(_args: StaticArray<u8>): StaticArray<u8> {
 
   Storage.set(nameEncoded, ageEncoded);
 
-  generateEvent("Changed age of '" + name + "' to '" + age.toString() + "'"); // Here we generate an event that indicates the changes that are made.;
+  // Here we generate an event that indicates the changes that are made.
+  generateEvent("Changed age of '" + name + "' to '" + age.toString() + "'");
   return [];
 }
 
@@ -85,24 +94,25 @@ export function change_age(_args: StaticArray<u8>): StaticArray<u8> {
  * @remarks
  *  If the entry doesn't exist the execution is aborted.
  *
- * @param args The serialized arguments that should contain 'name'.
+ * @param args - The serialized arguments that should contain 'name'.
  *
  * @returns The serialized 'age' found.
  *
  */
-export function get_age(_args: StaticArray<u8>): StaticArray<u8> {
+export function getAge(_args: StaticArray<u8>): StaticArray<u8> {
   let args = new Args(_args); // First we deserialize our arguments.
 
-  let name = args.nextString().expect('Missing name argument.'); // We use 'expect()' to check if the argument exists, if not we abort the execution.
+  // We use 'expect()' to check if the argument exists, if not we abort the execution.
+  let name = args.nextString().expect('Missing name argument.');
   // Then we create our encoded key from the function's argument.
   let nameEncoded = new Args().add(name).serialize();
 
   if (Storage.has(nameEncoded)) {
     // We check if the entry exists.
     let age = Storage.get(nameEncoded);
-    // We get the associated value and return it serialized.
-    // Always serialize your arguments before returning them !
-    return new Args().add(age).serialize();
+    // We get the associated value and return it.
+    // Since the return type of 'Storage.get' is 'StaticArray<u8>' it is already serialized.
+    return age;
   } else {
     // If the entry doesn't exist we abort the execution.
     abort("No such person's age is stored.");
