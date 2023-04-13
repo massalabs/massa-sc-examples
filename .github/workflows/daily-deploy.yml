@@ -38,7 +38,7 @@ jobs:
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "'${{ matrix.project.event }}'"; then
+          if npm run deploy |& grep -q "${{ matrix.project.event }}"; then
             echo "${{ matrix.project.event }} event received."
           else
             echo "No ${{ matrix.project.event }} event."
