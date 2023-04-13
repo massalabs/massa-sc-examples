@@ -31,11 +31,8 @@ import {
 
 /**
  * This function is the constructor, it is always called once on contract deployment.
- * In this case, the constructor initiate's the store by adding a 'person' entry with a default 'age' value.
- *
- * @remarks
- * If the entry doesn't exist the person is created.
- * It also generates an event that indicates the changes that are made.
+ * In this case, the constructor is adding a person
+ * named 'alice' with an age of 1 as default first entry in the Storage.
  *
  * @param args - The serialized arguments (unused).
  *
