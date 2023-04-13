@@ -14,9 +14,8 @@ git clone git@github.com:massalabs/massa-sc-examples.git
 After cloning the project, navigate to the project directory, install and update the required dependencies using NPM:
 
 ```bash
-cd massa-sc-examples/helloworld
+cd massa-sc-examples/age/smart-contract
 npm install
-npm update @massalabs/as-transformer @massalabs/as-types @massalabs/massa-as-sdk @massalabs/massa-sc-compiler @massalabs/massa-sc-deployer @massalabs/massa-web3
 ```
 
 This will install the required packages specified in the package.json file, including massa-sc-compiler, massa-sc-deployer, massa-as-sdk.
@@ -32,6 +31,7 @@ npm run build
 
 The wasm file will be generated in the build directory.
 
+
 ### Deploying
 Before deploying the smart contracts, you need to update the .env file at the root of the repository with the following keys set to valid values:
 
@@ -43,6 +43,9 @@ Once you have set these values, you can deploy the smart contracts using the fol
 ```shell
 npm run deploy
 ```
+
+You can customize the deploy pipeline in smart-contract/src/deploy.ts
+
 
 ## Contributing
 This project was generated using the sc-project-initializer tool provided by Massa, following the instructions in the Massa documentation [here](https://docs.massa.net/en/latest/web3-dev/smart-contracts/getting-started.html#setting-up-a-new-project).
