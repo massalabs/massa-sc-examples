@@ -8,19 +8,19 @@ on:
 
 jobs:
   deploy:
-    defaults:
-      run:
-        working-directory: ${{ matrix.project }}
-
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        include:
-          - project: helloworld
-            event: "'Hello, World!'"
-          - project: blog
-            event: "'Blog initiated'"
+        project:
+          - name: blog
+            event: "Blog initiated"
+          - name: helloworld
+            event: "Hello, World!"
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.project.name }}
+
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -31,17 +31,17 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./${{ matrix.project }}/package-lock.json
+          cache-dependency-path: ./${{ matrix.project.name }}/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "${{ matrix.event }}"; then
-            echo "${{ matrix.project }} event received."
+          if npm run deploy |& grep -q "'${{ matrix.project.event }}'"; then
+            echo "${{ matrix.project.event }} event received."
           else
-            echo "No ${{ matrix.project }} event."
+            echo "No ${{ matrix.project.event }} event."
             exit 1
           fi
         env:
