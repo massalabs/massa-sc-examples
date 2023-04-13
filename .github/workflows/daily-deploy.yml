@@ -10,13 +10,15 @@ jobs:
   deploy:
     strategy:
       matrix:
-        project:
-          - name: blog
-            event: "Blog initiated"
+        include:
+          - project_name: helloworld
+            project_event: "Hello, World!"
+          - project_name: blog
+            project_event: "Blog initiated"
 
     defaults:
       run:
-        working-directory: ${{ matrix.project.name }}
+        working-directory: ${{ matrix.project_name }}
 
     runs-on: ubuntu-latest
 
@@ -29,17 +31,17 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./${{ matrix.project.name }}/package-lock.json
+          cache-dependency-path: ./${{ matrix.project_name }}/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "${{ matrix.project.event }}"; then
-            echo "${{ matrix.project.event }} event received."
+          if npm run deploy |& grep -q "${{ matrix.project_event }}"; then
+            echo "${{ matrix.project_event }} event received."
           else
-            echo "No ${{ matrix.project.event }} event."
+            echo "No ${{ matrix.project_event }} event."
             exit 1
           fi
         env:
