@@ -113,6 +113,7 @@ export function getAge(_args: StaticArray<u8>): StaticArray<u8> {
   } else {
     // If the entry doesn't exist we abort the execution.
     abort("No such person's age is stored.");
+    // We still need to return due AssemblyScript compiler.
     return [];
   }
 }
