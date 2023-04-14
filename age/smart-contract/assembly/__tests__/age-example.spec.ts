@@ -64,14 +64,10 @@ describe('getAge tests', () => {
 
 describe('constructor tests', () => {
   test('Storage correctly initialized', () => {
-    const result = constructor(
-      new Args().add('A31242RFFFZ32R23F1SDF').serialize(),
-    );
+    constructor(new Args().add('A31242RFFFZ32R23F1SDF').serialize());
 
-    expect(result).toStrictEqual([]);
+    const result = getAge(new Args().add('alice').serialize());
 
-    const result2 = getAge(new Args().add('alice').serialize());
-
-    expect(result2).toStrictEqual(new Args().add(1 as u32).serialize());
+    expect(result).toStrictEqual(new Args().add(1 as u32).serialize());
   });
 });
