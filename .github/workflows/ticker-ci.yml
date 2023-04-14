@@ -1,0 +1,41 @@
+name: Ticker CI
+
+on: 
+  push:
+    paths:
+      - ticker/**
+
+defaults:
+  run:
+    working-directory: ./ticker
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install
+        run: npm ci
+
+      - name: Code quality
+        run: npm run fmt:check
+
+  unit-tests:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 18
+
+        - name: Install
+          run: npm ci
+
+        - name: Test
+          run: npm run test
