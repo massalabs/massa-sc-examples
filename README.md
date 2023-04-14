@@ -16,6 +16,9 @@ This project provides a basic example of a simple smart contract with a front-en
 #### [Async-Calls](async-call/README.md)
 This project provides basic examples of asynchronous smart contracts.
 
+#### [Blog](blog/README.md)
+This project is a blog functioning on the Massa Blockchain. Fully decentralized and censorship resistant, it allows users to create, and delete blog posts, all of which are stored directly on the blockchain as transactions.
+
 #### [Sum](sum/README.md)
 This project provides an example of a decentralized application for calculating the sum using Thyra, a blockchain platform built on top of Massa.
 
