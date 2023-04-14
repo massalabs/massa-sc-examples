@@ -39,7 +39,7 @@ import {
  * @returns none
  *
  */
-export function constructor(_: StaticArray<u8>): StaticArray<u8> {
+export function constructor(_: StaticArray<u8>): void {
   if (!callerHasWriteAccess()) {
     // First we check if the caller (in this case you when you deploy the contract) has write access on storage.
     return [];
@@ -51,7 +51,6 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   Storage.set(name.serialize(), age.serialize()); // Here we apply our key/value pair to the storage.
   // The Storage only stores bytes.
   // We need to serialize our arguments before storing them (that's why we are using 'Args' as container).
-  return [];
 }
 
 /**
@@ -66,7 +65,7 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
  * @returns none
  *
  */
-export function changeAge(_args: StaticArray<u8>): StaticArray<u8> {
+export function changeAge(_args: StaticArray<u8>): void {
   let args = new Args(_args); // First we deserialize our arguments.
 
   // We use 'next[Type]()' to retrieve the next argument in the serialized arguments.
@@ -82,7 +81,6 @@ export function changeAge(_args: StaticArray<u8>): StaticArray<u8> {
 
   // Here we generate an event that indicates the changes that are made.
   generateEvent("Changed age of '" + name + "' to '" + age.toString() + "'");
-  return [];
 }
 
 /**
