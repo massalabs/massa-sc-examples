@@ -6,18 +6,17 @@ import { Args } from '@massalabs/as-types';
  *
  * @param _ - not used
  */
-export function constructor(_: StaticArray<u8>): StaticArray<u8> {
+export function constructor(_: StaticArray<u8>): void {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
   if (!Context.isDeployingContract()) {
-    return [];
+    return;
   }
   const nBlogPosts = 0;
   // Set the initial value of N_BLOG_POSTS to 0 in the storage of the contract
   Storage.set("N_BLOG_POSTS", nBlogPosts.toString());
   // This function is used to emit an event to the blockchain
   generateEvent('Blog initiated');
-  return [];
 }
 
 export function post(_args: StaticArray<u8>): void {
@@ -27,16 +26,16 @@ export function post(_args: StaticArray<u8>): void {
     .nextString()
     .expect('Post argument is missing or invalid');
 
-  let numberOfPosts = 0;
+  let postLastIndex = 0;
   if (Storage.get<string>("N_BLOG_POSTS") !== "") {
-    numberOfPosts = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
+    postLastIndex = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
   }
-  numberOfPosts += 1;
+  postLastIndex += 1;
   // Store the post in the storage of the contract with the key POST_postIndex
   // The keys will have the following syntaxes: POST_1, POST_2, POST_3, etc.
-  Storage.set(blogKey(numberOfPosts.toString()), post);
+  Storage.set(blogKey(postLastIndex.toString()), post);
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
-  Storage.set("N_BLOG_POSTS", numberOfPosts.toString());
+  Storage.set("N_BLOG_POSTS", postLastIndex.toString());
 }
 
 export function deletePost(_args: StaticArray<u8>): void {
