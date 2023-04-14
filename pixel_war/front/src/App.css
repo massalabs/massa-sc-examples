@@ -1,0 +1,57 @@
+/* App.css */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.App-title {
+  position: absolute;
+  top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  
+}
+
+.App-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding-top: 90px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(50, 1fr);
+  grid-template-rows: repeat(50, 1fr);
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+  border: 1px solid #000;
+}
+
+.grid-item {
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.grid-item:hover {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
