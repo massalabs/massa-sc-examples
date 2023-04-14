@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     strategy:
+      max-parallel: 1
       matrix:
         project:
           - name: blog
