@@ -1,5 +1,5 @@
 import { Args, bytesToI32 } from "@massalabs/as-types"
-import { sum } from '../contracts/sum';
+import { sum } from '../contracts/main';
 
 describe('Testing sum contract', () => {
     test('sum 1 + 1', () => {
@@ -17,12 +17,12 @@ describe('Testing sum contract', () => {
     });
 
     // The message error message is correctly displayed in the console but the test fails because it does not throw an error
-    // test('sum 1 + a', () => {
-    //     expect(() : void => {
-    //         const args = new Args();
-    //         args.add(1);
-    //         args.add("abc" as string);
-    //         sum(args.serialize())
-    //     }).toThrow("Argument b is missing or invalid");
-    // });
+    test('sum 1 + abc', () => {
+        expect(() : void => {
+            const args = new Args();
+            args.add(1);
+            args.add("abc" as string);
+            sum(args.serialize())
+        }).toThrow("Argument b is missing or invalid");
+    });
 });
