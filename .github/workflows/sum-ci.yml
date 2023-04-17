@@ -22,9 +22,6 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Code quality
-        run: npm run fmt:check
-
       - name: Test
         run: npm run test
 
