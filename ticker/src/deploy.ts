@@ -71,7 +71,7 @@ const isLatestSlot = (slot1: ISlot, slot2: ISlot) => {
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'oracle.wasm')),
-        coins: fromMAS(1),
+        coins: fromMAS(0.1),
       } as ISCData,
     ],
     0n,
