@@ -7,11 +7,11 @@ The following projects are included in this repository:
 #### [HelloWorld](helloworld/README.md)
 This project provides the timeless "Hello World" example.
 
-### Potentially Non-Functional Projects
-The following projects may not be functional or up to date, but contributions to improve them are welcome:
-
 #### [Age](age/README.md)
 This project provides a basic example of a simple smart contract with a front-end implemented in plain JavaScript and ReactJS.
+
+### Potentially Non-Functional Projects
+The following projects may not be functional or up to date, but contributions to improve them are welcome:
 
 #### [Async-Calls](async-call/README.md)
 This project provides basic examples of asynchronous smart contracts.
