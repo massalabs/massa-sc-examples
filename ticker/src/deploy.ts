@@ -11,7 +11,7 @@ import {
   ProviderType,
   IEvent,
   fromMAS,
-  Args
+  Args,
 } from '@massalabs/massa-web3';
 import delay from 'delay';
 
