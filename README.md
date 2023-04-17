@@ -10,11 +10,11 @@ This project provides the timeless "Hello World" example.
 #### [Blog](blog/README.md)
 This project is a blog functioning on the Massa Blockchain. Fully decentralized and censorship resistant, it allows users to create, and delete blog posts, all of which are stored directly on the blockchain as transactions.
 
-### Potentially Non-Functional Projects
-The following projects may not be functional or up to date, but contributions to improve them are welcome:
-
 #### [Age](age/README.md)
 This project provides a basic example of a simple smart contract with a front-end implemented in plain JavaScript and ReactJS.
+
+### Potentially Non-Functional Projects
+The following projects may not be functional or up to date, but contributions to improve them are welcome:
 
 #### [Async-Calls](async-call/README.md)
 This project provides basic examples of asynchronous smart contracts.

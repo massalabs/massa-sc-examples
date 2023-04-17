@@ -1,42 +1,48 @@
 {
-    "name": "my-massa-sc",
+    "name": "age-sc-exemple",
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "npx astester --imports node_modules/@massalabs/massa-as-sdk/astester.imports.js ./assembly/**/*.spec.ts",
-        "build:debug": "asc --target debug",
-        "build:deployer": "ts-node deployer/compile-deployer.ts",
-        "build:smart-contract": "asc",
-        "build": "npm run build:smart-contract && npm run build:deployer",
-        "deploy": "ts-node deployer/deploy-contract.ts ",
-        "lint": "eslint --resolve-plugins-relative-to . \"./**/*.{ts,json}\" \"./*.{ts,json}\" --fix",
-        "prettier": "as-prettier assembly --write",
-        "fmt": "npm run lint && npm run prettier"
+        "test": "asp --summary",
+        "build": "npx massa-as-compile",
+        "deploy": "npm run build && ts-node src/deploy.ts",
+        "prettier": "prettier '**/src/**/*.ts' --check && as-prettier --check assembly",
+        "prettier:fix": "prettier '**/src/**/*.ts' --write && as-prettier --write assembly",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "fmt:check": "npm run prettier && npm run lint",
+        "fmt": "npm run prettier:fix && npm run lint:fix"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@massalabs/as": "^1.0.2",
-        "@massalabs/as-tester": "^0.0.3-dev",
-        "@massalabs/as-transformer": "^0.1.1-dev",
-        "@massalabs/massa-as-sdk": "^1.2.1-dev",
-        "@massalabs/massa-web3": "^1.11.0",
-        "@types/node": "^18.11.3",
-        "@typescript-eslint/eslint-plugin": "^5.40.1",
-        "@typescript-eslint/parser": "^5.40.1",
-        "assemblyscript": "^0.21.7",
-        "assemblyscript-prettier": "^1.0.5",
+        "@as-pect/cli": "^8.0.1",
+        "@assemblyscript/loader": "^0.25.2",
+        "@massalabs/as-transformer": "^0.1.3-dev",
+        "@massalabs/as-types": "^0.0.3-dev",
+        "@massalabs/eslint-config": "^0.0.9",
+        "@massalabs/massa-as-sdk": "^2.0.2-dev",
+        "@massalabs/massa-sc-compiler": "^0.0.4-dev",
+        "@massalabs/massa-sc-deployer": "^0.0.4-dev",
+        "@massalabs/massa-web3": "^1.16.2-dev",
+        "@massalabs/prettier-config-as": "^0.0.2",
+        "@types/node": "^18.11.10",
+        "assemblyscript": "^0.25.2",
+        "assemblyscript-prettier": "^1.0.7",
         "dotenv": "^16.0.3",
-        "eslint": "^8.27.0",
-        "eslint-plugin-json": "^3.1.0",
+        "prettier": "^2.8.1",
         "ts-node": "^10.9.1",
         "tslib": "^2.4.0",
         "typescript": "^4.8.4"
     },
-    "overrides": {
-        "assemblyscript": "^0.21.7"
+    "type": "module",
+    "prettier": "@massalabs/prettier-config-as",
+    "engines": {
+        "node": ">=16"
     },
-    "type": "module"
+    "dependencies": {
+        "node": "^19.8.1"
+    }
 }
