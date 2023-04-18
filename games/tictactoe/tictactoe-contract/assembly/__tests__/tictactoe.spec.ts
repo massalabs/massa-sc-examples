@@ -1,7 +1,7 @@
 import { Args } from '@massalabs/as-types';
 import { play } from '../contracts/tictactoe';
 import { resetStorage, Storage } from '@massalabs/massa-as-sdk';
-import { constructor } from '../contracts/run';
+
 
 describe('Check tictactoe', () => {
   beforeEach(() => {
