@@ -1,5 +1,3 @@
-/* App.css */
-
 html,
 body,
 #root {
@@ -14,15 +12,7 @@ body,
   justify-content: center;
   align-items: center;
   height: 100%;
-}
-
-.App-title {
-  position: absolute;
-  top: 20px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  
+  position: relative; /* Add this line to create a containing block for the absolute positioned title */
 }
 
 .App-content {
@@ -31,7 +21,7 @@ body,
   align-items: center;
   flex-direction: column;
   text-align: center;
-  padding-top: 90px;
+  padding-top: 70px; /* Increase this value to add enough padding to prevent the title from overlapping with the grid */
 }
 
 .grid-container {

@@ -4,15 +4,15 @@ import Box from '@mui/material/Box';
 import { ChromePicker } from 'react-color';
 
 const baseAccountSecretKey = 'S1cywdyu2HW9f4FAbhEsvviW5xZ3fM6XAGWgbASSSkfktjqWr5P';
-const contractAddress = 'AS1Utuv82RmCqEUHK5FtMcH5rrsnabd8WTzujFFK2HBYtU9ShZFu';
-const gridSize = 150;
+const contractAddress = 'AS1HFJdcQ61PRJApbp5r938zBBhTRSJBsXkUzXRsTQBy69KaDSVB';
+const gridSize = 500;
 
 export const PixelWar: React.FunctionComponent = (): JSX.Element => {
   const [web3Client, setWeb3Client] = useState<Client | null>(null);
   const [pixels, setPixels] = useState<string[][]>([]);
   const [cellSize, setCellSize] = useState(10);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
-  const [currentColor, setCurrentColor] = useState('#FF0000');
+  const [currentColor, setCurrentColor] = useState('#FFFFFF');
   const [selectedPixel, setSelectedPixel] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -27,26 +27,38 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
     const fetchAndUpdatePixels = async () => {
       if (!web3Client) return;
   
-      const entriesBatch = Array.from({ length: gridSize * gridSize }, (_, i) => {
-        const x = Math.floor(i / gridSize);
-        const y = i % gridSize;
-        const pixelKey = `${x}${y}`;
-        return { address: contractAddress, key: strToBytes(pixelKey) };
-      });
-
-      const entries = await web3Client.publicApi().getDatastoreEntries(entriesBatch);
-      console.log(entries);
-
-      const newFetchedPixels: string[][] = Array.from({ length: gridSize }, (_, x) =>
-      Array.from({ length: gridSize }, (_, y) => {
-        const index = x * gridSize + y;
-        const color = (entries[index]?.candidate_value)
-          ? bytesToStr(entries[index].candidate_value as Uint8Array)
-          : 'FF0000';
-        return `#${color}`;
-      }),
-    );
-
+      const batchSize = 22000;
+      const totalPixels = gridSize * gridSize;
+      const batchCount = Math.ceil(totalPixels / batchSize);
+  
+      let newFetchedPixels: string[][] = Array.from({ length: gridSize }, () =>
+        Array.from({ length: gridSize }, () => "#FFFFFF")
+      );
+  
+      for (let batchIndex = 0; batchIndex < batchCount; batchIndex++) {
+        const startPixelIndex = batchIndex * batchSize;
+        const endPixelIndex = Math.min(startPixelIndex + batchSize, totalPixels);
+  
+        const entriesBatch = Array.from({ length: endPixelIndex - startPixelIndex }, (_, i) => {
+          const index = startPixelIndex + i;
+          const x = Math.floor(index / gridSize);
+          const y = index % gridSize;
+          const pixelKey = `${x}${y}`;
+          return { address: contractAddress, key: strToBytes(pixelKey) };
+        });
+  
+        const entries = await web3Client.publicApi().getDatastoreEntries(entriesBatch);
+        console.log(entries);
+  
+        entries.forEach((entry, i) => {
+          const index = startPixelIndex + i;
+          const x = Math.floor(index / gridSize);
+          const y = index % gridSize;
+          const color = entry?.candidate_value ? bytesToStr(entry.candidate_value as Uint8Array) : "FFFFFF";
+          newFetchedPixels[x][y] = `#${color}`;
+        });
+      }
+  
       setPixels(newFetchedPixels);
     };
   
@@ -57,12 +69,14 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
     const calculateCellSize = () => {
       const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
       const calculatedSize = Math.floor(smallerDimension / gridSize);
-      setCellSize(calculatedSize);
+      const minCellSize = 2; // Set a minimum cell size to ensure cells are always visible
+      setCellSize(Math.max(calculatedSize, minCellSize));
+      console.log(Math.max(calculatedSize, minCellSize));
     };
-  
+
     calculateCellSize();
     window.addEventListener('resize', calculateCellSize);
-  
+
     return () => {
       window.removeEventListener('resize', calculateCellSize);
     };
@@ -84,6 +98,7 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
       const newColor = currentColor.slice(1); // Remove '#' from the color string
       let args = new Args();
       args.addI32(selectedPixel.x).addI32(selectedPixel.y).addString(newColor);
+      console.log(selectedPixel.x, selectedPixel.y, newColor);
     await web3Client.smartContracts().callSmartContract({
       /// storage fee for taking place in books
       fee: fromMAS(0),
@@ -123,10 +138,10 @@ return (
     ))}
     {colorPickerVisible && (
       <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <ChromePicker color={currentColor} onChange={handleColorChange} />
+        <ChromePicker color={currentColor} onChange={handleColorChange} disableAlpha />
         <button onClick={handleColorPickerClose}>Save</button>
-</div>
-)}
-</Box>
+      </div>
+    )}
+  </Box>
 );
 };
