@@ -1,4 +1,4 @@
-name: Age Daily Deploy
+name: Tictactoe Daily Deploy
 
 on:
   push:
