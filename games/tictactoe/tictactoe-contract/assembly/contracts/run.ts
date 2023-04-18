@@ -1,4 +1,9 @@
-import { Address, call, callerHasWriteAccess, Storage } from '@massalabs/massa-as-sdk';
+import {
+  Address,
+  call,
+  callerHasWriteAccess,
+  Storage,
+} from '@massalabs/massa-as-sdk';
 import { NoArg, Args } from '@massalabs/as-types';
 
 /**
@@ -6,14 +11,19 @@ import { NoArg, Args } from '@massalabs/as-types';
  *
  * @param tictactoeAddress -The address of the smart contract deployed in the previous step
  */
-export function constructor(tictactoeAddress: StaticArray<u8>): StaticArray<u8> {
+export function constructor(
+  tictactoeAddress: StaticArray<u8>,
+): StaticArray<u8> {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
   if (!callerHasWriteAccess()) {
     return [];
   }
   const args = new Args(tictactoeAddress);
-  Storage.set('address', args.nextString().expect('Argument address is missing or invalid'));
+  Storage.set(
+    'address',
+    args.nextString().expect('Argument address is missing or invalid'),
+  );
   main([]);
   return [];
 }

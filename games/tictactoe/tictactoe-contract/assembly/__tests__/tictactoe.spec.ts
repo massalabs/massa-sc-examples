@@ -12,13 +12,11 @@ describe('Check tictactoe', () => {
     resetStorage(); // We make sure that the contract's storage is reset.
   });
 
-
   test('Check if the game is won', () => {
     // mock constructor
-    Storage.set("currentPlayer", 'X');
-    Storage.set("gameState", "n,n,n,n,n,n,n,n,n");
-    Storage.set("gameWinner", 'n');
-
+    Storage.set('currentPlayer', 'X');
+    Storage.set('gameState', 'n,n,n,n,n,n,n,n,n');
+    Storage.set('gameWinner', 'n');
 
     const args = new Args().add(0 as u32).serialize();
     play(args);
@@ -35,7 +33,6 @@ describe('Check tictactoe', () => {
     const args5 = new Args().add(2 as u32).serialize();
     play(args5); // X should win here
 
-    expect(Storage.get("gameWinner").toString()).toBe("X");
+    expect(Storage.get('gameWinner').toString()).toBe('X');
   });
-
 });

@@ -40,7 +40,10 @@ const __dirname = path.dirname(path.dirname(__filename));
   );
 
   const data = (deployed.events?.find((e) => e.data) as IEvent).data;
-  const address = data.split('Contract deployed at address: ')[1].trim().replace(' ', '');
+  const address = data
+    .split('Contract deployed at address: ')[1]
+    .trim()
+    .replace(' ', '');
 
   await deploySC(
     publicApi,
