@@ -14,8 +14,10 @@ describe('Check tictactoe', () => {
 
 
   test('Check if the game is won', () => {
-    // We call the constructor function of the contract.
-    // constructor(new StaticArray<u8>(0));
+    // mock constructor
+    Storage.set("currentPlayer", 'X');
+    Storage.set("gameState", "n,n,n,n,n,n,n,n,n");
+    Storage.set("gameWinner", 'n');
 
 
     const args = new Args().add(0 as u32).serialize();

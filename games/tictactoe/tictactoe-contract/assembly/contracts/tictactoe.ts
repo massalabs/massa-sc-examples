@@ -1,5 +1,6 @@
 import { Storage, generateEvent, callerHasWriteAccess} from "@massalabs/massa-as-sdk";
 import { Args } from "@massalabs/as-types";
+import { isDeployingContract } from "@massalabs/massa-as-sdk/assembly/std/context";
 
 /**
  * This function is meant to be called only one time: when the contract is deployed.
@@ -9,7 +10,7 @@ import { Args } from "@massalabs/as-types";
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
     // This line is important. It ensures that this function can't be called in the future.
     // If you remove this check, someone could call your constructor function and reset your smart contract.
-    if (!callerHasWriteAccess()) {
+    if (!isDeployingContract()) {
       return [];
     }
     Storage.set("currentPlayer", 'X');
@@ -19,12 +20,13 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   }
 
 export function play(args: StaticArray<u8>): void {
+
     let args_object = new Args(args);
     let index = args_object.nextU32().unwrap();
-    let game_winner = Storage.get("gameWinner").toString();
+    let game_winner = Storage.get("gameWinner");
     if (game_winner == "n") {
-        let player = Storage.get("currentPlayer").toString();
-        let game_state = Storage.get("gameState").toString();
+        let player = Storage.get("currentPlayer");
+        let game_state = Storage.get("gameState");
         let vec_game_state = game_state.split(",");
 
         if (vec_game_state[index] == "n") {
@@ -56,7 +58,7 @@ function _checkWin(player: string): void {
         [2, 4, 6]
     ];
 
-    let game_state = Storage.get("gameState").toString();
+    let game_state = Storage.get("gameState");
     let vec_game_state = game_state.split(",");
 
     let roundWon = false;
