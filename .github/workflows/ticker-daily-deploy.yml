@@ -38,6 +38,24 @@ jobs:
             echo "Failed to deploy contract ..."
             exit 1
           fi
+
+      - name: Autonomy test
+        run: |
+          npm run deploy:watch 3 | tee deploy_result.txt;
+          if $(cat deploy_result.txt | grep -q "Contract deployed"); then
+              echo "Contract successfully deployed!"
+              if [ $(cat deploy_result.txt | grep -c "Price updated") -ge 3 ]; then
+                  echo "Price updated successfully!"
+                  exit 0
+              else
+                  echo "Failed to update price ..."
+                  exit 1
+              fi
+          else
+              echo "Failed to deploy contract ..."
+              exit 1
+          fi
+
         env:
           JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
