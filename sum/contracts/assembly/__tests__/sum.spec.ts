@@ -16,9 +16,7 @@ describe('Testing sum contract', () => {
     expect(bytesToI32(sum(args.serialize()))).toStrictEqual(1);
   });
 
-  // The message error message is correctly displayed in the console but the test fails because
-  // it does not throw an error
-  test('sum 1 + abc', () => {
+  itThrows('sum 1 + abc', () => {
     expect((): void => {
       const args = new Args();
       args.add(1);
