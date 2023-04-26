@@ -7,6 +7,7 @@
         "test": "asp --summary",
         "build": "npx massa-as-compile",
         "deploy": "npm run build && ts-node src/deploy.ts",
+        "deploy:watch": "npm run build && ts-node src/deploy.ts --watch",
         "prettier": "prettier '**/src/**/*.ts' --check && as-prettier --check assembly",
         "prettier:fix": "prettier '**/src/**/*.ts' --write && as-prettier --write assembly",
         "lint": "eslint .",

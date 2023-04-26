@@ -94,8 +94,9 @@ const isLatestSlot = (slot1: ISlot, slot2: ISlot) => {
   );
   let fromSlot = nextSlot(deployedSCEvent.context.slot);
   console.log(`listening autonomous SC events on "${addr}"`);
+  let isWatching = process.argv.includes('--watch');
 
-  while (1) {
+  while (1 && isWatching) {
     console.log(
       `get events from period ${fromSlot.period} thread ${fromSlot.thread}`,
     );
