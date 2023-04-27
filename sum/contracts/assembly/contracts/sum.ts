@@ -1,17 +1,19 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
-import { Args, stringToBytes, i32ToBytes } from '@massalabs/as-types';
+import { Args, stringToBytes, i32ToBytes, SafeMath } from '@massalabs/as-types';
 
 /**
+ * Sums 2 i32 using the SafeMath library and returns the result.
+ * 
  * @param a - first i32
  * @param b - second i32
  * @returns Sum of a and b
  */
 function add(a: u32, b: u32): u32 {
-  return a + b;
+  return SafeMath.add(a, b);
 }
 
 /**
- * This function sums 2 u32 and returns the result.
+ * This function sums 2 i32 and returns the result.
  * It also generates an event resuming the operation and save the last result in the blockchain.
  *
  * @param binaryArgs - the 2 u32 we want to sum serialized in bytes
