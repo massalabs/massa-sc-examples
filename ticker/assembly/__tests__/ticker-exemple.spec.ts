@@ -53,5 +53,5 @@ describe('getPrice test', () => {
 
     const price = Oracle.getPrice(NoArg.serialize());
     expect(price).toBeTruthy();
-  });toBeCloseTo
+  });
 });
