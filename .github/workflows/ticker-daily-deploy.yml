@@ -32,7 +32,8 @@ jobs:
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "Contract deployed"; then
+          npm run deploy | tee deploy_result.txt;
+          if $(cat deploy_result.txt | grep -q "Contract deployed"); then
             echo "Contract successfully deployed!"
           else
             echo "Failed to deploy contract ..."
