@@ -4,7 +4,7 @@ import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/contex
 
 
 /**
- * This function is meant to be called only one time: when the contract is deployed.
+ * This function is meant to be called only one time: when the contract is deploying.
  *
  * @param _ - not used
  */
