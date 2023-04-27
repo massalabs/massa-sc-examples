@@ -42,6 +42,7 @@ jobs:
         env:
           JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
+
       - name: Autonomy test
         run: |
           npm run deploy:watch 3 | tee deploy_result.txt;

@@ -103,7 +103,11 @@ const isLatestSlot = (slot1: ISlot, slot2: ISlot) => {
   }
   let watchedCount = 0;
 
-  while (1 && isWatching && (watchingCount === -1 || watchedCount < watchingCount)) {
+  while (
+    1 &&
+    isWatching &&
+    (watchingCount === -1 || watchedCount < watchingCount)
+  ) {
     console.log(
       `get events from period ${fromSlot.period} thread ${fromSlot.thread}`,
     );
