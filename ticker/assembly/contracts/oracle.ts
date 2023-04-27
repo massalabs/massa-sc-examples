@@ -48,7 +48,7 @@ function sendFuturOperation(): void {
   );
 
   generateEvent(
-    `next update planned on period ${validityStartPeriod.toString()} thread: ${validityStartThread.toString()}`,
+    `Next update planned on period ${validityStartPeriod.toString()} thread: ${validityStartThread.toString()}`,
   );
 }
 
