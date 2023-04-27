@@ -29,8 +29,7 @@ jobs:
         run: npm install
 
       - name: Deploy
-        run: |
-          npm run deploy
+        run: npm run deploy
         env:
           JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
