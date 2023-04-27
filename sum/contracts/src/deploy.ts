@@ -29,12 +29,12 @@ const __dirname = path.dirname(path.dirname(__filename));
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'main.wasm')),
-        coins: 0,
+        coins: 0n,
         args: new Args(),
       } as ISCData,
     ],
-    0,
-    4_200_000_000,
+    0n,
+    4_200_000_000n,
     true,
   );
 
@@ -46,12 +46,12 @@ const __dirname = path.dirname(path.dirname(__filename));
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'caller.wasm')),
-        coins: 100_000_000,
+        coins: 100_000_000n,
         args: new Args().addString(address),
       } as ISCData,
     ],
-    0,
-    4_200_000_000,
+    0n,
+    4_200_000_000n,
     true,
   );
 })();
