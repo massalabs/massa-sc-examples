@@ -1,6 +1,10 @@
-import { Args, NoArg } from '@massalabs/as-types';
+import { NoArg } from '@massalabs/as-types';
 import * as Oracle from '../contracts/oracle';
-import { Storage, mockAdminContext, resetStorage } from '@massalabs/massa-as-sdk';
+import {
+  Storage,
+  mockAdminContext,
+  resetStorage,
+} from '@massalabs/massa-as-sdk';
 
 describe('setPrice test', () => {
   beforeEach(() => {

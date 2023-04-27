@@ -56,13 +56,13 @@ function sendFuturOperation(): void {
 // Generate a random price change of +/- 5%.
 function generateRandomIncrease(base: u64): u64 {
   const randomInt = unsafeRandom();
-  const increasePercent = (abs(randomInt) % 10) - 5;
-  const increase = ((base as i64) * increasePercent) / 100;
+  const increasePercent = SafeMath.sub(abs(randomInt) % 11, 5);
+  const increase = SafeMath.div((base as i64) * increasePercent, 100);
 
   if (increase < 0 && base <= (abs(increase) as u64)) {
     return 0;
   }
-  return base + increase;
+  return SafeMath.add(base, increase);
 }
 
 export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
