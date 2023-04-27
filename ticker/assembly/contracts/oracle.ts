@@ -91,7 +91,7 @@ export function getPrice(_: StaticArray<u8>): StaticArray<u8> {
   assert(!Storage.has(PRICE_KEY), 'Price is not set');
 
   const price = u64.parse(Storage.get(PRICE_KEY));
-  generateEvent(`current price is ${price.toString()}`);
+  generateEvent(`Current price is ${price.toString()}`);
 
   return u64ToBytes(price);
 }
