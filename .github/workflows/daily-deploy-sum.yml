@@ -1,9 +1,9 @@
-name: Age Daily Deploy
+name: Sum Daily Deploy
 
 on:
   push:
     paths:
-      - age/**
+      - sum/**
   workflow_dispatch:
   schedule:
     - cron: "0 7 * * *"
