@@ -3,7 +3,7 @@ import { Args, stringToBytes, i32ToBytes, SafeMath } from '@massalabs/as-types';
 
 /**
  * Sums 2 i32 using the SafeMath library and returns the result.
- * 
+ *
  * @param a - first i32
  * @param b - second i32
  * @returns Sum of a and b

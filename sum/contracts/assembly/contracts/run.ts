@@ -2,7 +2,6 @@ import { Address, Storage, call } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
 import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/context';
 
-
 /**
  * This function is meant to be called only one time: when the contract is deploying.
  *
@@ -25,7 +24,7 @@ export function constructor(sumAddress: StaticArray<u8>): void {
 
 /**
  * Test the 'sum' function of the 'sum' contract by calling it with 2 i32.
- * 
+ *
  * @param _ - not used
  * @returns empty array
  */
