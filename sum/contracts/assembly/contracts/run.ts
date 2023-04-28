@@ -5,7 +5,7 @@ import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/contex
 /**
  * This function is meant to be called only one time: when the contract is deploying.
  *
- * @param sumAddress - The address of the sum contract we whant to interact with.
+ * @param sumAddress - The address of the sum contract we want to interact with.
  */
 export function constructor(sumAddress: StaticArray<u8>): void {
   // This line is important. It ensures that this function can't be called in the future.
