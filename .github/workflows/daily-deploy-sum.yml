@@ -1,16 +1,18 @@
-name: Daily Deploy
+name: Age Daily Deploy
 
 on:
   push:
+    paths:
+      - age/**
   workflow_dispatch:
   schedule:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy-sum:
+  deploy-age:
     defaults:
       run:
-        working-directory: sum/contracts
+        working-directory: ./sum/contracts/
 
     runs-on: ubuntu-latest
 
@@ -29,7 +31,13 @@ jobs:
         run: npm install
 
       - name: Deploy
-        run: npm run deploy
+        run: |
+          if npm run deploy |& grep -q "Contract deployed"; then
+            echo "Contract successfully deployed!"
+          else
+            echo "Failed to deploy contract ..."
+            exit 1
+          fi
         env:
           JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
