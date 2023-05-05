@@ -36,6 +36,7 @@ const __dirname = path.dirname(path.dirname(__filename));
     ],
     0n,
     4_200_000_000n,
+    0n,
     true,
   );
   const data = (deployed.events?.find((e) => e.data) as IEvent).data;
@@ -56,6 +57,7 @@ const __dirname = path.dirname(path.dirname(__filename));
     ],
     0n,
     4_200_000_000n,
+    0n,
     true,
   );
   process.exit(0);
