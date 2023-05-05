@@ -34,9 +34,11 @@ const __dirname = path.dirname(path.dirname(__filename));
       } as ISCData,
     ],
     0n,
+    0n,
     4_200_000_000n,
     true,
   );
+  
 
   const data = (deployedInfo.events?.find((e) => e.data) as IEvent).data;
   const address = data.split('Contract deployed at address:')[1].trim();
@@ -50,6 +52,7 @@ const __dirname = path.dirname(path.dirname(__filename));
         coins: 100_000_000n,
       } as ISCData,
     ],
+    100_000_000n,
     0n,
     4_200_000_000n,
     true,

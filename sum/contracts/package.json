@@ -25,7 +25,7 @@
         "@massalabs/massa-as-sdk": "^2.0.2-dev",
         "@massalabs/massa-sc-compiler": "^0.0.4-dev",
         "@massalabs/massa-sc-deployer": "^0.0.4-dev",
-        "@massalabs/massa-web3": "^1.13.0",
+        "@massalabs/massa-web3": "^1.16.2-dev",
         "@massalabs/prettier-config-as": "^0.0.2",
         "@types/node": "^18.11.10",
         "assemblyscript": "^0.25.2",
