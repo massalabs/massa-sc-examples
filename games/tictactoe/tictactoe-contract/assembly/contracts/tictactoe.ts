@@ -1,7 +1,6 @@
 import {
   Storage,
   generateEvent,
-  callerHasWriteAccess,
 } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
 import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/context';
