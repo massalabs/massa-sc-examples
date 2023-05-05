@@ -1,4 +1,4 @@
-# Tictactoe Smart Contract
+# Tictactoe
 
 This is a simple smart contract project that demonstrates how to make a simple multi-function smart contract using massa tools.
 
