@@ -14,7 +14,7 @@ import { CompactPicker } from 'react-color';
 
 const baseAccountSecretKey = 'S1cywdyu2HW9f4FAbhEsvviW5xZ3fM6XAGWgbASSSkfktjqWr5P';
 const contractAddress = 'AS1HFJdcQ61PRJApbp5r938zBBhTRSJBsXkUzXRsTQBy69KaDSVB';
-const gridSize = 200;
+const gridSize = 300;
 const cellBorderWidth = 0;
 
 export const PixelWar: React.FunctionComponent = (): JSX.Element => {
@@ -26,29 +26,46 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
   const [colorPickerVisible, setColorPickerVisible] = useState(true); // Always visible
   const [currentColor, setCurrentColor] = useState('#FFFFFF');
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [canvasContainerWidth, setCanvasContainerWidth] = useState(window.innerWidth);
+  const [canvasContainerHeight, setCanvasContainerHeight] = useState(window.innerHeight);
+  const [scrollX, setScrollX] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const calculateCanvasContainerDimensions = () => {
+      setCanvasContainerWidth(window.innerWidth - 20);
+      setCanvasContainerHeight(window.innerHeight - 75);
+    };
+
+    calculateCanvasContainerDimensions();
+    window.addEventListener("resize", calculateCanvasContainerDimensions);
+
+    return () => {
+      window.removeEventListener("resize", calculateCanvasContainerDimensions);
+    };
+  }, []);
 
   useEffect(() => {
     if (canvasRef.current && pixels.length > 0) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
         ctx.clearRect(0, 0, gridSize * (cellSize + cellBorderWidth), gridSize * (cellSize + cellBorderWidth));
-        ctx.fillStyle = '#000'; // Set the default fill color to black
-// Draw the grid cells
-for (let x = 0; x < gridSize; x++) {
-  for (let y = 0; y < gridSize; y++) {
-    const pixelColor = pixels[x][y];
-    ctx.fillStyle = pixelColor;
-    ctx.fillRect(
-      x * (cellSize + cellBorderWidth) + cellBorderWidth,
-      y * (cellSize + cellBorderWidth) + cellBorderWidth,
-      cellSize,
-      cellSize
-    );
+        ctx.fillStyle = '#000';
+      // Draw the grid cells
+      for (let x = 0; x < gridSize; x++) {
+        for (let y = 0; y < gridSize; y++) {
+          const pixelColor = pixels[x][y];
+          ctx.fillStyle = pixelColor;
+          ctx.fillRect(
+            x * (cellSize + cellBorderWidth) + cellBorderWidth,
+            y * (cellSize + cellBorderWidth) + cellBorderWidth,
+            cellSize,
+            cellSize
+          );
   }
 }
-
         // Draw the grid border
         ctx.strokeStyle = '#000'; // Set the border color to black
         ctx.lineWidth = cellBorderWidth;
@@ -60,7 +77,7 @@ for (let x = 0; x < gridSize; x++) {
         );
       }
     }
-  }, [pixels, cellSize]);
+  }, [pixels, cellSize, scrollX, scrollY]);
 
   useEffect(() => {
     (async () => {
@@ -112,22 +129,14 @@ for (let x = 0; x < gridSize; x++) {
 }, [web3Client]);
 
 
-const maxCellSize = 40; // Define the maximum cell size
-const minCellSize = 1; // Define the minimum cell size
-
-const handleZoomOut = () => {
-  setCellSize((prevCellSize) => Math.max(prevCellSize - 1, minCellSize));
-};
-
-const handleZoomIn = () => {
-  setCellSize((prevCellSize) => Math.min(prevCellSize + 1, maxCellSize));
-};
+const maxCellSize = 40; 
+const minCellSize = 1; 
 
 useEffect(() => {
   const calculateCellSize = () => {
   const smallerDimension = Math.min(window.innerWidth, window.innerHeight);
   const calculatedSize = Math.floor(smallerDimension / (gridSize * Math.max(zoomLevel, 1) + (gridSize - 1) * cellBorderWidth));
-  const minCellSize = 2; // Set a minimum cell size to ensure cells are always visible
+  const minCellSize = 2;
   setCellSize(Math.max(calculatedSize, minCellSize));
 };
 
@@ -182,14 +191,14 @@ const handlePixelClick = async (x: number, y: number) => {
 };
 const handleCanvasMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
   if (!pixels.length || !canvasRef.current) return;
-
+  
   const coordinates = getPixelCoordinates(event);
   if (coordinates) {
     const { x, y } = coordinates;
     const ctx = canvasRef.current.getContext("2d");
     if (ctx) {
       ctx.clearRect(0, 0, gridSize * (cellSize + cellBorderWidth), gridSize * (cellSize + cellBorderWidth));
-      ctx.fillStyle = "#000"; // Set the default fill color to black
+      ctx.fillStyle = "#000"; 
 
       // Draw the grid cells
       for (let x = 0; x < gridSize; x++) {
@@ -206,7 +215,7 @@ const handleCanvasMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
       }
 
       // Draw the grid border
-      ctx.strokeStyle = "#000"; // Set the border color to black
+      ctx.strokeStyle = "#000";
       ctx.lineWidth = cellBorderWidth;
       ctx.strokeRect(
         cellBorderWidth / 2,
@@ -224,6 +233,24 @@ const handleCanvasMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
       );
     }
   }
+  handleCanvasEdgeScroll(event.clientX, event.clientY);
+};
+
+const handleCanvasEdgeScroll = (x: number, y: number) => {
+  const edgeThreshold = 20; 
+  const scrollSpeed = 10; 
+
+  if (x <= edgeThreshold) {
+    setScrollX((prevScrollX) => Math.max(prevScrollX - scrollSpeed, 0));
+  } else if (x >= canvasContainerWidth - edgeThreshold) {
+    setScrollX((prevScrollX) => Math.min(prevScrollX + scrollSpeed, (cellSize + cellBorderWidth) * gridSize - canvasContainerWidth));
+  }
+
+  if (y <= edgeThreshold) {
+    setScrollY((prevScrollY) => Math.max(prevScrollY - scrollSpeed, 0));
+  } else if (y >= canvasContainerHeight - edgeThreshold) {
+    setScrollY((prevScrollY) => Math.min(prevScrollY + scrollSpeed, (cellSize + cellBorderWidth) * gridSize - canvasContainerHeight));
+  }
 };
 
 const handleColorChange = (color: any) => {
@@ -232,7 +259,6 @@ const handleColorChange = (color: any) => {
 
 const handleMouseWheel = (event: React.WheelEvent<HTMLCanvasElement>) => {
   event.preventDefault();
-  const zoomSpeed = 0.1; // Define the zoom speed
 
   if (event.deltaY < 0) {
     // Zoom in
@@ -243,16 +269,47 @@ const handleMouseWheel = (event: React.WheelEvent<HTMLCanvasElement>) => {
   }
 };
 
+useEffect(() => {
+  const handleWheel = (event: WheelEvent) => {
+    if (canvasRef.current) {
+      const rect = canvasRef.current.getBoundingClientRect();
+      if (
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+      ) {
+        event.preventDefault();
+      }
+    }
+  };
+
+  window.addEventListener('wheel', handleWheel, { passive: false });
+
+  return () => {
+    window.removeEventListener('wheel', handleWheel);
+  };
+}, []);
+
 return (
   <Box sx={{ flexGrow: 1, position: 'relative', display: 'flex' }}>
-    <canvas
-      ref={canvasRef}
-      width={gridSize * (cellSize + cellBorderWidth)}
-      height={gridSize * (cellSize + cellBorderWidth)}
-      onClick={handleCanvasClick}
-      onMouseMove={handleCanvasMouseMove}
-      onWheel={handleMouseWheel}
-    />
+    <div
+      style={{
+        position: 'relative',
+        overflow: 'auto',
+        width: canvasContainerWidth,
+        height: canvasContainerHeight,
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        width={gridSize * (cellSize + cellBorderWidth)}
+        height={gridSize * (cellSize + cellBorderWidth)}
+        onClick={handleCanvasClick}
+        onMouseMove={handleCanvasMouseMove}
+        onWheel={handleMouseWheel}
+      />
+    </div>
     {colorPickerVisible && (
       <div style={{ position: 'fixed', top: '50%', right: '10px', transform: 'translateY(-50%)' }}>
         <CompactPicker color={currentColor} onChange={handleColorChange} />
