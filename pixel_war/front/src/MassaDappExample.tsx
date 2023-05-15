@@ -28,8 +28,10 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [canvasContainerWidth, setCanvasContainerWidth] = useState(window.innerWidth);
   const [canvasContainerHeight, setCanvasContainerHeight] = useState(window.innerHeight);
-  const [scrollX, setScrollX] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [lastPosition, setLastPosition] = useState({ x: 0, y: 0 });
+  const [draggingOccurred, setDraggingOccurred] = useState(false);
+  
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -77,7 +79,7 @@ export const PixelWar: React.FunctionComponent = (): JSX.Element => {
         );
       }
     }
-  }, [pixels, cellSize, scrollX, scrollY]);
+  }, [pixels, cellSize]);
 
   useEffect(() => {
     (async () => {
@@ -168,6 +170,10 @@ const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
 const handlePixelClick = async (x: number, y: number) => {
   const newColor = currentColor.slice(1); // Remove '#' from the color string
 
+  if (draggingOccurred) {
+    return; // If dragging occurred, cancel click event (to prevent accidental pixel placements after dragging)
+  }
+
   if (web3Client) {
     let args = new Args();
     args.addI32(x).addI32(y).addString(newColor);
@@ -190,66 +196,52 @@ const handlePixelClick = async (x: number, y: number) => {
   }
 };
 const handleCanvasMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
-  if (!pixels.length || !canvasRef.current) return;
-  
-  const coordinates = getPixelCoordinates(event);
-  if (coordinates) {
-    const { x, y } = coordinates;
-    const ctx = canvasRef.current.getContext("2d");
-    if (ctx) {
-      ctx.clearRect(0, 0, gridSize * (cellSize + cellBorderWidth), gridSize * (cellSize + cellBorderWidth));
-      ctx.fillStyle = "#000"; 
+  if (dragging) {
+    handleMouseMove(event);
+  } else {
+    if (!pixels.length || !canvasRef.current) return;
 
-      // Draw the grid cells
-      for (let x = 0; x < gridSize; x++) {
-        for (let y = 0; y < gridSize; y++) {
-          const pixelColor = pixels[x][y];
-          ctx.fillStyle = pixelColor;
-          ctx.fillRect(
-            x * (cellSize + cellBorderWidth) + cellBorderWidth,
-            y * (cellSize + cellBorderWidth) + cellBorderWidth,
-            cellSize,
-            cellSize
-          );
+    const coordinates = getPixelCoordinates(event);
+    if (coordinates) {
+      const { x, y } = coordinates;
+      const ctx = canvasRef.current.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, gridSize * (cellSize + cellBorderWidth), gridSize * (cellSize + cellBorderWidth));
+        ctx.fillStyle = "#000"; 
+
+        // Draw the grid cells
+        for (let x = 0; x < gridSize; x++) {
+          for (let y = 0; y < gridSize; y++) {
+            const pixelColor = pixels[x][y];
+            ctx.fillStyle = pixelColor;
+            ctx.fillRect(
+              x * (cellSize + cellBorderWidth) + cellBorderWidth,
+              y * (cellSize + cellBorderWidth) + cellBorderWidth,
+              cellSize,
+              cellSize
+            );
+          }
         }
+
+        // Draw the grid border
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = cellBorderWidth;
+        ctx.strokeRect(
+          cellBorderWidth / 2,
+          cellBorderWidth / 2,
+          gridSize * (cellSize + cellBorderWidth) - cellBorderWidth,
+          gridSize * (cellSize + cellBorderWidth) - cellBorderWidth
+        );
+
+        ctx.fillStyle = currentColor;
+        ctx.fillRect(
+          x * (cellSize + cellBorderWidth) + cellBorderWidth,
+          y * (cellSize + cellBorderWidth) + cellBorderWidth,
+          cellSize,
+          cellSize
+        );
       }
-
-      // Draw the grid border
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = cellBorderWidth;
-      ctx.strokeRect(
-        cellBorderWidth / 2,
-        cellBorderWidth / 2,
-        gridSize * (cellSize + cellBorderWidth) - cellBorderWidth,
-        gridSize * (cellSize + cellBorderWidth) - cellBorderWidth
-      );
-
-      ctx.fillStyle = currentColor;
-      ctx.fillRect(
-        x * (cellSize + cellBorderWidth) + cellBorderWidth,
-        y * (cellSize + cellBorderWidth) + cellBorderWidth,
-        cellSize,
-        cellSize
-      );
     }
-  }
-  handleCanvasEdgeScroll(event.clientX, event.clientY);
-};
-
-const handleCanvasEdgeScroll = (x: number, y: number) => {
-  const edgeThreshold = 20; 
-  const scrollSpeed = 10; 
-
-  if (x <= edgeThreshold) {
-    setScrollX((prevScrollX) => Math.max(prevScrollX - scrollSpeed, 0));
-  } else if (x >= canvasContainerWidth - edgeThreshold) {
-    setScrollX((prevScrollX) => Math.min(prevScrollX + scrollSpeed, (cellSize + cellBorderWidth) * gridSize - canvasContainerWidth));
-  }
-
-  if (y <= edgeThreshold) {
-    setScrollY((prevScrollY) => Math.max(prevScrollY - scrollSpeed, 0));
-  } else if (y >= canvasContainerHeight - edgeThreshold) {
-    setScrollY((prevScrollY) => Math.min(prevScrollY + scrollSpeed, (cellSize + cellBorderWidth) * gridSize - canvasContainerHeight));
   }
 };
 
@@ -291,6 +283,39 @@ useEffect(() => {
   };
 }, []);
 
+const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  setDragging(true);
+  setLastPosition({ x: event.clientX, y: event.clientY });
+  setDraggingOccurred(false);
+};
+
+const handleMouseUp = () => {
+  setDragging(false);
+};
+useEffect(() => {
+  window.addEventListener('mouseup', handleMouseUp);
+
+  return () => {
+    window.removeEventListener('mouseup', handleMouseUp);
+  };
+}, []);
+
+const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  if (dragging) {
+    const container = event.currentTarget.parentElement;
+    if (!container) return;
+    
+    const deltaX = lastPosition.x - event.clientX;
+    const deltaY = lastPosition.y - event.clientY;
+
+    container.scrollLeft += deltaX;
+    container.scrollTop += deltaY;
+
+    setLastPosition({ x: event.clientX, y: event.clientY });
+    setDraggingOccurred(true);
+  }
+};
+
 return (
   <Box sx={{ flexGrow: 1, position: 'relative', display: 'flex' }}>
     <div
@@ -302,13 +327,15 @@ return (
       }}
     >
       <canvas
-        ref={canvasRef}
-        width={gridSize * (cellSize + cellBorderWidth)}
-        height={gridSize * (cellSize + cellBorderWidth)}
-        onClick={handleCanvasClick}
-        onMouseMove={handleCanvasMouseMove}
-        onWheel={handleMouseWheel}
-      />
+  ref={canvasRef}
+  width={gridSize * (cellSize + cellBorderWidth)}
+  height={gridSize * (cellSize + cellBorderWidth)}
+  onClick={handleCanvasClick}
+  onMouseMove={handleCanvasMouseMove}
+  onWheel={handleMouseWheel}
+  onMouseDown={handleMouseDown}
+  onMouseUp={handleMouseUp}
+/>
     </div>
     {colorPickerVisible && (
       <div style={{ position: 'fixed', top: '50%', right: '10px', transform: 'translateY(-50%)' }}>
