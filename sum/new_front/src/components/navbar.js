@@ -6,7 +6,7 @@ import "../css/styleSheet.css"
 
 /**
  * This navbar contains:
- * - a title related to the contract
+ * - a generic title
  */
 function Navbar() {
     return (

@@ -114,7 +114,7 @@ export default function Body() {
 
     return (
         <div className="body">
-
+            {/* Title and quick presentation of the smart contract related to this front end */}
             <h1 className='bodyTitle'>Sum calculator</h1>
             <p className='bodyText'>This is a simple calculator that adds two numbers together.</p>
 
