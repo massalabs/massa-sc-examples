@@ -1,0 +1,49 @@
+/* Setup title size and color */
+.title {
+    color: rgb(241, 12, 12);
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Setup the background color */
+body {
+    background-color: rgb(54, 44, 44);
+}
+
+/* Setup the bodyTitle text */
+.bodyTitle {
+    color: rgb(255, 255, 255);
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Setup the bodyText text */
+.bodyText {
+    color: rgb(255, 255, 255);
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.messageToDisplay {
+    color: rgb(255, 255, 255);
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.accountInfo {
+    color: rgb(255, 255, 255);
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.addressLink {
+    color: rgb(255, 255, 255);
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+}
