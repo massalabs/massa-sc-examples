@@ -18,6 +18,7 @@ export default function ContractInteraction() {
 
   const [num1, setNum1] = useState("");
   const [num2, setNum2] = useState("");
+  const [result, setResult] = useState(null);
 
   const handleNum1Change = (event) => {
     setNum1(event.target.value);
@@ -54,6 +55,11 @@ export default function ContractInteraction() {
           Calculate Sum
         </button>
       </div>
+      {result !== null && (
+        <div className="result">
+          <h4>Result: {result}</h4>
+        </div>
+      )}
     </div>
   );
 }
