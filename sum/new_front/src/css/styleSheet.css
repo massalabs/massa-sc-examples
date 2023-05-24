@@ -47,3 +47,26 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
+/* Footer style */
+.footerContent {
+    background-color: rgb(54, 44, 44);
+    color: rgb(255, 255, 255);
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    padding: 50px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footerContent a {
+    color: rgb(255, 255, 255);
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.footerContent a:hover {
+    color: rgb(241, 12, 12);
+}
