@@ -4,7 +4,11 @@ import "../css/styleSheet.css";
 function Footer() {
     return (
         <footer className="footerContent">
-            <a href="https://github.com/massalabs/massa-sc-examples" target="_blank" rel="noreferrer">
+            <a
+                href="https://github.com/massalabs/massa-sc-examples"
+                target="_blank"
+                rel="noreferrer"
+            >
                 Repository
             </a>
             |
@@ -12,7 +16,11 @@ function Footer() {
                 Massa Website
             </a>
             |
-            <a href="https://docs.massa.net/en/latest/" target="_blank" rel="noreferrer">
+            <a
+                href="https://docs.massa.net/en/latest/"
+                target="_blank"
+                rel="noreferrer"
+            >
                 Documentation
             </a>
         </footer>
