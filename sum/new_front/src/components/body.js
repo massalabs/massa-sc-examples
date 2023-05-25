@@ -11,23 +11,6 @@ const provider = providers()[0]; // this is a thyraProvider object
 
 // get all the accounts and returns them in an array
 async function getAllAccounts() {
-  // empty the message
-  document.getElementsByClassName("messageToDisplay")[0].innerHTML = "";
-
-  // get the accounts from the wallet plugin
-  const url = MASSA_STATION_WALLET_URL + "api/accounts";
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log(data);
-  return data;
-}
-
-export default function Body() {
-  const [connected, setConnected] = useState(false);
-  const [account, setAccount] = useState("");
-  const [balance, setBalance] = useState("");
-
-  function createAccount() {
     // empty the message
     try{
         document.getElementsByClassName("messageToDisplay")[0].innerHTML = "";
@@ -35,7 +18,6 @@ export default function Body() {
     catch(error) {
         console.log(error);
     }
-
 
     try{
         // get all the accounts
@@ -91,9 +73,9 @@ export default function Body() {
             // create an account
             const newAccountData = await provider.generateNewAccount(document.getElementsByClassName("input")[0].value);
             console.log("new account created: ", newAccountData);
-            setAccountAddress(newAccountData._address);
-            setAccountName(newAccountData._name);
-            const acc = new ThyraAccount({ address: accountAddress, name: accountName }, provider.providerName)
+            setAccountAddress(newAccountData.address);
+            setAccountName(newAccountData.name);
+            const acc = new ThyraAccount({ address: newAccountData.address, name: newAccountData.name }, provider.providerName)
             setBalance(getBalance(acc));
         }
         catch(error) {
