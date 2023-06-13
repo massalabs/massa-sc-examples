@@ -88,6 +88,7 @@ export function changeAge(name: string, age: u32): void {
  * @returns The serialized 'age' found.
  *
  */
+@massaExport()
 export function getAge(name: string): u32 {
   // Then we create our encoded key from the function's argument.
   let nameEncoded = new Args().add(name).serialize();

@@ -4,7 +4,7 @@
             "outFile": "build/main.wasm",
             "sourceMap": true,
             "debug": true,
-            "transformer": ["@massalabs/as-transformer"]
+            "transform": ["@massalabs/as-transformer"]
         },
         "release": {
             "outFile": "build/main.wasm",
@@ -13,7 +13,7 @@
             "shrinkLevel": 0,
             "converge": false,
             "noAssert": false,
-            "transformer": ["@massalabs/as-transformer"]
+            "transform": ["@massalabs/as-transformer"]
         }
     },
     "options": {
