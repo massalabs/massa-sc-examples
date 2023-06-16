@@ -28,9 +28,9 @@ const __dirname = path.dirname(path.dirname(__filename));
     deployerAccount,
     [
       {
-        data: readFileSync(path.join(__dirname, 'build', 'main.wasm')),
+        data: readFileSync(path.join(__dirname, 'build', 'dns.wasm')),
         coins: fromMAS(0.1),
-        args: new Args().addString('Test'),
+        args: new Args(),
       } as ISCData,
     ],
     0n,
