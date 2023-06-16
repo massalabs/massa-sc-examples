@@ -7,6 +7,8 @@
         "test": "asp --summary",
         "build": "npx massa-as-compile",
         "deploy": "npm run build && ts-node src/deploy.ts",
+        "addDnsEntry": "ts-node src/addDnsEntry.ts",
+        "blacklist": "ts-node src/blacklist.ts",
         "prettier": "prettier '**/src/**/*.ts' --check && as-prettier --check assembly",
         "prettier:fix": "prettier '**/src/**/*.ts' --write && as-prettier --write assembly",
         "lint": "eslint .",
@@ -43,6 +45,6 @@
         "node": ">=16"
     },
     "dependencies": {
-        "@massalabs/sc-standards": "^0.0.2"
+        "@massalabs/sc-standards": "^0.0.3-dev.20230616133200"
     }
 }

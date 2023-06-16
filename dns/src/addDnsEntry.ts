@@ -5,7 +5,6 @@ import {
   ClientFactory,
   DefaultProviderUrls,
 } from '@massalabs/massa-web3';
-import { Address } from '@massalabs/massa-as-sdk';
 
 dotenv.config();
 
@@ -33,10 +32,10 @@ Get ready to soar to new heights!
 `;
 
 // Dummy address (replace it with the actual address)
-const websiteScAddr = new Address('').serialize();
+const websiteScAddr = 'AS1s58fxda7hftippRx7gMEgADqP4RAyYxBX7iJkiqgFfrMHuo2R';
 
 // Dummy address (replace it with the actual address)
-const dnsScAddr = new Address('').serialize();
+const dnsScAddr = 'AS129fg2eHHQW7D3bn8KqPsBibNRTK1t3JBHyPTJtBaanPi5kJtag';
 
 // Serialize the website parameters using Args
 const setResolverArgs = new Args()

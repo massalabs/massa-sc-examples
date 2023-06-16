@@ -5,7 +5,6 @@ import {
   ClientFactory,
   DefaultProviderUrls,
 } from '@massalabs/massa-web3';
-import { call, generateEvent, Address } from '@massalabs/massa-as-sdk';
 import { TypedArrayUnit } from '@massalabs/massa-web3/dist/esm/utils/arguments';
 
 dotenv.config();
@@ -33,7 +32,7 @@ const websiteNamesBinary = new Args()
   .serialize();
 
 // Dummy address (replace it with the actual address)
-const dnsScAddr = new Address('').serialize();
+const dnsScAddr = 'AS129fg2eHHQW7D3bn8KqPsBibNRTK1t3JBHyPTJtBaanPi5kJtag';
 
 (async () => {
   // Create the default web3 client
