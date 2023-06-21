@@ -3,8 +3,9 @@
     "version": "0.0.1",
     "description": "",
     "scripts": {
-        "test": "npx astester --imports node_modules/@massalabs/massa-as-sdk/astester.imports.js ./assembly/**/*.spec.ts",
-        "build": "asc assembly/smart-contract.ts --target release --exportRuntime --outFile build/smart-contract.wasm && asc --transform @massalabs/as-transformer/file2ByteArray.js --target release --exportRuntime assembly/main.ts --outFile build/main.wasm",
+        "test": "asp --summary",
+        "build": "npx massa-as-compile",
+        "deploy": "npm run build && ts-node src/deploy.ts",
         "lint": "eslint --resolve-plugins-relative-to \"./assembly/**/*.{ts,json}\" --fix",
         "prettier": "as-prettier \"./*.{ts,js,json,md}\" \"./{src,__tests}/**/*.{ts,js,json,md}\" --write",
         "fmt": "npm run lint && npm run prettier"
@@ -15,9 +16,9 @@
     "devDependencies": {
         "@massalabs/as": "^1.0.2",
         "@massalabs/as-tester": "^0.0.2-dev",
-        "@massalabs/as-transformer": "^0.1.1-dev",
-        "@massalabs/massa-as-sdk": "^2.0.2-dev",
+        "@massalabs/as-transformer": "^0.2.1-dev.20230613093831",
         "@massalabs/as-types": "^0.0.3-dev",
+        "@massalabs/massa-as-sdk": "^2.0.2-dev",
         "@massalabs/massa-web3": "^1.10.0",
         "@types/node": "^18.11.3",
         "@typescript-eslint/eslint-plugin": "^5.40.1",
@@ -33,6 +34,9 @@
     "overrides": {
         "assemblyscript": "^0.21.7"
     },
-    "type": "module"
-   
+    "type": "module",
+    "dependencies": {
+        "@massalabs/massa-sc-compiler": "^0.1.0",
+        "@massalabs/massa-sc-deployer": "^0.4.1"
+    }
 }

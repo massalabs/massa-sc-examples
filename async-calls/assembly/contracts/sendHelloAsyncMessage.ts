@@ -6,7 +6,7 @@ import { Args, stringToBytes } from "@massalabs/as-types";
 
 import {
     sendMessage,
-    currentPeriod,
+    Context,
     callerHasWriteAccess,
     Address,
 } from "@massalabs/massa-as-sdk";
@@ -16,14 +16,14 @@ import {
  * This function is meant to be called only one time: when the contract is deployed.
 
  */
-export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
+@massaExport()
+export function constructor(addr: string): void {
     // This line is important. It ensure that this function can't be called in the future.
     // If you remove this check someone could call your constructor function and reset your SC.
     if (!callerHasWriteAccess()) {
-        return [];
+        return;
     }
-    sendHelloMessage(binaryArgs);
-    return [];
+    sendHelloAsyncMessage(addr);
 }
 
 /**
@@ -33,12 +33,11 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
  * @returns empty array
 
  */
-export function sendHelloAsyncMessage(
-    binaryArgs: StaticArray<u8>
-): StaticArray<u8> {
+@massaExport()
+export function sendHelloAsyncMessage(addr: string): void {
     // Setup the 'message' we will send to our deployed SC
     const functionName = "receive";
-    const current_period = currentPeriod();
+    const current_period = Context.currentPeriod();
     const validityStartPeriod = current_period + 1;
     const validityStartThread = 13 as u8;
     const validityEndPeriod = current_period + 20;
@@ -48,11 +47,7 @@ export function sendHelloAsyncMessage(
     const coins = 100; // coins that can be used inside SC.
     const msg = new Args().add("hello my good friend!").serialize();
 
-    const args = new Args(binaryArgs);
-
-    const address = new Address(
-        args.nextString().expect("Address argument is missing or invalid")
-    );
+    const address = new Address(addr);
 
     // Send the message
     sendMessage(
@@ -67,6 +62,4 @@ export function sendHelloAsyncMessage(
         coins,
         msg
     );
-
-    return [];
 }
