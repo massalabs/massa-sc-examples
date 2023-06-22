@@ -1,5 +1,4 @@
 import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
-import { Args } from '@massalabs/as-types';
 
 /**
  * This function is meant to be called only one time: when the contract is deployed.
@@ -18,14 +17,9 @@ export function constructor(_: StaticArray<u8>): void {
   // This function is used to emit an event to the blockchain
   generateEvent('Blog initiated');
 }
-
-export function post(_args: StaticArray<u8>): void {
-  const args = new Args(_args);
-  // Get the post from the arguments and check if it is valid (not null)
-  const post = args
-    .nextString()
-    .expect('Post argument is missing or invalid');
-
+ 
+@massaExport()
+export function post(post: string): void {
   let postLastIndex = 0;
   if (Storage.get<string>("N_BLOG_POSTS") !== "") {
     postLastIndex = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
@@ -37,14 +31,9 @@ export function post(_args: StaticArray<u8>): void {
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
   Storage.set("N_BLOG_POSTS", postLastIndex.toString());
 }
-
-export function deletePost(_args: StaticArray<u8>): void {
-  const args = new Args(_args);
-  // Get the post index from the arguments and check if it is valid, we expect a string of the form "1.0" or "2.0", etc.
-  const postIndex = args
-    .nextString()
-    .expect('Post index argument is missing or invalid');
-    // Delete the post from the storage of the contract by setting its value to an empty string
+@massaExport()
+export function deletePost(postIndex: string): void {
+  // Delete the post from the storage of the contract by setting its value to an empty string
   Storage.set(blogKey(postIndex), "");
 }
 

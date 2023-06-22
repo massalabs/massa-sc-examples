@@ -27,26 +27,11 @@ describe('Blog Key', () => {
   });
 });
 
-// Testing the post function with an invalid post
-describe('Post function with invalid post', () => {
-  test('post', () => {
-    expect(() => {
-      main.post(new Args()
-      // the function expects a post index as a string, but we're passing a number
-        .add(1 as u32)
-        .serialize(),);
-    }).toThrow("Argument invalid");
-  });
-});
-
-
 // Testing the post function with a valid post : First Post
 describe('Post function with valid post', () => {
   test('post', () => {
-    const args = new Args();
-    args.add("First Post" as string);
 
-    main.post(args.serialize());
+    main.post("First Post");
 
     const updatedNBlogPosts = parseInt(Storage.get("N_BLOG_POSTS")) as i32;
     expect(updatedNBlogPosts).toBe(1);
@@ -61,21 +46,8 @@ describe('Delete Post function with valid post index', () => {
   test('delete existing post', () => {
     // Using a valid post index : 1
     const postKey = main.blogKey('1');
-    const args = new Args();
-    args.add("1" as string);
-    main.deletePost(args.serialize());
+    main.deletePost("1");
     const deletedPost = Storage.get<string>(postKey);
     expect<string>(deletedPost).toBe(""); // Check if the post has been deleted
-  });
-});
-
-describe('Delete Post function with invalid post index', () => {
-  test('delete existing post', () => {
-    expect(() => {
-      main.deletePost(new Args()
-      // the function expects a post index as a string, but we're passing a number
-        .add(1 as u32)
-        .serialize(),);
-    }).toThrow("Argument invalid");
   });
 });
