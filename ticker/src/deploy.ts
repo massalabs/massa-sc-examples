@@ -10,7 +10,7 @@ import {
   ISlot,
   ProviderType,
   IEvent,
-  MassaCoin,
+  fromMAS,
 } from '@massalabs/massa-web3';
 import delay from 'delay';
 
@@ -70,11 +70,11 @@ const isLatestSlot = (slot1: ISlot, slot2: ISlot) => {
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'oracle.wasm')),
-        coins: new MassaCoin(1),
+        coins: fromMAS(1),
       } as ISCData,
     ],
-    0,
-    4_200_000_000,
+    BigInt(0),
+    BigInt(4_200_000_000),
     true,
   );
 

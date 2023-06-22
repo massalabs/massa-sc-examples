@@ -1,6 +1,5 @@
 import {
   callerHasWriteAccess,
-  currentPeriod,
   generateEvent,
   Context,
   sendMessage,
@@ -8,6 +7,7 @@ import {
   unsafeRandom,
 } from '@massalabs/massa-as-sdk';
 import { u64ToBytes } from '@massalabs/as-types';
+import { currentPeriod } from '@massalabs/massa-as-sdk/assembly/std/context';
 
 const PRICE_KEY = 'PRICE_KEY';
 const INIT_PRICE: u64 = 10000;
