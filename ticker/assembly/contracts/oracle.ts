@@ -6,20 +6,18 @@ import {
   Storage,
   unsafeRandom,
 } from '@massalabs/massa-as-sdk';
-import { u64ToBytes } from '@massalabs/as-types';
 import { currentPeriod } from '@massalabs/massa-as-sdk/assembly/std/context';
 
 const PRICE_KEY = 'PRICE_KEY';
 const INIT_PRICE: u64 = 10000;
 
-export function constructor(_: StaticArray<u8>): StaticArray<u8> {
+@massaExport()
+export function constructor(): void {
   // This line is important. It ensure that this function can't be called in the future.
   // If you remove this check someone could call your constructor function and reset your SC.
   assert(callerHasWriteAccess(), 'Caller is not allowed');
 
-  setPrice([]);
-
-  return [];
+  setPrice();
 }
 
 function sendFuturOperation(): void {
@@ -63,8 +61,8 @@ function generateRandomIncrease(base: u64): u64 {
   }
   return base + increase;
 }
-
-export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
+@massaExport()
+export function setPrice(): u64 {
   assert(callerHasWriteAccess(), 'Caller is not allowed');
 
   let currentPrice: u64;
@@ -84,14 +82,15 @@ export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
 
   sendFuturOperation();
 
-  return u64ToBytes(newPrice);
+  return newPrice;
 }
 
-export function getPrice(_: StaticArray<u8>): StaticArray<u8> {
+@massaExport()
+export function getPrice(): u64 {
   assert(!Storage.has(PRICE_KEY), 'Price is not set');
 
   const price = u64.parse(Storage.get(PRICE_KEY));
   generateEvent(`current price is ${price.toString()}`);
 
-  return u64ToBytes(price);
+  return price;
 }
