@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { CONTRACT_ADDRESS } from "../.env"
 
 /**
  * In this file we allow the user can: interact with a contract we deployed
  */
 
-// first we need to set the contract address
-const contractAddress = "The contract address goes here";
+// first we need to set the default contract address in the .env.example file
 
 export default function ContractInteraction() {
     /** here we need to set the inputs of the contract (for instance, in the sum contract we need to set the two numbers to sum and a button to send the transaction)

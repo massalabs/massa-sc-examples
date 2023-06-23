@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ContractInteraction from "./contractInteraction";
-import { providers, ThyraAccount } from "@massalabs/wallet-provider";
+import { providers, MassaStationAccount } from "@massalabs/wallet-provider";
 
-// setup a new provider: MassaStation (THYRA)
+// setup a new provider: MassaStation
 const registerEvent = new CustomEvent("register", {
-    detail: { providerName: "THYRA" },
+    detail: { providerName: "MASSASTATION" },
 });
 document.getElementById("massaWalletProvider").dispatchEvent(registerEvent);
 
@@ -73,7 +73,7 @@ export default function Body() {
             console.log("new account created: ", newAccountData);
             setAccountAddress(newAccountData.address);
             setAccountName(newAccountData.name);
-            const acc = new ThyraAccount(
+            const acc = new MassaStationAccount(
                 { address: newAccountData.address, name: newAccountData.name },
                 provider.providerName
             );
@@ -103,7 +103,7 @@ export default function Body() {
                 setAccountAddress(data[0]._address);
                 setAccountName(data[0]._name);
                 // set the balance
-                const acc = new ThyraAccount(
+                const acc = new MassaStationAccount(
                     { address: data[0]._address, name: data[0]._name },
                     provider.providerName
                 );
