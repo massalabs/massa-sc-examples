@@ -1,17 +1,17 @@
-// create a navbar component that will be used in the app.js file
+// create a header component that will be used in the app.js file
 import React from "react";
 import "../css/styleSheet.css";
 
 /**
- * This navbar contains:
+ * This header contains:
  * - a generic title
  */
-function Navbar() {
+function Header() {
     return (
-        <nav>
+        <header>
             <h1 className="title">Massa Smart contract example</h1>
-        </nav>
+        </header>
     );
 }
 
-export default Navbar;
+export default Header;

@@ -1,69 +1,69 @@
 import React, { useState } from "react";
 import ContractInteraction from "./contractInteraction";
-import { providers, MassaStationAccount } from "@massalabs/wallet-provider";
-
-// setup a new provider: MassaStation
-const registerEvent = new CustomEvent("register", {
-    detail: { providerName: "MASSASTATION" },
-});
-document.getElementById("massaWalletProvider").dispatchEvent(registerEvent);
-
-const provider = providers()[0]; // this is a thyraProvider object
-
-// get all the accounts and returns them in an array
-async function getAllAccounts() {
-    // empty the message
-    try {
-        document.getElementsByClassName("messageToDisplay")[0].innerHTML = "";
-    } catch (error) {
-        console.log(error);
-    }
-
-    try {
-        // get all the accounts
-        const accounts = await provider.accounts();
-        return accounts;
-    } catch (error) {
-        console.log("Error while retrieving accounts: ", error);
-        document.getElementsByClassName("messageToDisplay")[0].innerHTML =
-            "Error while retrieving accounts: " + error;
-        return [];
-    }
-}
-
-// account is a ThyraAccount object
-function getBalance(account) {
-    try {
-        let balance = 0;
-        (async () => {
-            balance = await account.balance();
-        })();
-        return balance;
-    } catch (error) {
-        console.log("Error while retrieving balance: ", error);
-        return 0;
-    }
-}
-
-// check if Massa Station is running with the wallet plugin
-async function isMassaStationRunning() {
-    try {
-        const isRunning = await getAllAccounts();
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
+import { providers } from "@massalabs/wallet-provider";
+import { MASSA_EXEMPLE } from "../const/const";
 
 export default function Body() {
     const [connected, setConnected] = useState(false);
     const [accountName, setAccountName] = useState("");
     const [accountAddress, setAccountAddress] = useState("");
     const [balance, setBalance] = useState(-1);
+    const [account, setAccount] = useState(null);
+    const [messageToDisplay, setMessageToDisplay] = useState("");
+
+    // setup a new provider: MassaStation
+    const registerEvent = new CustomEvent("register", {
+        detail: { providerName: "MASSASTATION" },
+    });
+    document.getElementById("massaWalletProvider").dispatchEvent(registerEvent);
+
+    const provider = providers()[0]; // this is a massaStation object
+
+    // get all the accounts and returns them in an array
+    async function getAllAccounts() {
+        // empty the message
+        try {
+            document.getElementsByClassName("messageToDisplay")[0].innerHTML =
+                "";
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            // get all the accounts
+            const accounts = await provider.accounts();
+            return accounts;
+        } catch (error) {
+            console.log("Error while retrieving accounts: ", error);
+            setMessageToDisplay("Error while retrieving accounts: " + error);
+            return [];
+        }
+    }
+
+    // check if Massa Station is running with the wallet plugin
+    async function isMassaStationRunning() {
+        try {
+            await getAllAccounts();
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // account is a MassaStation object
+    async function getBalance(account) {
+        try {
+            const balance = await account.balance();
+            setBalance(balance.finalBalance);
+        } catch (error) {
+            console.log("Error while retrieving balance: ", error);
+            return 0;
+        }
+    }
 
     async function createAccount() {
         // empty the message
-        document.getElementsByClassName("messageToDisplay")[0].innerHTML = "";
+        setMessageToDisplay("");
 
         try {
             // create an account
@@ -73,41 +73,26 @@ export default function Body() {
             console.log("new account created: ", newAccountData);
             setAccountAddress(newAccountData.address);
             setAccountName(newAccountData.name);
-            const acc = new MassaStationAccount(
-                { address: newAccountData.address, name: newAccountData.name },
-                provider.providerName
-            );
-            setBalance(getBalance(acc));
+            setAccount(newAccountData);
+            getBalance(newAccountData);
         } catch (error) {
             console.log(error);
-            document.getElementsByClassName("messageToDisplay")[0].innerHTML =
-                error;
+            setMessageToDisplay(error);
             return;
         }
     }
 
-    function onMSDisconnected(message) {
-        setConnected(false);
-        console.log("Disconnected from Massa Station");
-        // replace className MSDisconnected with message
-        document.getElementsByClassName("messageToDisplay")[0].innerHTML =
-            message;
-    }
-
-    function onMSConnected() {
+    async function onMSConnected() {
         console.log("Connected to Massa Station");
         setConnected(true);
         // set the account
-        getAllAccounts().then((data) => {
+        getAllAccounts().then(async (data) => {
             if (data.length > 0) {
+                // set constants
                 setAccountAddress(data[0]._address);
                 setAccountName(data[0]._name);
-                // set the balance
-                const acc = new MassaStationAccount(
-                    { address: data[0]._address, name: data[0]._name },
-                    provider.providerName
-                );
-                setBalance(getBalance(acc));
+                getBalance(data[0]);
+                setAccount(data[0]);
             } else {
                 setAccountAddress("No account found");
                 setAccountName("No account found");
@@ -118,10 +103,10 @@ export default function Body() {
 
     function onMSDisconnected(message) {
         setConnected(false);
+        setAccount(null);
         console.log("Disconnected from Massa Station");
         // replace className MSDisconnected with message
-        document.getElementsByClassName("messageToDisplay")[0].innerHTML =
-            message;
+        setMessageToDisplay(message);
     }
 
     // check if Massa Station is running with the wallet plugin
@@ -139,15 +124,11 @@ export default function Body() {
         })();
     }
 
-    let displayBalance = "Balance : " + balance + " MASSA";
-
     return (
         <div className="body">
             {/* Title and quick presentation of the smart contract related to this front end */}
-            <h1 className="bodyTitle">Sum calculator</h1>
-            <p className="bodyText">
-                This is a simple calculator that adds two numbers together.
-            </p>
+            <h1 className="bodyTitle">{MASSA_EXEMPLE.TITLE}</h1>
+            <p className="bodyText">{MASSA_EXEMPLE.DESCRIPTION}</p>
 
             <div className="bodyContent">
                 {!connected && (
@@ -158,7 +139,7 @@ export default function Body() {
                         Connect to Massa Station
                     </button>
                 )}
-                {connected && accountAddress === "No account found" && (
+                {connected && account === "No account found" && (
                     <div>
                         <br></br>
                         <p className="address">
@@ -179,7 +160,7 @@ export default function Body() {
                         </p>
                     </div>
                 )}
-                {connected && accountAddress !== "No account found" && (
+                {connected && account !== "No account found" && (
                     <div>
                         <div className="accountInfo">
                             <br></br>
@@ -188,9 +169,11 @@ export default function Body() {
                                 <a
                                     className="addressLink"
                                     href={
-                                        "https://massa.net/testnet/" +
+                                        "https://test.massa.net/v1/#explorer?explore=" +
                                         accountAddress
                                     }
+                                    target="_blank"
+                                    rel="noreferrer"
                                 >
                                     {accountAddress.substring(0, 6) +
                                         " ... " +
@@ -200,14 +183,17 @@ export default function Body() {
                                         )}
                                 </a>
                             </p>
-                            <p className="balance">{displayBalance}</p>
+                            <p className="accountName">
+                                Account Name : {accountName}
+                            </p>
+                            <p className="balance">Balance : {balance} MASSA</p>
                         </div>
                         <br></br>
-                        <ContractInteraction />
+                        <ContractInteraction account={account} />
                     </div>
                 )}
             </div>
-            <div className="messageToDisplay"></div>
+            <div className="messageToDisplay">{messageToDisplay}</div>
         </div>
     );
 }

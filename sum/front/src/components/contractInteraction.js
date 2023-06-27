@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CONTRACT_ADDRESS } from "../.env"
+import { sum } from "../utils/sumCaller.ts";
 
 /**
  * In this file we allow the user can: interact with a contract we deployed
@@ -7,7 +7,7 @@ import { CONTRACT_ADDRESS } from "../.env"
 
 // first we need to set the default contract address in the .env.example file
 
-export default function ContractInteraction() {
+export default function ContractInteraction(account) {
     /** here we need to set the inputs of the contract (for instance, in the sum contract we need to set the two numbers to sum and a button to send the transaction)
      * we can also :
      *  - send a transaction to the contract
@@ -16,8 +16,8 @@ export default function ContractInteraction() {
      *  - etc.
      */
 
-    const [num1, setNum1] = useState("");
-    const [num2, setNum2] = useState("");
+    const [num1, setNum1] = useState(0);
+    const [num2, setNum2] = useState(0);
     const [result, setResult] = useState(null);
 
     const handleNum1Change = (event) => {
@@ -28,8 +28,10 @@ export default function ContractInteraction() {
         setNum2(event.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log("Handle sum transaction");
+        const response = await sum(num1, num2, 0);
+        setResult(response);
     };
 
     return (
