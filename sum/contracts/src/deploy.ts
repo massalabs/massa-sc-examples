@@ -4,7 +4,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
 import { Args, IEvent, fromMAS } from '@massalabs/massa-web3';
-import { NoArg } from '@massalabs/as-types';
 
 dotenv.config();
 
@@ -30,12 +29,11 @@ const __dirname = path.dirname(path.dirname(__filename));
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'sum.wasm')),
-        coins: fromMAS(0.5)
+        coins: fromMAS(0.5),
       } as ISCData,
     ],
     0n,
     4_200_000_000n,
-    0n,
     true,
   );
   const data = (deployed.events?.find((e) => e.data) as IEvent).data;
@@ -56,7 +54,6 @@ const __dirname = path.dirname(path.dirname(__filename));
     ],
     0n,
     4_200_000_000n,
-    0n,
     true,
   );
   process.exit(0);

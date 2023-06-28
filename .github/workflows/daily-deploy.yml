@@ -46,5 +46,5 @@ jobs:
             exit 1
           fi
         env:
-          JSON_RPC_URL_PUBLIC: https://test.massa.net/api/v2:33035
+          JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
           WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}

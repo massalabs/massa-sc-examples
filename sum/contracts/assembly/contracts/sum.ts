@@ -1,35 +1,35 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
-import { Args, stringToBytes, i32ToBytes, SafeMath } from '@massalabs/as-types';
+import { Args, stringToBytes, SafeMath, i64ToBytes } from '@massalabs/as-types';
 
 /**
- * Sums 2 i32 using the SafeMath library and returns the result.
+ * Sums 2 i64 using the SafeMath library and returns the result.
  *
- * @param a - first i32
- * @param b - second i32
+ * @param a - first i64
+ * @param b - second i64
  * @returns Sum of a and b
  */
-function add(a: u32, b: u32): u32 {
+function add(a: u64, b: u64): u64 {
   return SafeMath.add(a, b);
 }
 
 /**
- * This function sums 2 i32 and returns the result.
+ * This function sums 2 i64 and returns the result.
  * It also generates an event resuming the operation and save the last result in the blockchain.
  *
- * @param binaryArgs - the 2 u32 we want to sum serialized in bytes
+ * @param binaryArgs - the 2 u64 we want to sum serialized in bytes
  *
- * @returns the sum of the 2 u32 serialized in bytes
+ * @returns the sum of the 2 u64 serialized in bytes
  */
 export function sum(binaryArgs: StaticArray<u8>): StaticArray<u8> {
   const args = new Args(binaryArgs);
-  const a = args.nextI32().expect('Argument a is missing or invalid');
-  const b = args.nextI32().expect('Argument b is missing or invalid');
+  const a = args.nextI64().expect('Argument a is missing or invalid');
+  const b = args.nextI64().expect('Argument b is missing or invalid');
   const result = add(a, b);
   generateEvent(
     `Sum (${a.toString()}, ${b.toString()}) = ${result.toString()}`,
   );
-  Storage.set(stringToBytes('lastResult'), i32ToBytes(result));
-  return i32ToBytes(result);
+  Storage.set(stringToBytes('lastResult'), i64ToBytes(result));
+  return i64ToBytes(result);
 }
 
 /**
