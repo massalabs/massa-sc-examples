@@ -35,7 +35,7 @@ Get ready to soar to new heights!
 const websiteScAddr = 'AS1s58fxda7hftippRx7gMEgADqP4RAyYxBX7iJkiqgFfrMHuo2R';
 
 // Dummy address (replace it with the actual address)
-const dnsScAddr = 'AS129fg2eHHQW7D3bn8KqPsBibNRTK1t3JBHyPTJtBaanPi5kJtag';
+const dnsScAddr = '';
 
 // Serialize the website parameters using Args
 const setResolverArgs = new Args()

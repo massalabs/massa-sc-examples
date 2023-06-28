@@ -5,7 +5,6 @@ import {
   ClientFactory,
   DefaultProviderUrls,
 } from '@massalabs/massa-web3';
-import { TypedArrayUnit } from '@massalabs/massa-web3/dist/esm/utils/arguments';
 
 dotenv.config();
 
@@ -28,11 +27,12 @@ const websiteNames = ['blacklist1', 'blacklist2', 'blacklist3'];
 
 // Serialize the website names using Args
 const websiteNamesBinary = new Args()
-  .addNativeTypeArray(websiteNames, TypedArrayUnit.STRING)
+  .addNativeTypeArray(websiteNames, 0)
   .serialize();
 
+
 // Dummy address (replace it with the actual address)
-const dnsScAddr = 'AS129fg2eHHQW7D3bn8KqPsBibNRTK1t3JBHyPTJtBaanPi5kJtag';
+const dnsScAddr = '';
 
 (async () => {
   // Create the default web3 client
@@ -42,16 +42,16 @@ const dnsScAddr = 'AS129fg2eHHQW7D3bn8KqPsBibNRTK1t3JBHyPTJtBaanPi5kJtag';
     adminAccount,
   );
 
-  // Call the smart contract's "addWebsitesToBlackList" function
-  await web3Client.smartContracts().callSmartContract(
-    {
-      fee: BigInt(0),
-      maxGas: BigInt(70000000),
-      coins: BigInt(0),
-      targetAddress: dnsScAddr,
-      functionName: 'addWebsitesToBlackList',
-      parameter: websiteNamesBinary,
-    },
-    adminAccount,
-  );
+    // Call the smart contract's "addWebsitesToBlackList" function
+    await web3Client.smartContracts().callSmartContract(
+      {
+        fee: BigInt(0),
+        maxGas: BigInt(70000000),
+        coins: BigInt(0),
+        targetAddress: dnsScAddr,
+        functionName: 'addWebsitesToBlackList',
+        parameter: websiteNamesBinary,
+      },
+      adminAccount,
+    );
 })();
