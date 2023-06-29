@@ -27,8 +27,7 @@
         "@massalabs/eslint-config": "^0.0.9",
         "@massalabs/massa-as-sdk": "^2.1.0",
         "@massalabs/massa-sc-compiler": "^0.1.0",
-        "@massalabs/massa-sc-deployer": "^0.2.1",
-        "@massalabs/massa-web3": "^1.17.5-dev.20230626091359",
+        "@massalabs/massa-sc-deployer": "^0.2.3-dev.20230628143325",
         "@massalabs/prettier-config-as": "^0.0.2",
         "@types/node": "^18.11.10",
         "assemblyscript": "^0.25.2",
@@ -43,6 +42,9 @@
     "prettier": "@massalabs/prettier-config-as",
     "engines": {
         "node": ">=16"
+    },
+    "overrides": {
+        "@massalabs/massa-web3": "~1.17.5-dev"
     },
     "dependencies": {
         "@massalabs/sc-standards": "^0.0.3-dev.20230627121550"

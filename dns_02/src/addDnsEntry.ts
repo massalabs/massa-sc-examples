@@ -23,7 +23,7 @@ if (!privKey) {
 const adminAccount = await WalletClient.getAccountFromSecretKey(privKey);
 
 // Website parameters to add to the DNS
-const websiteName = 'blacklist3';
+const websiteName = 'blacklist2';
 
 const websiteDescription = `
 Experience the addictive joy of Flappy game on our website,
@@ -35,7 +35,7 @@ Get ready to soar to new heights!
 const websiteScAddr = 'AS1s58fxda7hftippRx7gMEgADqP4RAyYxBX7iJkiqgFfrMHuo2R';
 
 // Dummy address (replace it with the actual address)
-const dnsScAddr = 'AS1JB9pJNa63HNNMMZUevtMWHj6BnojgrNd5oR2Y5m1Eh6KdddLE';
+const dnsScAddr = 'AS162neANrc49uhqadRmamBqr8Bgn6zBmf4ryDpWbumNaep3BvRV';
 
 // Serialize the website parameters using Args
 const setResolverArgs = new Args()
