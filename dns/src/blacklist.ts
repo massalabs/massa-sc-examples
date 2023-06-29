@@ -23,16 +23,16 @@ if (!privKey) {
 const adminAccount = await WalletClient.getAccountFromSecretKey(privKey);
 
 // List of website names to be blacklisted
-const websiteNames = ['blacklist1', 'blacklist2', 'blacklist3'];
+const websiteNames = ["blacklist1", "blacklist2","blacklist22"];
 
 // Serialize the website names using Args
-const websiteNamesBinary = new Args()
-  .addNativeTypeArray(websiteNames, 0)
-  .serialize();
+
+const websiteNamesBinary = new Args().addArray(websiteNames, 0).serialize();
+
 
 
 // Dummy address (replace it with the actual address)
-const dnsScAddr = '';
+const dnsScAddr = 'AS1YEaTx2krvt8PE1fRATwnodDWMyfFFmDypfAjVr7p5aEkaYDAP';
 
 (async () => {
   // Create the default web3 client

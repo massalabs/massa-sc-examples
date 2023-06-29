@@ -29,7 +29,7 @@ const __dirname = path.dirname(path.dirname(__filename));
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'dns.wasm')),
-        coins: fromMAS(0.1),
+        coins: fromMAS(1),
         args: new Args(),
       } as ISCData,
     ],
