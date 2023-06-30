@@ -12,10 +12,11 @@ Welcome to the repository for the Sum smart contract's front-end application, de
 
 
 ### Clone the Repository
- After setting up MassaStation, clone this repository and install the required dependencies with the following command:
+After setting up MassaStation, clone this repository
+`git clone git@github.com:massalabs/massa-sc-examples.git`
 
 ### Install Dependencies
-
+Install the required dependencies with the following command:
 `npm install`
 
 ## Running the Application
