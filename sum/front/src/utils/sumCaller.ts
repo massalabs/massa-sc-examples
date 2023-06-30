@@ -2,9 +2,9 @@
  * Massa Proto CLI can generate a method to call "sum" function.
  */
 export async function sum(
-    num1: bigint,
-    num2: bigint,
-    coins: bigint
+    num1: number,
+    num2: number,
+    coins: number
 ): Promise<string> {
     return num1 + " + " + num2;
 }

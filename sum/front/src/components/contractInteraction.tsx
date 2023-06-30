@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { sum } from "../utils/sumCaller.ts";
+import React, { ChangeEvent, useState } from "react";
+import { sum } from "../utils/sumCaller";
+import { IAccount } from "@massalabs/wallet-provider";
 
 /**
  * In this file we allow the user can: interact with a contract we deployed
@@ -7,7 +8,13 @@ import { sum } from "../utils/sumCaller.ts";
 
 // first we need to set the default contract address in the .env.example file
 
-export default function ContractInteraction(account) {
+interface ContractInteractionProps {
+    account: IAccount;
+}
+
+export default function ContractInteraction({
+    account,
+}: ContractInteractionProps) {
     /** here we need to set the inputs of the contract (for instance, in the sum contract we need to set the two numbers to sum and a button to send the transaction)
      * we can also :
      *  - send a transaction to the contract
@@ -16,16 +23,16 @@ export default function ContractInteraction(account) {
      *  - etc.
      */
 
-    const [num1, setNum1] = useState(0);
-    const [num2, setNum2] = useState(0);
-    const [result, setResult] = useState(null);
+    const [num1, setNum1] = useState<number>(0);
+    const [num2, setNum2] = useState<number>(0);
+    const [result, setResult] = useState<string>("");
 
-    const handleNum1Change = (event) => {
-        setNum1(event.target.value);
+    const handleNum1Change = (event: ChangeEvent<HTMLInputElement>) => {
+        setNum1(Number(event.target.value));
     };
 
-    const handleNum2Change = (event) => {
-        setNum2(event.target.value);
+    const handleNum2Change = (event: ChangeEvent<HTMLInputElement>) => {
+        setNum2(Number(event.target.value));
     };
 
     const handleSubmit = async () => {
