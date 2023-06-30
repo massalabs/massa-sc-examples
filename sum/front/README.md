@@ -1,68 +1,63 @@
-# Massa front example: Sum
+# Massa Front-End Example: Sum
 
-This repository is a front end application for the Sum smart-contract.
+Welcome to the repository for the Sum smart contract's front-end application, developed on the Massa platform. For a comprehensive understanding of Massa smart contracts, refer to our [documentation](https://docs.massa.net/en/latest/web3-dev/massa-web3.html).
 
-Find the documentation here: <https://docs.massa.net/en/latest/web3-dev/massa-web3.html>.
+## Setup & Installation
 
-## Requirements
+### Prerequisites
 
-Install MassaStation on your laptop. Follow the instructions [here](https://github.com/massalabs/station/blob/main/INSTALLATION.md) to install MassaStation and run it.
+- Ensure you have NodeJs installed on your system. Follow the instructions provided [here](https://nodejs.org/en/download/) for installation.
 
-Install the dependencies:
+- Before diving in, ensure you have installed MassaStation on your system. Follow the instructions provided [here](https://github.com/massalabs/station/blob/main/INSTALLATION.md) for installation.
 
-```shell
-npm install
-```
 
-## Getting Started with Create React App
+### Clone the Repository
+ After setting up MassaStation, clone this repository and install the required dependencies with the following command:
 
-This is a React.JS application with TypeScript and Bootstrap css framework.
+### Install Dependencies
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`npm install`
 
-## Available Scripts
+## Running the Application
 
-In the project directory, you can run:
+The following npm commands are available to run in your project directory:
 
-### `npm start`
+### Start the Application
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`npm start`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+This command runs the application in development mode. Open [http://localhost:3000](http://localhost:3000) to view the application in your browser. The application reloads if you make changes to the source files.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Run Tests
 
-### `npm run build`
+`npm test`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This command launches the test runner in interactive watch mode. For more details, check out the Create React App [documentation on running tests](https://facebook.github.io/create-react-app/docs/running-tests).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Build for Production
 
-### `npm run eject`
+`npm run build`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This command builds the application for production use, optimizing for the best performance. The build is minified and includes hashed filenames. For deployment instructions, refer to the Create React App [deployment guide](https://facebook.github.io/create-react-app/docs/deployment).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Ejecting
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+`npm run eject`
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Warning:** Ejecting is a permanent operation!
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+If the build tool and configuration do not meet your project needs, you can use `npm run eject` to expose all the configuration files and dependencies. This allows for full customization. Remember, this action is irreversible!
 
-### `npm run build` fails to minify
+## Additional Resources
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Further your knowledge on Create React App by visiting the [official documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+For a deeper dive into React, check out the [React documentation](https://reactjs.org/).
+
+### Troubleshooting
+
+In case you encounter issues with the `npm run build` command, refer to this guide: [Troubleshooting 'npm run build' fails to minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify).
