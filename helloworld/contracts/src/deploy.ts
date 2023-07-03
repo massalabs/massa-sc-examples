@@ -38,40 +38,20 @@ const __dirname = path.dirname(path.dirname(__filename));
  * After all deployments, it terminates the process.
  */
 (async () => {
-  let deployed = await deploySC(
+  await deploySC(
     publicApi, // JSON RPC URL
     deployerAccount, // account deploying the smart contract(s)
     [
       {
         data: readFileSync(path.join(__dirname, 'build', 'helloworld.wasm')), // smart contract bytecode
         coins: fromMAS(0.1), // coins for deployment
-        args: new Args().addString('Test'), // arguments for deployment
+        args: new Args().addString('Hello Massa'), // arguments for deployment
       } as ISCData,
       // Additional smart contracts can be added here for deployment
     ],
     0n, // fees for deployment
     4_200_000_000n, // max gas for deployment
     true, // if true, waits for the first event before returning
-  );
-  const data = (deployed.events as IEvent[])[1].data;
-  const address = data
-    .split('Contract deployed at address: ')[1]
-    .trim()
-    .replace(' ', '');
-
-  await deploySC(
-    publicApi,
-    deployerAccount,
-    [
-      {
-        data: readFileSync(path.join(__dirname, 'build', 'run.wasm')),
-        coins: fromMAS(0.5),
-        args: new Args().addString(address),
-      } as ISCData,
-    ],
-    0n,
-    4_200_000_000n,
-    true,
   );
   process.exit(0); // terminate the process after deployment(s)
 })();
