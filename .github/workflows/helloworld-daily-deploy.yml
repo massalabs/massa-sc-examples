@@ -1,25 +1,18 @@
-name: Daily Deploy
+name: Helloworld Daily Deploy
 
 on:
   push:
+    paths:
+      - helloworld/**
   workflow_dispatch:
   schedule:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy:
-    strategy:
-      max-parallel: 1
-      matrix:
-        project:
-          - name: blog
-            event: "Blog initiated"
-          - name: helloworld
-            event: "Hello, World!"
-
+  deploy-helloworld:
     defaults:
       run:
-        working-directory: ${{ matrix.project.name }}
+        working-directory: ./helloworld/contracts/
 
     runs-on: ubuntu-latest
 
@@ -32,17 +25,17 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./${{ matrix.project.name }}/package-lock.json
+          cache-dependency-path: ./helloworld/contracts/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "'${{ matrix.project.event }}'"; then
-            echo "${{ matrix.project.event }} event received."
+          if npm run deploy | grep -q "Hello, World!"; then
+            echo "Hello, World! event received."
           else
-            echo "No ${{ matrix.project.event }} event."
+            echo "No Hello, World! event."
             exit 1
           fi
         env:
