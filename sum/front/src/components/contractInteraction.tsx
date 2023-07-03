@@ -2,12 +2,6 @@ import React, { ChangeEvent, useState } from "react";
 import { sum } from "../utils/sumCaller";
 import { IAccount } from "@massalabs/wallet-provider";
 
-/**
- * In this file we allow the user can: interact with a contract we deployed
- */
-
-// first we need to set the default contract address in the .env.example file
-
 interface ContractInteractionProps {
     account: IAccount;
 }
@@ -15,14 +9,6 @@ interface ContractInteractionProps {
 export default function ContractInteraction({
     account,
 }: ContractInteractionProps) {
-    /** here we need to set the inputs of the contract (for instance, in the sum contract we need to set the two numbers to sum and a button to send the transaction)
-     * we can also :
-     *  - send a transaction to the contract
-     *  - listen to events emitted by the contract
-     *  - read the state of the contract
-     *  - etc.
-     */
-
     const [num1, setNum1] = useState<number>(0);
     const [num2, setNum2] = useState<number>(0);
     const [result, setResult] = useState<string>("");

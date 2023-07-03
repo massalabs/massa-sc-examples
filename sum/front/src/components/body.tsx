@@ -1,58 +1,49 @@
-import React from "react";
 import AccountInformation from "./accountInformation";
 import ContractInteraction from "./contractInteraction";
 import { MASSA_EXEMPLE } from "../const";
-import { IAccount } from "@massalabs/wallet-provider";
-
-interface BodyProps {
-    connected: boolean;
-    account: IAccount | null;
-    balance: {
-        finalBalance: number;
-    };
-    errorMessage: string;
-    connectMassaStation: () => void;
-    createAccount: () => void;
-}
+import { useProvider } from "../interfaces/useProvider";
+import { useState } from "react";
 
 export default function Body({
+    connect,
+    createAccount,
     connected,
     account,
     balance,
     errorMessage,
-    connectMassaStation,
-    createAccount,
-}: BodyProps) {
+}: useProvider) {
+    const [accountName, setAccountName] = useState<string>("");
     return (
         <div className="body">
             {/* Title and quick presentation of the smart contract related to this front end */}
             <h1 className="bodyTitle">{MASSA_EXEMPLE.TITLE}</h1>
-            <p className="bodyText">{MASSA_EXEMPLE.DESCRIPTION}</p>
+            <p className="bodySubTitle">{MASSA_EXEMPLE.DESCRIPTION}</p>
 
             <div className="bodyContent">
                 {!connected && (
-                    <button
-                        className="bodyButton"
-                        onClick={connectMassaStation}
-                    >
+                    <button className="bodyButton" onClick={connect}>
                         Connect to Massa Station
                     </button>
                 )}
                 {connected && !account && (
                     <>
-                        <br></br>
+                        <p className="bodyText">
+                            You are connected to Massa Station, but you don't
+                            have any account yet. you can create one here:
+                        </p>
                         <p className="address">
-                            No account found. Create an account by clicking the
-                            button below.
-                            <br></br>
                             <input
                                 type="text"
                                 className="input"
                                 placeholder="Account's name"
+                                onChange={(event) =>
+                                    setAccountName(event.target.value)
+                                }
                             ></input>
                             <button
                                 className="bodyButton"
-                                onClick={createAccount}
+                                onClick={() => createAccount(accountName)}
+                                disabled={accountName === ""}
                             >
                                 Create account
                             </button>

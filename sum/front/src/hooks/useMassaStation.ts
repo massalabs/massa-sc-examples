@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
-import { IAccount, IProvider, providers } from "@massalabs/wallet-provider";
+import {
+    IAccount,
+    IAccountBalanceResponse,
+    IProvider,
+    providers,
+} from "@massalabs/wallet-provider";
+import { useProvider } from "../interfaces/useProvider";
+
+const MASSA_STATION = "MASSASTATION";
+const MASSA_WALLET_PROVIDER = "massaWalletProvider";
+const NO_ACCOUNT_ERROR = "No account found";
+const MASSA_STATION_NOT_RUNNING_ERROR =
+    "Massa Station is not running or the wallet plugin is not installed.";
 
 const registerEvent = (name: string, id: string) => {
     const registerEvent = new CustomEvent("register", {
@@ -11,19 +23,24 @@ const registerEvent = (name: string, id: string) => {
     }
 };
 
-const UseMassaStation = () => {
+const UseMassaStation = (): useProvider => {
     const [connected, setConnected] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount | null>(null);
-    const [balance, setBalance] = useState<{ finalBalance: number }>({
-        finalBalance: 0,
+    const [balance, setBalance] = useState<IAccountBalanceResponse>({
+        finalBalance: "",
+        candidateBalance: "",
     });
     const [errorMessage, setErrorMessage] = useState<any>("");
     const [massaStationProvider, setMassaStationProvider] =
-        useState<IProvider | null>();
+        useState<IProvider | null>(null);
 
     useEffect(() => {
-        registerEvent("MASSASTATION", "massaWalletProvider");
-        setMassaStationProvider(providers()[0]); // this is a massaStation object
+        const registerAndSetProvider = async () => {
+            registerEvent(MASSA_STATION, MASSA_WALLET_PROVIDER);
+            setMassaStationProvider(providers()[0]); // this is a massaStation object
+        };
+
+        registerAndSetProvider();
     }, []);
 
     async function getFirstAccount() {
@@ -37,18 +54,17 @@ const UseMassaStation = () => {
     }
 
     // check if Massa Station is running with the wallet plugin
-    async function connectMassaStation() {
+    async function connect() {
         try {
             const firstAccount = await getFirstAccount();
+            setConnected(true);
             if (firstAccount) {
                 setAccountInfo(firstAccount);
-                setConnected(true);
-                console.log("Connected to Massa Station");
             } else {
-                throw new Error("No account found");
+                setErrorMessage(NO_ACCOUNT_ERROR);
             }
         } catch (error) {
-            console.log("Error while connecting to Massa Station: ", error);
+            console.error("Error while connecting to Massa Station: ", error);
             resetAccountInfo();
             setConnected(false);
             setErrorMessage(
@@ -57,54 +73,44 @@ const UseMassaStation = () => {
         }
     }
 
-    async function fetchBalance(account: IAccount) {
+    async function fetchBalance(
+        account: IAccount
+    ): Promise<IAccountBalanceResponse> {
         try {
             const balance = await account.balance();
-            return Number(balance);
+            return balance;
         } catch (error) {
             console.log("Error while retrieving balance: ", error);
-            return 0;
+            return { finalBalance: "0", candidateBalance: "0" };
         }
     }
 
-    async function createAccount() {
-        // empty the message
+    async function createAccount(accountName: string) {
         setErrorMessage("");
-
         try {
             if (!massaStationProvider) {
-                return Error(
-                    "Massa Station is not running or the wallet plugin is not installed."
-                );
+                throw new Error(MASSA_STATION_NOT_RUNNING_ERROR);
             }
-            await massaStationProvider.generateNewAccount(
-                (
-                    document.getElementsByClassName(
-                        "input"
-                    )[0] as HTMLInputElement
-                ).value
-            );
+            await massaStationProvider.generateNewAccount(accountName);
             const firstAccount = await getFirstAccount();
             if (firstAccount) {
-                setAccountInfo(firstAccount);
+                await setAccountInfo(firstAccount);
             } else {
-                throw new Error("No account found");
+                throw new Error(NO_ACCOUNT_ERROR);
             }
         } catch (error) {
-            console.log(error);
-            setErrorMessage(error);
-            return;
+            setErrorMessage((error as Error).message);
         }
     }
 
     async function setAccountInfo(account: IAccount) {
         setAccount(account);
-        setBalance({ finalBalance: await fetchBalance(account) });
+        setBalance(await fetchBalance(account));
     }
 
     function resetAccountInfo() {
         setAccount(null);
-        setBalance({ finalBalance: 0 });
+        setBalance({ finalBalance: "0", candidateBalance: "0" });
     }
 
     return {
@@ -112,7 +118,7 @@ const UseMassaStation = () => {
         balance,
         account,
         errorMessage,
-        connectMassaStation,
+        connect,
         createAccount,
     };
 };

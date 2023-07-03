@@ -3,7 +3,7 @@ import React from "react";
 interface AccountInformationProps {
     accountAddress: string;
     accountName: string;
-    balance: number;
+    balance: string;
 }
 
 const formatAccountAddress = (accountAddress: string) => {
