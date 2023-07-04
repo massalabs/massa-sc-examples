@@ -68,6 +68,6 @@ describe('constructor tests', () => {
 
     const result = getAge(new Args().add('alice').serialize());
 
-    expect(result).toStrictEqual(new Args().add(1 as u32).serialize());
+    expect(result).toStrictEqual(new Args().add(42 as u32).serialize());
   });
 });

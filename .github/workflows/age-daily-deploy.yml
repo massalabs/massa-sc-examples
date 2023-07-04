@@ -12,7 +12,7 @@ jobs:
   deploy-age:
     defaults:
       run:
-        working-directory: ./age/smart-contract/
+        working-directory: ./age/contracts/
 
     runs-on: ubuntu-latest
 
@@ -25,14 +25,14 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./age/smart-contract/package-lock.json
+          cache-dependency-path: ./age/contracts/package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Deploy
         run: |
-          if npm run deploy |& grep -q "Contract deployed"; then
+          if npm run deploy | grep -q "Contract deployed"; then
             echo "Contract successfully deployed!"
           else
             echo "Failed to deploy contract ..."
