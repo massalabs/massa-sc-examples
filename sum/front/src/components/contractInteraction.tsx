@@ -28,7 +28,7 @@ export default function ContractInteraction({
     };
 
     return (
-        <div className="bg-tertiary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
             <h3 className="">Manage Sum Transactions</h3>
             <div>
                 <h4 className="py-4">Enter Numbers</h4>

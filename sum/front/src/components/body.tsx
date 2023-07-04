@@ -24,7 +24,7 @@ export default function Body({
                 )}
                 {connected && !account && (
                     <>
-                        <p className="bodyText">
+                        <p className="mas-body my-4">
                             You are connected to Massa Station, but you don't
                             have any account yet. you can create one here:
                         </p>
@@ -59,7 +59,7 @@ export default function Body({
                     </>
                 )}
             </div>
-            <div className="messageToDisplay">{errorMessage}</div>
+            <div className="mas-h2 text-red-500">{errorMessage}</div>
         </div>
     );
 }

@@ -60,6 +60,7 @@ const UseMassaStation = (): ProviderService => {
             setConnected(true);
             if (firstAccount) {
                 setAccountInfo(firstAccount);
+                setErrorMessage("");
             } else {
                 setErrorMessage(NO_ACCOUNT_ERROR);
             }
@@ -80,7 +81,7 @@ const UseMassaStation = (): ProviderService => {
             const balance = await account.balance();
             return balance;
         } catch (error) {
-            console.log("Error while retrieving balance: ", error);
+            console.error("Error while retrieving balance: ", error);
             return { finalBalance: "0", candidateBalance: "0" };
         }
     }

@@ -1,8 +1,11 @@
 /* Setup the background color */
 body {
-    background-color: rgb(255, 255, 255);
+    background-image: url("../public/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
     padding-bottom: 4rem;
     overflow-y: auto;
+
 }
 
 .bodyContent {
