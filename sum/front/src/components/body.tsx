@@ -1,7 +1,7 @@
 import AccountInformation from "./accountInformation";
 import ContractInteraction from "./contractInteraction";
 import { MASSA_EXEMPLE } from "../const";
-import { useProvider } from "../interfaces/useProvider";
+import { ProviderService } from "../interfaces/ProviderService";
 import { useState } from "react";
 
 export default function Body({
@@ -11,7 +11,7 @@ export default function Body({
     account,
     balance,
     errorMessage,
-}: useProvider) {
+}: ProviderService) {
     const [accountName, setAccountName] = useState<string>("");
     return (
         <div className="body">

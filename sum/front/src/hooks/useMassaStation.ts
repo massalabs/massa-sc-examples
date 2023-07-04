@@ -5,7 +5,7 @@ import {
     IProvider,
     providers,
 } from "@massalabs/wallet-provider";
-import { useProvider } from "../interfaces/useProvider";
+import { ProviderService } from "../interfaces/ProviderService";
 
 const MASSA_STATION = "MASSASTATION";
 const MASSA_WALLET_PROVIDER = "massaWalletProvider";
@@ -23,7 +23,7 @@ const registerEvent = (name: string, id: string) => {
     }
 };
 
-const UseMassaStation = (): useProvider => {
+const UseMassaStation = (): ProviderService => {
     const [connected, setConnected] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount | null>(null);
     const [balance, setBalance] = useState<IAccountBalanceResponse>({
@@ -54,7 +54,7 @@ const UseMassaStation = (): useProvider => {
     }
 
     // check if Massa Station is running with the wallet plugin
-    async function connect() {
+    async function connect(): Promise<void> {
         try {
             const firstAccount = await getFirstAccount();
             setConnected(true);
@@ -85,7 +85,7 @@ const UseMassaStation = (): useProvider => {
         }
     }
 
-    async function createAccount(accountName: string) {
+    async function createAccount(accountName: string): Promise<void> {
         setErrorMessage("");
         try {
             if (!massaStationProvider) {

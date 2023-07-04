@@ -1,10 +1,10 @@
 import { IAccount, IAccountBalanceResponse } from "@massalabs/wallet-provider";
 
-export interface useProvider {
+export interface ProviderService {
     connected: boolean;
     balance: IAccountBalanceResponse;
     account: IAccount | null;
     errorMessage: any;
-    connect: () => void;
-    createAccount: (name: string) => void;
+    connect(): Promise<void>;
+    createAccount(accountName: string): Promise<void>;
 }
