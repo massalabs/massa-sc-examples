@@ -1,7 +1,7 @@
 import AccountInformation from "./accountInformation";
 import ContractInteraction from "./contractInteraction";
 import { ProviderService } from "../interfaces/ProviderService";
-import { useState } from "react";
+import AccountCreation from "./accountCreation";
 
 export default function Body({
     connect,
@@ -11,7 +11,6 @@ export default function Body({
     balance,
     errorMessage,
 }: ProviderService) {
-    const [accountName, setAccountName] = useState<string>("");
     return (
         <div className="body">
             <div className="bodyContent">
@@ -23,29 +22,7 @@ export default function Body({
                     </>
                 )}
                 {connected && !account && (
-                    <>
-                        <p className="mas-body my-4">
-                            You are connected to Massa Station, but you don't
-                            have any account yet. you can create one here:
-                        </p>
-                        <p className="address">
-                            <input
-                                type="text"
-                                className="input"
-                                placeholder="Account's name"
-                                onChange={(event) =>
-                                    setAccountName(event.target.value)
-                                }
-                            ></input>
-                            <button
-                                className="bodyButton"
-                                onClick={() => createAccount(accountName)}
-                                disabled={accountName === ""}
-                            >
-                                Create account
-                            </button>
-                        </p>
-                    </>
+                    <AccountCreation createAccount={createAccount} />
                 )}
                 {connected && account && (
                     <>
