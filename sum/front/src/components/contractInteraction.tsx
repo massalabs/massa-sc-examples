@@ -28,10 +28,10 @@ export default function ContractInteraction({
     };
 
     return (
-        <div className="contractInteraction bodyText">
-            <h3 className="contractTitle">Manage Sum Transactions</h3>
-            <div className="wrapperCall">
-                <h4 className="callFunctionName">Enter Numbers</h4>
+        <div className="bg-tertiary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+            <h3 className="">Manage Sum Transactions</h3>
+            <div>
+                <h4 className="py-4">Enter Numbers</h4>
                 <input
                     type="number"
                     className="input"
@@ -51,7 +51,7 @@ export default function ContractInteraction({
                 </button>
             </div>
             {result !== null && (
-                <div className="result">
+                <div className="py-4">
                     <h4>Result: {result}</h4>
                 </div>
             )}

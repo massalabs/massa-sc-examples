@@ -1,6 +1,5 @@
 import AccountInformation from "./accountInformation";
 import ContractInteraction from "./contractInteraction";
-import { MASSA_EXEMPLE } from "../const";
 import { ProviderService } from "../interfaces/ProviderService";
 import { useState } from "react";
 
@@ -15,15 +14,13 @@ export default function Body({
     const [accountName, setAccountName] = useState<string>("");
     return (
         <div className="body">
-            {/* Title and quick presentation of the smart contract related to this front end */}
-            <h1 className="bodyTitle">{MASSA_EXEMPLE.TITLE}</h1>
-            <p className="bodySubTitle">{MASSA_EXEMPLE.DESCRIPTION}</p>
-
             <div className="bodyContent">
                 {!connected && (
-                    <button className="bodyButton" onClick={connect}>
-                        Connect to Massa Station
-                    </button>
+                    <>
+                        <button className="bodyButton" onClick={connect}>
+                            Connect to Massa Station
+                        </button>
+                    </>
                 )}
                 {connected && !account && (
                     <>

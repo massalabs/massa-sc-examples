@@ -1,11 +1,11 @@
 import { MASSA_EXEMPLE } from "../const";
-import "../css/styleSheet.css";
 
 function Header() {
     return (
-        <header>
-            <h1 className="headerTitle">{MASSA_EXEMPLE.TITLE}</h1>
-            <p className="headerSubTitle">{MASSA_EXEMPLE.DESCRIPTION}</p>
+        <header className="bg-primary text-f-primary">
+            {/* Title and quick presentation of the smart contract related to this front end */}
+            <h1 className="mas-banner my-8">{MASSA_EXEMPLE.TITLE}</h1>
+            <p className="mas-subtitle my-8">{MASSA_EXEMPLE.DESCRIPTION}</p>
         </header>
     );
 }

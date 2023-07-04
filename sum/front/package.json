@@ -1,5 +1,5 @@
 {
-    "name": "new_front",
+    "name": "sum-front",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -43,6 +43,8 @@
         ]
     },
     "devDependencies": {
-        "prettier": "^2.8.8"
+        "@massalabs/react-ui-kit": "^0.0.3",
+        "prettier": "^2.8.8",
+        "tailwindcss": "^3.3.2"
     }
 }

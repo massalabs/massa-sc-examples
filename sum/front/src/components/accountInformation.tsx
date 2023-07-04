@@ -21,12 +21,12 @@ const AccountInformation: React.FC<AccountInformationProps> = ({
     balance,
 }) => (
     <div>
-        <div className="accountInfo">
+        <div className="mas-body text-bold text-center">
             <br />
-            <p className="address">
+            <p>
                 Account:{" "}
                 <a
-                    className="addressLink"
+                    className="mas-menu-underline font-bold text-center cursor-pointer"
                     href={`https://test.massa.net/v1/#explorer?explore=${accountAddress}`}
                     target="_blank"
                     rel="noreferrer"
