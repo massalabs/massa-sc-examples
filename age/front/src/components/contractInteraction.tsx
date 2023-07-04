@@ -9,61 +9,68 @@ interface ContractInteractionProps {
 export default function ContractInteraction({
     account,
 }: ContractInteractionProps) {
-    const [name, setname] = useState<string>("");
-    const [age, setage] = useState<number>(0);
+    const [nameSet, setNameSet] = useState<string>("");
+    const [nameGet, setNameGet] = useState<string>("");
+    const [age, setAge] = useState<number>(0);
     const [resultSet, setResultSet] = useState<string>("");
     const [resultGet, setResultGet] = useState<string>("");
 
-    const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setname(event.target.value);
+    const handleNameSetChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setNameSet(event.target.value);
     };
 
     const handleAgeChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setage(Number(event.target.value));
+        setAge(Number(event.target.value));
+    };
+
+    const handleNameGetChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setNameGet(event.target.value);
     };
 
     const handleSubmitSet = async () => {
         console.log("Handle sum transaction");
-        const response = await changeAge(name, age);
+        const response = await changeAge(nameSet, age);
         setResultSet(response);
     };
 
     const handleSubmitGet = async () => {
         console.log("Handle sum transaction");
-        const response = await getAge(name);
+        const response = await getAge(nameGet);
         setResultGet(response);
     };
 
     return (
-        <>
-            <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+        <div className="flex gap-10">
+            <div className="bg-secondary mas-body flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
                 <h3 className="">Set Age</h3>
                 <div>
                     <h4 className="py-4">Enter name</h4>
-                    <input
-                        type="text"
-                        className="input"
-                        placeholder="Enter name"
-                        value={name}
-                        onChange={handleNameChange}
-                    />
-                    <h4 className="py-4">Enter age</h4>
-                    <input
-                        type="number"
-                        className="input"
-                        placeholder="Enter age"
-                        value={age}
-                        onChange={handleAgeChange}
-                    />
-                    <button className="button" onClick={handleSubmitSet}>
-                        Set Name and Age in blockchain
-                    </button>
-                </div>
-                {resultSet !== null && (
-                    <div className="py-4">
-                        <h4>Result: {resultSet}</h4>
+                    <div>
+                        <input
+                            type="text"
+                            className="input"
+                            placeholder="Enter name"
+                            value={nameSet}
+                            onChange={handleNameSetChange}
+                        />
+                        <h4 className="py-4">Enter age</h4>
+                        <input
+                            type="number"
+                            className="input"
+                            placeholder="Enter age"
+                            value={age}
+                            onChange={handleAgeChange}
+                        />
+                        <button className="button" onClick={handleSubmitSet}>
+                            Set Name and Age in blockchain
+                        </button>
                     </div>
-                )}
+                    {resultSet !== null && (
+                        <div className="py-4">
+                            <h4>Result: {resultSet}</h4>
+                        </div>
+                    )}
+                </div>
             </div>
             <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
                 <h3 className="">Get Age</h3>
@@ -73,8 +80,8 @@ export default function ContractInteraction({
                         type="text"
                         className="input"
                         placeholder="Enter name"
-                        value={name}
-                        onChange={handleNameChange}
+                        value={nameGet}
+                        onChange={handleNameGetChange}
                     />
                     <button className="button" onClick={handleSubmitGet}>
                         Get Age in blockchain
@@ -86,6 +93,6 @@ export default function ContractInteraction({
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }
