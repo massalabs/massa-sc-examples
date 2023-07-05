@@ -41,8 +41,8 @@ export default function ContractInteraction({
 
     return (
         <div className="flex gap-10">
-            <div className="bg-secondary mas-body flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
-                <h3 className="">Set Age</h3>
+            <div className="bg-secondary mas-body flex-col items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+                <h3 className=" font-bold text-2xl">Set Age</h3>
                 <div>
                     <h4 className="py-4">Enter name</h4>
                     <div>
@@ -72,8 +72,8 @@ export default function ContractInteraction({
                     )}
                 </div>
             </div>
-            <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
-                <h3 className="">Get Age</h3>
+            <div className="bg-secondary mas-body flex flex-col items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+                <h3 className="font-bold text-2xl">Get Age</h3>
                 <div>
                     <h4 className="py-4">Enter name</h4>
                     <input
