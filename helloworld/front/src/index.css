@@ -1,0 +1,64 @@
+/* Setup the background color */
+body {
+    background-image: url("../public/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 4rem;
+    overflow-y: auto;
+
+}
+
+.bodyContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Setup the bodyText text */
+.bodyButton {
+    padding: 10px 20px;
+    margin-bottom: 1rem;
+    background-color: rgb(159, 26, 26);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.messageToDisplay {
+    color: rgb(0, 0, 0);
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Contract Interaction style */
+
+.input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.button {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:hover,
+.bodyButton:hover {
+    background-color: rgb(73, 47, 47);
+}
