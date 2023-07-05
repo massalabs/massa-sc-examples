@@ -69,7 +69,7 @@ export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
 
   let currentPrice: u64;
   if (!Storage.has(PRICE_KEY)) {
-    // Set initial oracle price
+    // Set initial autonomousprice price
     generateEvent(`Set initial price to ${INIT_PRICE.toString()}`);
     Storage.set(PRICE_KEY, INIT_PRICE.toString());
     currentPrice = INIT_PRICE;
