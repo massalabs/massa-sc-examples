@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "test": "asp --summary",
-        "build": "npx massa-as-compile",
+        "build": "npx massa-as-compile -r",
         "deploy": "npm run build && ts-node src/deploy.ts",
         "prettier": "prettier '**/src/**/*.ts' --check && as-prettier --check assembly",
         "prettier:fix": "prettier '**/src/**/*.ts' --write && as-prettier --write assembly",
@@ -24,7 +24,7 @@
         "@massalabs/eslint-config": "^0.0.9",
         "@massalabs/massa-as-sdk": "^2.0.2-dev",
         "@massalabs/massa-sc-compiler": "^0.0.4-dev",
-        "@massalabs/massa-sc-deployer": "^0.0.4-dev",
+        "@massalabs/massa-sc-deployer": "^0.4.2-dev.20230628084912",
         "@massalabs/massa-web3": "^1.13.0",
         "@massalabs/prettier-config-as": "^0.0.2",
         "@types/node": "^18.11.10",
@@ -33,7 +33,11 @@
         "prettier": "^2.8.1",
         "ts-node": "^10.9.1",
         "tslib": "^2.4.0",
-        "typescript": "^4.8.4"
+        "typescript": "^4.9.0"
     },
-    "prettier": "@massalabs/prettier-config-as"
+    "prettier": "@massalabs/prettier-config-as",
+    "dependencies": {
+        "protobufjs": "^7.2.4",
+        "protoc-gen-ts": "^0.8.6"
+    }
 }
