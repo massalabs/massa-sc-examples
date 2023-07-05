@@ -1,6 +1,11 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
 import { Args, stringToBytes, SafeMath, u64ToBytes } from '@massalabs/as-types';
 
+export function constructor(protoFiles: StaticArray<u8>): void {
+  // save the proto files in the storage
+  Storage.set(stringToBytes('protoMassa'), protoFiles);
+}
+
 /**
  * Sums 2 i64 using the SafeMath library and returns the result.
  *

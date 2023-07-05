@@ -22,6 +22,8 @@ const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(path.dirname(__filename));
 
+const protoContent = readFileSync(path.join(__dirname, 'sum.proto')).toString();
+
 (async () => {
   let deployed = await deploySC(
     publicApi,
@@ -30,6 +32,7 @@ const __dirname = path.dirname(path.dirname(__filename));
       {
         data: readFileSync(path.join(__dirname, 'build', 'sum.wasm')),
         coins: fromMAS(0.5),
+        args: new Args().addString(protoContent),
       } as ISCData,
     ],
     0n,
