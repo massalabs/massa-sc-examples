@@ -1,10 +1,12 @@
 {
     "targets": {
         "debug": {
+            "outFile": "build/main.wasm",
             "sourceMap": true,
             "debug": true
         },
         "release": {
+            "outFile": "build/main.wasm",
             "sourceMap": true,
             "optimizeLevel": 3,
             "shrinkLevel": 0,
