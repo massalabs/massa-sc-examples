@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { PixelWar } from './MassaDappExample';
+import { PixelWar } from './PixelWar';
 
 const App: React.FC = () => {
   return (

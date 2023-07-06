@@ -1,6 +1,10 @@
 html,
 body,
 #root {
+  background-image: url('../public/background.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -12,7 +16,7 @@ body,
   justify-content: center;
   align-items: center;
   height: 100%;
-  position: relative; /* Add this line to create a containing block for the absolute positioned title */
+  position: relative;
 }
 
 .App-content {
@@ -21,14 +25,14 @@ body,
   align-items: center;
   flex-direction: column;
   text-align: center;
-  padding-top: 70px; /* Increase this value to add enough padding to prevent the title from overlapping with the grid */
+  padding-top: 70px;
 }
 
 .grid-container {
   display: grid;
   grid-template-columns: repeat(50, 1fr);
   grid-template-rows: repeat(50, 1fr);
-  width: 100%;
+  width: 10%;
   height: 100%;
   max-width: 100vw;
   max-height: 100vh;
