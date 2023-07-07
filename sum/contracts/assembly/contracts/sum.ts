@@ -1,5 +1,5 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
-import { Args, stringToBytes, SafeMath, i64ToBytes } from '@massalabs/as-types';
+import { Args, stringToBytes, SafeMath, u64ToBytes } from '@massalabs/as-types';
 
 /**
  * Sums 2 i64 using the SafeMath library and returns the result.
@@ -22,14 +22,14 @@ function add(a: u64, b: u64): u64 {
  */
 export function sum(binaryArgs: StaticArray<u8>): StaticArray<u8> {
   const args = new Args(binaryArgs);
-  const a = args.nextI64().expect('Argument a is missing or invalid');
-  const b = args.nextI64().expect('Argument b is missing or invalid');
+  const a = args.nextU64().expect('Argument a is missing or invalid');
+  const b = args.nextU64().expect('Argument b is missing or invalid');
   const result = add(a, b);
   generateEvent(
     `Sum (${a.toString()}, ${b.toString()}) = ${result.toString()}`,
   );
-  Storage.set(stringToBytes('lastResult'), i64ToBytes(result));
-  return i64ToBytes(result);
+  Storage.set(stringToBytes('lastResult'), u64ToBytes(result));
+  return u64ToBytes(result);
 }
 
 /**
