@@ -22,7 +22,7 @@ This project provides a basic example of a simple smart contract with a front-en
 
 The following projects may not be functional or up to date, but contributions to improve them are welcome:
 
-#### [Async-Calls](async-call/README.md)
+#### [Async-Calls](asynccalls/README.md)
 
 This project provides basic examples of asynchronous smart contracts.
 

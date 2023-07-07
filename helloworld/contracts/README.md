@@ -1,4 +1,4 @@
-# Hello, World!
+# Massa Smart Contract example: Hello, World!
 
 This is a simple smart contract project that demonstrates how to use the massa smart-contract toolkit to test, compile and deploy a smart contract to the Massa blockchain.
 
