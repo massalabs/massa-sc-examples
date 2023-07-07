@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- favicon -->
+    <link rel="icon" href="./public/favicon.ico" type="image/x-icon" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum Calculator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="mainContainer">
+
+        <h1>Sum Calculator</h1>
+    
+        <section id="connection">
+            <button id="connectButton">Connect to Wallet</button>
+        </section>
+    
+        <section id="walletInfo" style="display: none;">
+            <h2>Wallet Information</h2>
+            <p>Address: <span id="address"></span></p>
+            <p>Balance: <span id="balance"></span></p>
+        </section>
+    
+        <section id="contractInteraction" style="display: none;"></section>
+    
+        <section id="error" style="display: none;">
+            <h2>Error</h2>
+            <p id="errorMessage"></p>
+        </section>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@1.17.4/bundle.js"
+    ></script>
+</body>
+</html>
