@@ -30,8 +30,8 @@ export function constructor(sumAddress: StaticArray<u8>): void {
  */
 export function main(_: StaticArray<u8>): void {
   const address = new Address(Storage.get('address'));
-  const a: i64 = 2;
-  const b: i64 = 3;
+  const a: u64 = 2;
+  const b: u64 = 3;
   const values = new Args().add(a).add(b);
   call(address, 'sum', values, 5000000);
   return;
