@@ -3,14 +3,16 @@ import ContractInteraction from "./contractInteraction";
 import { ProviderService } from "../interfaces/ProviderService";
 import AccountCreation from "./accountCreation";
 
-export default function Body({
-    connect,
-    createAccount,
-    connected,
-    account,
-    balance,
-    errorMessage,
-}: ProviderService) {
+export default function Body(provider: ProviderService) {
+    const {
+        connect,
+        createAccount,
+        connected,
+        account,
+        balance,
+        errorMessage,
+    } = provider;
+
     return (
         <div className="body">
             <div className="bodyContent">

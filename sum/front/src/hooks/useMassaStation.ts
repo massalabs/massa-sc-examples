@@ -44,6 +44,7 @@ const UseMassaStation = (): ProviderService => {
     }, []);
 
     async function getFirstAccount() {
+        console.log(massaStationProvider);
         if (!massaStationProvider) {
             return null;
         }

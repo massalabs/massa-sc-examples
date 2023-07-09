@@ -3,6 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "@massalabs/massa-web3": "^1.18.0",
         "@massalabs/react-ui-kit": "^0.0.4-dev",
         "@massalabs/wallet-provider": "^0.0.2-dev",
         "@testing-library/jest-dom": "^5.16.5",
