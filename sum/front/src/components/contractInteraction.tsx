@@ -3,7 +3,8 @@ import { IAccount } from "@massalabs/wallet-provider";
 import { Args } from "@massalabs/massa-web3";
 import Loader from "../ui/Loader";
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS || "";
+const CONTRACT_ADDRESS =
+    "AS12YrZxFisWZCKJpXLEYfSYzrSCS4bjoyKGeaviQMmb5zqfgXaML";
 
 interface ContractInteractionProps {
     account: IAccount;
@@ -56,21 +57,8 @@ export default function ContractInteraction({
         return new Args(result.returnValue).nextI64();
     };
 
-    if (!CONTRACT_ADDRESS) {
-        return (
-            // error message if contract address is not set
-            <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
-                <h3 className="">Manage Sum Transactions</h3>
-                <div>
-                    <h4 className="py-4">
-                        Please set the contract address in the .env file
-                    </h4>
-                </div>
-            </div>
-        );
-    }
     return (
-        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12">
             <h3 className="">Manage Sum Transactions</h3>
             <div>
                 <h4 className="py-4">Enter Numbers</h4>
