@@ -1,5 +1,5 @@
 module.exports = {
-  extends: [
-    '@massalabs',
-  ],
+  extends: ['@massalabs'],
+  // ignore helpers folder
+  ignorePatterns: ['helpers/'],
 };
