@@ -58,17 +58,18 @@ export default function ContractInteraction({
     };
 
     return (
-        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12">
-            <h3 className="">Manage Sum Transactions</h3>
-            <div>
-                <h4 className="py-4">Enter Numbers</h4>
+        <div className="bg-secondary border mas-body flex flex-col justify-center items-center w-1/4 max-w-lg p-8 box-border rounded-lg shadow-md mb-12">
+            <h3 className="font-bold text-lg">Manage Sum Transactions</h3>
+            <h4 className="py-4">Enter Numbers</h4>
+            <div className="flex justify-center items-center gap-2 mb-4">
                 <input
                     type="number"
-                    className="input"
+                    className="input m-0"
                     placeholder="Enter number 1"
                     value={num1}
                     onChange={handleNum1Change}
                 />
+                +
                 <input
                     type="number"
                     className="input"
@@ -76,16 +77,16 @@ export default function ContractInteraction({
                     value={num2}
                     onChange={handleNum2Change}
                 />
-                <button
-                    className="button flex justify-center items-center"
-                    onClick={calculateSum}
-                    disabled={loading}
-                >
-                    {!loading ? <div>Calculate Sum</div> : <Loader />}
-                </button>
             </div>
+            <button
+                className="button flex justify-center items-center border border-green-500 p-3 text-green-500 rounded-md hover:bg-green-500 hover:text-white disabled:bg-secondary"
+                onClick={calculateSum}
+                disabled={loading}
+            >
+                {!loading ? <div>Calculate Sum</div> : <Loader />}
+            </button>
 
-            {result !== null && (
+            {result && (
                 <div className="py-4">
                     <h4>Result: {result}</h4>
                 </div>

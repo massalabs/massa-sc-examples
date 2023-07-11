@@ -14,11 +14,9 @@ const Body = ({
     <div className="body">
         <div className="bodyContent">
             {!connected && (
-                <>
-                    <button className="bodyButton" onClick={connect}>
-                        Connect to Massa Station
-                    </button>
-                </>
+                <button className="bodyButton" onClick={connect}>
+                    Connect to Massa Station
+                </button>
             )}
             {connected && !account && (
                 <AccountCreation createAccount={createAccount} />
@@ -30,7 +28,7 @@ const Body = ({
                         accountName={account.name()}
                         balance={balance.finalBalance}
                     />
-                    <br></br>
+                    <br />
                     <ContractInteraction account={account} />
                 </>
             )}
