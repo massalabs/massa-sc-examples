@@ -46,7 +46,7 @@ const UseMassaStation = (): ProviderService => {
         };
 
         registerAndSetProvider();
-    }, [massaStationProvider]);
+    }, []);
 
     const setAccountInfo = async (account: IAccount) => {
         setAccount(account);
