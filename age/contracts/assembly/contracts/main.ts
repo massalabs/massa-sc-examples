@@ -22,7 +22,6 @@
  * @see [massa-as-sdk](https://github.com/massalabs/massa-as-sdk)
  *
  */
-import { Args } from '@massalabs/as-types';
 import {
   Storage,
   callerHasWriteAccess,
@@ -42,15 +41,14 @@ import {
 export function constructor(_: StaticArray<u8>): void {
   if (!callerHasWriteAccess()) {
     // First we check if the caller (in this case you when you deploy the contract) has write access on storage.
-    return [];
+    return;
   }
 
-  let name = new Args().add('alice'); // We create our 'name' key for the person's entry.
-  let age = new Args().add(1 as u32); // We create our 'age' value for the person's entry.
+  let name = 'alice';
+  let age = 1;
 
-  Storage.set(name.serialize(), age.serialize()); // Here we apply our key/value pair to the storage.
-  // The Storage only stores bytes.
-  // We need to serialize our arguments before storing them (that's why we are using 'Args' as container).
+  Storage.set(name, age.toString());
+
 }
 
 /**
@@ -60,24 +58,16 @@ export function constructor(_: StaticArray<u8>): void {
  *  If the entry doesn't exist the person is created.
  *  It also generates an event that indicates the changes that are made.
  *
- * @param _args - The serialized arguments that should contain 'name' and 'age'.
+ * @param name - The given name
+ * @param age - Age of the person
  *
  * @returns none
  *
  */
-export function changeAge(_args: StaticArray<u8>): void {
-  let args = new Args(_args); // First we deserialize our arguments.
+@massaExport()
+export function changeAge(name: string, age: u32): void {
 
-  // We use 'next[Type]()' to retrieve the next argument in the serialized arguments.
-  let name = args.nextString().expect('Missing name argument.');
-  // We use 'expect()' to check if the argument exists, if not we abort the execution.
-  let age = args.nextU32().expect('Missing age argument.');
-
-  // Then we create our key/value pair and store it.
-  let ageEncoded = new Args().add(age).serialize();
-  let nameEncoded = new Args().add(name).serialize();
-
-  Storage.set(nameEncoded, ageEncoded);
+  Storage.set(name, age.toString());
 
   // Here we generate an event that indicates the changes that are made.
   generateEvent("Changed age of '" + name + "' to '" + age.toString() + "'");
@@ -89,29 +79,25 @@ export function changeAge(_args: StaticArray<u8>): void {
  * @remarks
  *  If the entry doesn't exist the execution is aborted.
  *
- * @param args - The serialized arguments that should contain 'name'.
+ * @param name - The given name
  *
  * @returns The serialized 'age' found.
  *
  */
-export function getAge(_args: StaticArray<u8>): StaticArray<u8> {
-  let args = new Args(_args); // First we deserialize our arguments.
-
-  // We use 'expect()' to check if the argument exists, if not we abort the execution.
-  let name = args.nextString().expect('Missing name argument.');
+@massaExport()
+export function getAge(name: string): u32 {
   // Then we create our encoded key from the function's argument.
-  let nameEncoded = new Args().add(name).serialize();
 
-  if (Storage.has(nameEncoded)) {
+  if (Storage.has(name)) {
     // We check if the entry exists.
-    let age = Storage.get(nameEncoded);
+    let age = Storage.get(name);
     // We get the associated value and return it.
     // Since the return type of 'Storage.get' is 'StaticArray<u8>' it is already serialized.
-    return age;
+    return u32.parse(age);
   } else {
     // If the entry doesn't exist we abort the execution.
     abort("No such person's age is stored.");
     // We still need to return due AssemblyScript compiler.
-    return [];
+    return 0;
   }
 }
