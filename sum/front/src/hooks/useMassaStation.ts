@@ -12,6 +12,7 @@ const MASSA_WALLET_PROVIDER = "massaWalletProvider";
 const NO_ACCOUNT_ERROR = "No account found";
 const MASSA_STATION_NOT_RUNNING_ERROR =
     "Massa Station is not running or the wallet plugin is not installed.";
+const EMPTY_BALANCE = { finalBalance: "0", candidateBalance: "0" };
 
 const registerEvent = (name: string, id: string) => {
     const registerEvent = new CustomEvent("register", {
@@ -31,62 +32,71 @@ const UseMassaStation = (): ProviderService => {
         candidateBalance: "",
     });
     const [errorMessage, setErrorMessage] = useState<any>("");
-    const [massaStationProvider, setMassaStationProvider] =
-        useState<IProvider | null>(null);
+    const [massaStationProvider, setMassaStationProvider] = useState<
+        IProvider | undefined
+    >(undefined);
 
     useEffect(() => {
         const registerAndSetProvider = async () => {
             registerEvent(MASSA_STATION, MASSA_WALLET_PROVIDER);
-            setMassaStationProvider(providers()[0]); // this is a massaStation object
+            const massaStationProvider = providers().find(
+                (provider) => provider.name() === MASSA_STATION
+            );
+            setMassaStationProvider(massaStationProvider);
         };
 
         registerAndSetProvider();
-    }, []);
+    }, [massaStationProvider]);
 
-    async function getFirstAccount() {
+    const setAccountInfo = async (account: IAccount) => {
+        setAccount(account);
+        setBalance(await fetchBalance(account));
+    };
+
+    const resetAccountInfo = async () => {
+        setAccount(null);
+        setBalance({ finalBalance: "0", candidateBalance: "0" });
+    };
+
+    const getFirstAccount = async () => {
         if (!massaStationProvider) {
-            return null;
+            throw new Error(MASSA_STATION_NOT_RUNNING_ERROR);
         }
         const data = await massaStationProvider.accounts();
         if (data.length > 0) {
             return data[0];
         }
-    }
+    };
 
-    // check if Massa Station is running with the wallet plugin
-    async function connect(): Promise<void> {
+    const connect = async () => {
         try {
             const firstAccount = await getFirstAccount();
-            setConnected(true);
             if (firstAccount) {
                 setAccountInfo(firstAccount);
+                setConnected(true);
                 setErrorMessage("");
             } else {
-                setErrorMessage(NO_ACCOUNT_ERROR);
+                throw new Error(NO_ACCOUNT_ERROR);
             }
-        } catch (error) {
-            console.error("Error while connecting to Massa Station: ", error);
+        } catch (e: any) {
+            console.error("Error while connecting to Massa Station: ", e);
             resetAccountInfo();
             setConnected(false);
-            setErrorMessage(
-                "Massa Station is not running or the wallet plugin is not installed."
-            );
+            setErrorMessage(e.message);
         }
-    }
+    };
 
-    async function fetchBalance(
-        account: IAccount
-    ): Promise<IAccountBalanceResponse> {
+    const fetchBalance = async (account: IAccount) => {
         try {
             const balance = await account.balance();
             return balance;
         } catch (error) {
             console.error("Error while retrieving balance: ", error);
-            return { finalBalance: "0", candidateBalance: "0" };
+            return EMPTY_BALANCE;
         }
-    }
+    };
 
-    async function createAccount(accountName: string): Promise<void> {
+    const createAccount = async (accountName: string) => {
         setErrorMessage("");
         try {
             if (!massaStationProvider) {
@@ -102,17 +112,7 @@ const UseMassaStation = (): ProviderService => {
         } catch (error) {
             setErrorMessage((error as Error).message);
         }
-    }
-
-    async function setAccountInfo(account: IAccount) {
-        setAccount(account);
-        setBalance(await fetchBalance(account));
-    }
-
-    function resetAccountInfo() {
-        setAccount(null);
-        setBalance({ finalBalance: "0", candidateBalance: "0" });
-    }
+    };
 
     return {
         connected,
