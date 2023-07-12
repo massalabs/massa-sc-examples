@@ -1,5 +1,4 @@
 import { Storage, generateEvent } from '@massalabs/massa-as-sdk';
-import { Args } from '@massalabs/as-types';
 import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/context';
 
 /**
@@ -19,9 +18,9 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   return [];
 }
 
-export function play(binaryArgs: StaticArray<u8>): void {
-  let args = new Args(binaryArgs);
-  let index = args.nextU32().unwrap();
+@massaExport
+export function play(index: u32): void {
+
   let gameWinner = Storage.get('gameWinner');
   if (gameWinner == 'n') {
     let player = Storage.get('currentPlayer');

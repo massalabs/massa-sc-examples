@@ -17,20 +17,16 @@ describe('Check tictactoe', () => {
     Storage.set('gameState', 'n,n,n,n,n,n,n,n,n');
     Storage.set('gameWinner', 'n');
 
-    const args = new Args().add(0).serialize();
-    play(args);
+    play(0);
 
-    const args2 = new Args().add(8).serialize();
-    play(args2);
+    play(8);
 
-    const args3 = new Args().add(1).serialize();
-    play(args3);
+    play(1);
 
     const args4 = new Args().add(7).serialize();
-    play(args4);
+    play(7);
 
-    const args5 = new Args().add(2).serialize();
-    play(args5); // X should win here
+    play(2); // X should win here
 
     expect(Storage.get('gameWinner').toString()).toBe('X');
   });
