@@ -7,6 +7,7 @@ import { Args } from '@massalabs/as-types';
 
 import {
   sendMessage,
+  Context,
   callerHasWriteAccess,
   Address,
 } from '@massalabs/massa-as-sdk';
@@ -37,7 +38,7 @@ export function sendHelloAsyncMessage(
   addr: string): void {
   // Setup the 'message' we will send to our deployed SC
   const functionName = 'receive';
-  const currentPeriodStart = currentPeriod();
+  const currentPeriodStart = Context.currentPeriod();
   const validityStartPeriod = currentPeriodStart + 1;
   const validityStartThread = 13 as u8;
   const validityEndPeriod = currentPeriodStart + 20;
