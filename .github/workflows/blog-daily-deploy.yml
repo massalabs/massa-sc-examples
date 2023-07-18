@@ -1,0 +1,43 @@
+name: Blog Daily Deploy
+
+on:
+  push:
+    paths:
+      - blog/**
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * *"
+
+jobs:
+  deploy-blog:
+    defaults:
+      run:
+        working-directory: ./blog/contracts/
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: ./blog/contracts/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy
+        run: |
+          if npm run deploy | grep -q "Contract deployed"; then
+            echo "Contract successfully deployed!"
+          else
+            echo "Failed to deploy contract ..."
+            exit 1
+          fi
+        env:
+          JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
+          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
