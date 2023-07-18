@@ -1,5 +1,5 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
-import { Args, stringToBytes, SafeMath, u64ToBytes } from '@massalabs/as-types';
+import { stringToBytes, SafeMath, u64ToBytes } from '@massalabs/as-types';
 
 /**
  * Sums 2 i64 using the SafeMath library and returns the result.
@@ -16,20 +16,19 @@ function add(a: u64, b: u64): u64 {
  * This function sums 2 i64 and returns the result.
  * It also generates an event resuming the operation and save the last result in the blockchain.
  *
- * @param binaryArgs - the 2 u64 we want to sum serialized in bytes
+ * @param a - The given a
+ * @param a - The given b
  *
  * @returns the sum of the 2 u64 serialized in bytes
  */
-export function sum(binaryArgs: StaticArray<u8>): StaticArray<u8> {
-  const args = new Args(binaryArgs);
-  const a = args.nextU64().expect('Argument a is missing or invalid');
-  const b = args.nextU64().expect('Argument b is missing or invalid');
+@massaExport()
+export function sum(a: u64, b: u64): u64 {
   const result = add(a, b);
   generateEvent(
     `Sum (${a.toString()}, ${b.toString()}) = ${result.toString()}`,
   );
   Storage.set(stringToBytes('lastResult'), u64ToBytes(result));
-  return u64ToBytes(result);
+  return result;
 }
 
 /**

@@ -7,19 +7,16 @@ import { isDeployingContract } from '@massalabs/massa-as-sdk/assembly/std/contex
  *
  * @param sumAddress - The address of the sum contract we want to interact with.
  */
-export function constructor(sumAddress: StaticArray<u8>): void {
+@massaExport()
+export function constructor(sumAddress: string): string {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
   if (!isDeployingContract) {
-    return;
+    return "";
   }
-  const args = new Args(sumAddress);
-  Storage.set(
-    'address',
-    args.nextString().expect('Argument address is missing or invalid'),
-  );
-  main([]);
-  return;
+  Storage.set('address', sumAddress);
+  main();
+  return "";
 }
 
 /**
@@ -28,7 +25,7 @@ export function constructor(sumAddress: StaticArray<u8>): void {
  * @param _ - not used
  * @returns empty array
  */
-export function main(_: StaticArray<u8>): void {
+export function main(): void {
   const address = new Address(Storage.get('address'));
   const a: u64 = 2;
   const b: u64 = 3;
