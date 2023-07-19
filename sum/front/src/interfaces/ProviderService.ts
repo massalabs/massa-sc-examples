@@ -1,4 +1,8 @@
-import { IAccount, IAccountBalanceResponse } from "@massalabs/wallet-provider";
+import {
+    IAccount,
+    IAccountBalanceResponse,
+    IProvider,
+} from "@massalabs/wallet-provider";
 
 export interface ProviderService {
     connected: boolean;
@@ -7,4 +11,11 @@ export interface ProviderService {
     errorMessage: any;
     connect(): Promise<void>;
     createAccount(accountName: string): Promise<void>;
+    getProviders: IProvider[] | null;
+    setProviderSelected: (provider: IProvider) => void;
+    providerSelected: IProvider | null;
+    getAccounts: IAccount[] | null;
+    setAccountSelected: (account: IAccount) => void;
+    accountSelected: IAccount | null;
+    loadingProvider: string;
 }
