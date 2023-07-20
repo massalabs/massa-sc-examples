@@ -1,6 +1,9 @@
 name: Tictactoe CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - games/tictactoe/**
 
 defaults:
   run:

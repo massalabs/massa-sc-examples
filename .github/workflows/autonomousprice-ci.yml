@@ -1,6 +1,9 @@
 name: Autonomousprice CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - autonomousprice/**
 
 defaults:
   run:

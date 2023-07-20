@@ -1,6 +1,9 @@
 name: Sum CI
 
-on: [ push ]
+on:
+  push:
+    paths:
+      - sum/**
 
 defaults:
   run:

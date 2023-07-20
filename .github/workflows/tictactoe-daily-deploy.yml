@@ -9,7 +9,7 @@ on:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy-age:
+  deploy-tictactoe:
     defaults:
       run:
         working-directory: ./games/tictactoe/contracts/
