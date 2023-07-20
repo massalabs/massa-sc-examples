@@ -23,8 +23,9 @@ export default function ContractInteraction({
 
     const handleSubmit = async () => {
         console.log("Handle sum transaction");
-        const response = await sum(num1, num2, 0);
-        setResult(response);
+        const response = await sum(BigInt(num1), BigInt(num2), 0n);
+        // setResult(response);
+        console.log(response);
     };
 
     return (
