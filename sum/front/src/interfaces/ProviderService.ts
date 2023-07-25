@@ -14,7 +14,7 @@ export interface ProviderService {
     getProviders: IProvider[] | null;
     setProviderSelected: (provider: IProvider) => void;
     providerSelected: IProvider | null;
-    getAccounts: IAccount[] | null;
+    accounts: IAccount[] | null;
     setAccountSelected: (account: IAccount) => void;
     accountSelected: IAccount | null;
     loadingProvider: string;

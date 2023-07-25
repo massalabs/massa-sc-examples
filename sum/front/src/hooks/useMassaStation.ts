@@ -24,7 +24,7 @@ const UseMassaStation = (): ProviderService => {
     const [providerSelected, setProviderSelected] = useState<IProvider | null>(
         null
     );
-    const [getAccounts, setGetAccounts] = useState<IAccount[] | null>(null);
+    const [accounts, setAccounts] = useState<IAccount[] | null>(null);
     const [accountSelected, setAccountSelected] = useState<IAccount | null>(
         null
     );
@@ -35,12 +35,13 @@ const UseMassaStation = (): ProviderService => {
     useEffect(() => {
         const registerAndGetProviders = async () => {
             try {
-                const providerslist = await providers(true, 5000, 3000);
-                setGetProviders(providerslist);
-                if (providerslist.length === 0) {
+                const providersList = await providers();
+                console.log(await providers());
+                if (providersList.length === 0) {
                     setLoadingProvider("No provider detected");
                     throw new Error(NO_PROVIDER_ERROR);
                 }
+                setGetProviders(providersList);
             } catch (error) {
                 setErrorMessage((error as Error).message);
             }
@@ -53,10 +54,10 @@ const UseMassaStation = (): ProviderService => {
         const registerAndGetAccounts = async () => {
             if (providerSelected) {
                 try {
-                    const accounts = await providerSelected.accounts();
-                    setGetAccounts(accounts);
-                    setAccountSelected(accounts[0]);
-                    if (accounts.length === 0) {
+                    const result = await providerSelected.accounts();
+                    setAccounts(result);
+                    setAccountSelected(result[0]);
+                    if (result.length === 0) {
                         setLoadingProvider("No account detected.");
                         setErrorMessage(NO_ACCOUNT_ERROR);
                     }
@@ -150,7 +151,7 @@ const UseMassaStation = (): ProviderService => {
         getProviders,
         setProviderSelected,
         providerSelected,
-        getAccounts,
+        accounts,
         setAccountSelected,
         accountSelected,
         loadingProvider,
