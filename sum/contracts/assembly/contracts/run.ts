@@ -33,6 +33,6 @@ export function main(_: StaticArray<u8>): void {
   const a: u64 = 2;
   const b: u64 = 3;
   const values = new Args().add(a).add(b);
-  call(address, 'sum', values, 5000000);
+  call(address, 'sum', values, 25000000);
   return;
 }
