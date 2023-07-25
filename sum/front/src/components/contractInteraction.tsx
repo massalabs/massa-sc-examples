@@ -33,7 +33,7 @@ export default function ContractInteraction({
                 CONTRACT_ADDRESS,
                 "sum",
                 new Args().addI64(BigInt(num1)).addI64(BigInt(num2)),
-                BigInt(0)
+                BigInt(1)
             );
 
             setResult((await getLastResult()).toString());
