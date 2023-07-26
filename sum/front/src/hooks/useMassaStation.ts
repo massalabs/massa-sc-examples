@@ -11,7 +11,7 @@ const NO_ACCOUNT_ERROR = "No account found";
 const NOT_PROVIDER_SELECTED_ERROR = "No provider selected";
 const NO_PROVIDER_ERROR = "No provider found. Run Wallet and reload page.";
 
-const UseMassaStation = (): ProviderService => {
+const useMassaStation = (): ProviderService => {
     const [connected, setConnected] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount | null>(null);
     const [balance, setBalance] = useState<IAccountBalanceResponse>({
@@ -158,4 +158,4 @@ const UseMassaStation = (): ProviderService => {
     };
 };
 
-export default UseMassaStation;
+export default useMassaStation;

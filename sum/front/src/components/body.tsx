@@ -1,29 +1,30 @@
 import AccountInformation from "./accountInformation";
 import ContractInteraction from "./contractInteraction";
-import { ProviderService } from "../interfaces/ProviderService";
 import AccountCreation from "./accountCreation";
 import { useEffect, useState } from "react";
-import { IAccount, IProvider } from "@massalabs/wallet-provider";
+import useMassaStation from "../hooks/useMassaStation";
 
-export default function Body({
-    account,
-    accountSelected,
-    balance,
-    connect,
-    connected,
-    createAccount,
-    errorMessage,
-    accounts,
-    getProviders,
-    loadingProvider,
-    providerSelected,
-    setAccountSelected,
-    setProviderSelected,
-}: ProviderService) {
+export default function Body() {
+    const {
+        account,
+        accountSelected,
+        balance,
+        connect,
+        connected,
+        createAccount,
+        errorMessage,
+        accounts,
+        getProviders,
+        loadingProvider,
+        providerSelected,
+        setAccountSelected,
+        setProviderSelected,
+    } = useMassaStation();
+
     const [providersName, setProvidersNames] = useState<string[]>([]);
 
     useEffect(() => {
-        if (getProviders !== null) {
+        if (getProviders) {
             setProviderSelected(getProviders[0]);
             setProvidersNames(getProviders.map((provider) => provider.name()));
         }

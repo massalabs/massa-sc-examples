@@ -11,7 +11,7 @@ function App() {
     return (
         <div className="App theme-light">
             <Header />
-            <Body {...massaStation} />
+            <Body />
             <Footer />
         </div>
     );
