@@ -48,7 +48,7 @@ export default function ContractInteraction({
         <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
             <h3 className="p-8">Manage Autonomousprice</h3>
             <h4 className="">Current price : </h4>
-            {currentPrice !== null && (
+            {currentPrice && (
                 <div className="">
                     <h4>{currentPrice}</h4>
                 </div>
@@ -58,7 +58,7 @@ export default function ContractInteraction({
                     Get price
                 </button>
             </div>
-            {resultGet !== null && (
+            {resultGet && (
                 <div className="py-4">
                     <h4>Result: {resultGet}</h4>
                 </div>

@@ -10,6 +10,8 @@ Welcome to the repository for the Sum smart contract's front-end application, de
 
 - Before diving in, ensure you have installed MassaStation on your system. Follow the instructions provided [here](https://github.com/massalabs/station/blob/main/INSTALLATION.md) for installation.
 
+- You also need to have the wallet plugin installed in massa station. To do that, go to the massa station module page by clicking the right arrow and on the wallet plugin install button.
+
 
 ### Clone the Repository
 After setting up MassaStation, clone this repository

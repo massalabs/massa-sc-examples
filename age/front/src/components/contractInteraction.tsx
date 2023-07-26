@@ -65,7 +65,7 @@ export default function ContractInteraction({
                             Set Name and Age in blockchain
                         </button>
                     </div>
-                    {resultSet !== null && (
+                    {resultSet && (
                         <div className="py-4">
                             <h4>Result: {resultSet}</h4>
                         </div>
@@ -87,7 +87,7 @@ export default function ContractInteraction({
                         Get Age in blockchain
                     </button>
                 </div>
-                {resultGet !== null && (
+                {resultGet && (
                     <div className="py-4">
                         <h4>Result: {resultGet}</h4>
                     </div>

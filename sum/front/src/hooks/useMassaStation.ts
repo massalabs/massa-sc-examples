@@ -7,63 +7,76 @@ import {
 } from "@massalabs/wallet-provider";
 import { ProviderService } from "../interfaces/ProviderService";
 
-const MASSA_STATION = "MASSASTATION";
-const MASSA_WALLET_PROVIDER = "massaWalletProvider";
 const NO_ACCOUNT_ERROR = "No account found";
-const MASSA_STATION_NOT_RUNNING_ERROR =
-    "Massa Station is not running or the wallet plugin is not installed.";
+const NOT_PROVIDER_SELECTED_ERROR = "No provider selected";
+const NO_PROVIDER_ERROR = "No provider found. Run Wallet and reload page.";
 
-const registerEvent = (name: string, id: string) => {
-    const registerEvent = new CustomEvent("register", {
-        detail: { providerName: name },
-    });
-    const element = document.getElementById(id);
-    if (element) {
-        element.dispatchEvent(registerEvent);
-    }
-};
-
-const UseMassaStation = (): ProviderService => {
-    const [connected, setConnected] = useState<boolean>(false);
+const useMassaStation = (): ProviderService => {
     const [account, setAccount] = useState<IAccount | null>(null);
+    const [connected, setConnected] = useState<boolean>(false);
+
     const [balance, setBalance] = useState<IAccountBalanceResponse>({
         finalBalance: "",
         candidateBalance: "",
     });
-    const [errorMessage, setErrorMessage] = useState<any>("");
-    const [massaStationProvider, setMassaStationProvider] =
-        useState<IProvider | null>(null);
+
+    const [providerList, setProviderList] = useState<IProvider[] | null>([]);
+
+    const [errorMessage, setErrorMessage] = useState<any>(null);
+
+    const [selectedProvider, setSelectedProvider] = useState<IProvider | null>(
+        null
+    );
+    const [accounts, setAccounts] = useState<IAccount[] | null>(null);
+    const [selectedAccount, setSelectedAccount] = useState<IAccount | null>(
+        null
+    );
+    const [loadingProvider, setLoadingProvider] = useState<string>(
+        "Loading provider and wallet"
+    );
 
     useEffect(() => {
-        const registerAndSetProvider = async () => {
-            registerEvent(MASSA_STATION, MASSA_WALLET_PROVIDER);
-            setMassaStationProvider(providers()[0]); // this is a massaStation object
-        };
-
-        registerAndSetProvider();
+        getProviderList();
     }, []);
 
-    async function getFirstAccount() {
-        if (!massaStationProvider) {
-            return null;
+    useEffect(() => {
+        if (!selectedProvider) return;
+        getAccounts(selectedProvider);
+    }, [selectedProvider]);
+
+    const getProviderList = async () => {
+        try {
+            const providersList = await providers();
+            if (providersList.length === 0) {
+                setLoadingProvider("No provider detected");
+                throw new Error(NO_PROVIDER_ERROR);
+            }
+            setProviderList(providersList);
+        } catch (error) {
+            setErrorMessage((error as Error).message);
         }
-        const data = await massaStationProvider.accounts();
-        if (data.length > 0) {
-            return data[0];
+    };
+
+    async function getAccounts(provider: IProvider) {
+        try {
+            const data = await provider.accounts();
+            setAccounts(data);
+            setSelectedAccount(data[0]);
+            if (data.length === 0) {
+                setLoadingProvider("No account detected.");
+                setErrorMessage(NO_ACCOUNT_ERROR);
+            }
+        } catch (error) {
+            setLoadingProvider("No account detected.");
+            setErrorMessage(NO_ACCOUNT_ERROR);
         }
     }
 
-    // check if Massa Station is running with the wallet plugin
-    async function connect(): Promise<void> {
+    async function connect(account: IAccount): Promise<void> {
         try {
-            const firstAccount = await getFirstAccount();
             setConnected(true);
-            if (firstAccount) {
-                setAccountInfo(firstAccount);
-                setErrorMessage("");
-            } else {
-                setErrorMessage(NO_ACCOUNT_ERROR);
-            }
+            setAccountInfo(account);
+            setErrorMessage("");
         } catch (error) {
             console.error("Error while connecting to Massa Station: ", error);
             resetAccountInfo();
@@ -86,15 +99,18 @@ const UseMassaStation = (): ProviderService => {
         }
     }
 
-    async function createAccount(accountName: string): Promise<void> {
-        setErrorMessage("");
+    async function createAccount(
+        accountName: string,
+        provider: IProvider
+    ): Promise<void> {
         try {
-            if (!massaStationProvider) {
-                throw new Error(MASSA_STATION_NOT_RUNNING_ERROR);
-            }
-            await massaStationProvider.generateNewAccount(accountName);
-            const firstAccount = await getFirstAccount();
+            await provider.generateNewAccount(accountName);
+            const data = await provider.accounts();
+            setAccounts(data);
+            const firstAccount = data[0];
+
             if (firstAccount) {
+                setSelectedAccount(firstAccount);
                 await setAccountInfo(firstAccount);
             } else {
                 throw new Error(NO_ACCOUNT_ERROR);
@@ -121,7 +137,14 @@ const UseMassaStation = (): ProviderService => {
         errorMessage,
         connect,
         createAccount,
+        providerList,
+        setSelectedProvider,
+        selectedProvider,
+        accounts,
+        selectedAccount,
+        setSelectedAccount,
+        loadingProvider,
     };
 };
 
-export default UseMassaStation;
+export default useMassaStation;

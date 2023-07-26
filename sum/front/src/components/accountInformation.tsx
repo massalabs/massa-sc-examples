@@ -1,10 +1,5 @@
-import React from "react";
-
-interface AccountInformationProps {
-    accountAddress: string;
-    accountName: string;
-    balance: string;
-}
+import React, { useContext } from "react";
+import { MassaContext } from "../App";
 
 const formatAccountAddress = (accountAddress: string) => {
     const firstPart = accountAddress.substring(0, 6);
@@ -15,29 +10,27 @@ const formatAccountAddress = (accountAddress: string) => {
     return `${firstPart} ... ${lastPart}`;
 };
 
-const AccountInformation: React.FC<AccountInformationProps> = ({
-    accountAddress,
-    accountName,
-    balance,
-}) => (
-    <div>
-        <div className="mas-body text-bold text-center">
+const AccountInformation = () => {
+    const { balance, account } = useContext(MassaContext)!;
+
+    return (
+        <div className="mas-body text-bold text-center p-5">
             <br />
             <p>
                 Account:{" "}
                 <a
                     className="mas-menu-underline font-bold text-center cursor-pointer"
-                    href={`https://test.massa.net/v1/#explorer?explore=${accountAddress}`}
+                    href={`https://test.massa.net/v1/#explorer?explore=${account?.address()}`}
                     target="_blank"
                     rel="noreferrer"
                 >
-                    {formatAccountAddress(accountAddress)}
+                    {formatAccountAddress(account?.address() || "")}
                 </a>
             </p>
-            <p className="accountName">Account Name: {accountName}</p>
-            <p className="balance">Balance: {balance} MASSA</p>
+            <p className="accountName">Account Name: {account?.name()}</p>
+            <p className="balance">Balance: {balance.finalBalance} MASSA</p>
         </div>
-    </div>
-);
+    );
+};
 
 export default AccountInformation;
