@@ -7,15 +7,15 @@ import useMassaStation from "../hooks/useMassaStation";
 export default function Body() {
     const {
         account,
+        accounts,
         accountSelected,
         balance,
         connect,
         connected,
         createAccount,
         errorMessage,
-        accounts,
-        getProviders,
         loadingProvider,
+        providerList,
         providerSelected,
         setAccountSelected,
         setProviderSelected,
@@ -24,17 +24,17 @@ export default function Body() {
     const [providersName, setProvidersNames] = useState<string[]>([]);
 
     useEffect(() => {
-        if (getProviders) {
-            setProviderSelected(getProviders[0]);
-            setProvidersNames(getProviders.map((provider) => provider.name()));
+        if (providerList) {
+            setProviderSelected(providerList[0]);
+            setProvidersNames(providerList.map((provider) => provider.name()));
         }
-    }, [getProviders]);
+    }, [providerList]);
 
     const handleChangeProvider = (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
         const selectedProviderName = event.target.value;
-        const selectedProvider = getProviders?.find(
+        const selectedProvider = providerList?.find(
             (provider) => provider.name() === selectedProviderName
         );
         if (selectedProvider) {
@@ -67,7 +67,7 @@ export default function Body() {
                                 onChange={handleChangeProvider}
                                 value={providerSelected?.name()}
                             >
-                                {getProviders?.map((provider, index) => (
+                                {providerList?.map((provider, index) => (
                                     <option key={`provider_${provider.name()}`}>
                                         {providersName[index]}
                                     </option>

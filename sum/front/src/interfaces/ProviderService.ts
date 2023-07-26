@@ -11,7 +11,7 @@ export interface ProviderService {
     errorMessage: any;
     connect(): Promise<void>;
     createAccount(accountName: string): Promise<void>;
-    getProviders: IProvider[] | null;
+    providerList: IProvider[] | null;
     setProviderSelected: (provider: IProvider) => void;
     providerSelected: IProvider | null;
     accounts: IAccount[] | null;

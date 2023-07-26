@@ -27,7 +27,7 @@ export default function ContractInteraction({
                     Get Event
                 </button>
             </div>
-            {result !== null && (
+            {result && (
                 <div className="py-4">
                     <h4>Result: {result}</h4>
                 </div>

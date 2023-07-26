@@ -83,7 +83,7 @@ export default function ContractInteraction({
                     {!loading ? <div>Calculate Sum</div> : <Loader />}
                 </button>
             </div>
-            {result !== null && (
+            {result && (
                 <div className="py-4">
                     <h4>Result: {result}</h4>
                 </div>

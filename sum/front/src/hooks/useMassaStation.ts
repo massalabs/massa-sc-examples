@@ -20,7 +20,7 @@ const useMassaStation = (): ProviderService => {
     });
     const [errorMessage, setErrorMessage] = useState<any>(null);
 
-    const [getProviders, setGetProviders] = useState<IProvider[] | null>([]);
+    const [providerList, setProviderList] = useState<IProvider[] | null>([]);
     const [providerSelected, setProviderSelected] = useState<IProvider | null>(
         null
     );
@@ -33,21 +33,21 @@ const useMassaStation = (): ProviderService => {
     );
 
     useEffect(() => {
-        const registerAndGetProviders = async () => {
+        const registerAndproviderList = async () => {
             try {
                 const providersList = await providers();
-                console.log(await providers());
+
                 if (providersList.length === 0) {
                     setLoadingProvider("No provider detected");
                     throw new Error(NO_PROVIDER_ERROR);
                 }
-                setGetProviders(providersList);
+                setProviderList(providersList);
             } catch (error) {
                 setErrorMessage((error as Error).message);
             }
         };
 
-        registerAndGetProviders();
+        registerAndproviderList();
     }, []);
 
     useEffect(() => {
@@ -148,7 +148,7 @@ const useMassaStation = (): ProviderService => {
         errorMessage,
         connect,
         createAccount,
-        getProviders,
+        providerList,
         setProviderSelected,
         providerSelected,
         accounts,
