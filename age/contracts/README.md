@@ -83,8 +83,8 @@ Prerequisites :
 
 - You must add a .env file at the root of the repository with the following keys set to valid values :
   - WALLET_PRIVATE_KEY="wallet_private_key"
-  - JSON_RPC_URL_PUBLIC=<https://test.massa.net/api/v2:33035>
-  - JSON_RPC_URL_PRIVATE=<https://test.massa.net/api/v2:33035>
+  - JSON_RPC_URL_PUBLIC=<https://buildnet.massa.net/api/v2:33035>
+  - JSON_RPC_URL_PRIVATE=<https://buildnet.massa.net/api/v2:33035>
 
 These keys will be the ones used by the deployer script to interact with the blockchain.
 
