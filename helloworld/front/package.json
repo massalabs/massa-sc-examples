@@ -3,8 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@massalabs/massa-web3": "^2.0.0",
         "@massalabs/react-ui-kit": "^0.0.4-dev",
-        "@massalabs/wallet-provider": "^0.0.2-dev",
+        "@massalabs/wallet-provider": "^1.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",

@@ -14,7 +14,7 @@ git clone git@github.com:massalabs/massa-sc-examples.git
 After cloning the project, navigate to the project directory and install the required dependencies using NPM:
 
 ```bash
-cd massa-sc-examples/helloworld
+cd massa-sc-examples/helloworld/contracts
 npm install
 ```
 
@@ -59,7 +59,7 @@ This project was generated using the sc-project-initializer tool provided by Mas
 To modify the project, the following files need to be updated:
 
 - README.md: Updated with project-specific information and usage instructions.
-- assembly/contracts/main.ts: Updated with smart contract code.
+- assembly/contracts/helloworld.ts: Updated with smart contract code.
 - assembly/__test__/massa-example.spec.ts: Updated with a simple test case.
 
 If you wish to contribute to this project, please follow these guidelines:
