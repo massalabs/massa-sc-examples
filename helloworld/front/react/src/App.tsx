@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
 import { Args } from "@massalabs/massa-web3";
 
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
 const CONTRACT_ADDRESS = "AS1u8i5H1RQU5qD8R8hQzugA8HwWmS9qqyZNjhvR9WywUP17v1od";
 
 function App() {
@@ -16,8 +14,7 @@ function App() {
     useEffect(() => {
         const registerAndSetProvider = async () => {
         try {
-            await sleep(1000);
-           let accounts = await (await providers())[0].accounts();
+           let accounts = await (await providers(true, 10000))[0].accounts();
             if (accounts.length == 0) {
                 setErrorMessage("No accounts found");
                 return;
