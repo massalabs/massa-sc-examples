@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { IAccount } from "@massalabs/wallet-provider";
 import { Args } from "@massalabs/massa-web3";
 import Loader from "./Loader";
+import { MassaContext } from "../App";
 
 interface ContractInteractionProps {
     account: IAccount;
@@ -10,9 +11,8 @@ interface ContractInteractionProps {
 const CONTRACT_ADDRESS =
     "AS12YrZxFisWZCKJpXLEYfSYzrSCS4bjoyKGeaviQMmb5zqfgXaML";
 
-export default function ContractInteraction({
-    account,
-}: ContractInteractionProps) {
+export default function ContractInteraction() {
+    const { account } = useContext(MassaContext)!;
     const [num1, setNum1] = useState<number>(0);
     const [num2, setNum2] = useState<number>(0);
     const [result, setResult] = useState<string>("");
@@ -29,7 +29,7 @@ export default function ContractInteraction({
     const calculateSum = async () => {
         setLoading(true);
         try {
-            await account.callSC(
+            await account?.callSC(
                 CONTRACT_ADDRESS,
                 "sum",
                 new Args().addI64(BigInt(num1)).addI64(BigInt(num2)),
@@ -45,7 +45,7 @@ export default function ContractInteraction({
     };
 
     const getLastResult = async () => {
-        const result = await account.callSC(
+        const result = await account?.callSC(
             CONTRACT_ADDRESS,
             "lastResult",
             new Uint8Array([]),
@@ -57,7 +57,7 @@ export default function ContractInteraction({
     };
 
     return (
-        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12">
+        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
             <h3 className="">Manage Sum Transactions</h3>
             <div>
                 <h4 className="py-4">Enter Numbers</h4>

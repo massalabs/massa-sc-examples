@@ -12,85 +12,71 @@ const NOT_PROVIDER_SELECTED_ERROR = "No provider selected";
 const NO_PROVIDER_ERROR = "No provider found. Run Wallet and reload page.";
 
 const useMassaStation = (): ProviderService => {
-    const [connected, setConnected] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount | null>(null);
+    const [connected, setConnected] = useState<boolean>(false);
+
     const [balance, setBalance] = useState<IAccountBalanceResponse>({
         finalBalance: "",
         candidateBalance: "",
     });
-    const [errorMessage, setErrorMessage] = useState<any>(null);
 
     const [providerList, setProviderList] = useState<IProvider[] | null>([]);
-    const [providerSelected, setProviderSelected] = useState<IProvider | null>(
+
+    const [errorMessage, setErrorMessage] = useState<any>(null);
+
+    const [selectedProvider, setSelectedProvider] = useState<IProvider | null>(
         null
     );
     const [accounts, setAccounts] = useState<IAccount[] | null>(null);
-    const [accountSelected, setAccountSelected] = useState<IAccount | null>(
+    const [selectedAccount, setSelectedAccount] = useState<IAccount | null>(
         null
     );
     const [loadingProvider, setLoadingProvider] = useState<string>(
-        "loading provider and wallet"
+        "Loading provider and wallet"
     );
 
     useEffect(() => {
-        const registerAndproviderList = async () => {
-            try {
-                const providersList = await providers();
-
-                if (providersList.length === 0) {
-                    setLoadingProvider("No provider detected");
-                    throw new Error(NO_PROVIDER_ERROR);
-                }
-                setProviderList(providersList);
-            } catch (error) {
-                setErrorMessage((error as Error).message);
-            }
-        };
-
-        registerAndproviderList();
+        getProviderList();
     }, []);
 
     useEffect(() => {
-        const registerAndGetAccounts = async () => {
-            if (providerSelected) {
-                try {
-                    const result = await providerSelected.accounts();
-                    setAccounts(result);
-                    setAccountSelected(result[0]);
-                    if (result.length === 0) {
-                        setLoadingProvider("No account detected.");
-                        setErrorMessage(NO_ACCOUNT_ERROR);
-                    }
-                } catch (error) {
-                    setLoadingProvider("No account detected.");
-                    setErrorMessage(NO_ACCOUNT_ERROR);
-                }
+        if (!selectedProvider) return;
+        getAccounts(selectedProvider);
+    }, [selectedProvider]);
+
+    const getProviderList = async () => {
+        try {
+            const providersList = await providers();
+            if (providersList.length === 0) {
+                setLoadingProvider("No provider detected");
+                throw new Error(NO_PROVIDER_ERROR);
             }
-        };
-
-        registerAndGetAccounts();
-    }, [providerSelected]);
-
-    async function getFirstAccount() {
-        if (!providerSelected) {
-            console.log("No provider selected");
-            return null;
+            setProviderList(providersList);
+        } catch (error) {
+            setErrorMessage((error as Error).message);
         }
-        const data = await providerSelected.accounts();
-        if (data.length > 0) {
-            return data[0];
+    };
+
+    async function getAccounts(provider: IProvider) {
+        try {
+            const data = await provider.accounts();
+            setAccounts(data);
+            setSelectedAccount(data[0]);
+            if (data.length === 0) {
+                setLoadingProvider("No account detected.");
+                setErrorMessage(NO_ACCOUNT_ERROR);
+            }
+        } catch (error) {
+            setLoadingProvider("No account detected.");
+            setErrorMessage(NO_ACCOUNT_ERROR);
         }
     }
 
-    async function connect(): Promise<void> {
+    async function connect(account: IAccount): Promise<void> {
         try {
             setConnected(true);
-            if (accountSelected) {
-                setAccountInfo(accountSelected);
-                setErrorMessage("");
-            } else {
-                setErrorMessage(NO_ACCOUNT_ERROR);
-            }
+            setAccountInfo(account);
+            setErrorMessage("");
         } catch (error) {
             console.error("Error while connecting to Massa Station: ", error);
             resetAccountInfo();
@@ -113,15 +99,18 @@ const useMassaStation = (): ProviderService => {
         }
     }
 
-    async function createAccount(accountName: string): Promise<void> {
-        setErrorMessage("");
+    async function createAccount(
+        accountName: string,
+        provider: IProvider
+    ): Promise<void> {
         try {
-            if (!providerSelected) {
-                throw new Error(NOT_PROVIDER_SELECTED_ERROR);
-            }
-            await providerSelected.generateNewAccount(accountName);
-            const firstAccount = await getFirstAccount();
+            await provider.generateNewAccount(accountName);
+            const data = await provider.accounts();
+            setAccounts(data);
+            const firstAccount = data[0];
+
             if (firstAccount) {
+                setSelectedAccount(firstAccount);
                 await setAccountInfo(firstAccount);
             } else {
                 throw new Error(NO_ACCOUNT_ERROR);
@@ -149,11 +138,11 @@ const useMassaStation = (): ProviderService => {
         connect,
         createAccount,
         providerList,
-        setProviderSelected,
-        providerSelected,
+        setSelectedProvider,
+        selectedProvider,
         accounts,
-        setAccountSelected,
-        accountSelected,
+        selectedAccount,
+        setSelectedAccount,
         loadingProvider,
     };
 };

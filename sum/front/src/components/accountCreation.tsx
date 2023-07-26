@@ -1,13 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { MassaContext } from "../App";
 
-interface AccountCreationProps {
-    createAccount: (accountName: string) => void;
-}
-
-const AccountCreation = ({ createAccount }: AccountCreationProps) => {
+const AccountCreation = () => {
     const [accountName, setAccountName] = useState<string>("");
+    const { createAccount, selectedProvider } = useContext(MassaContext)!; // Use the context
     return (
-        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12">
+        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border bg-gray-700 rounded-lg shadow-md mb-12 mx-auto">
             <p className="mas-body my-4">
                 You are connected to Massa Station, but you don't have any
                 account yet. you can create one here:
@@ -21,8 +19,11 @@ const AccountCreation = ({ createAccount }: AccountCreationProps) => {
                 ></input>
                 <button
                     className="bodyButton"
-                    onClick={() => createAccount(accountName)}
-                    disabled={accountName === ""}
+                    onClick={() =>
+                        selectedProvider &&
+                        createAccount(accountName, selectedProvider)
+                    }
+                    disabled={accountName === "" && !selectedProvider}
                 >
                     Create account
                 </button>
