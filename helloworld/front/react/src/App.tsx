@@ -1,15 +1,14 @@
 import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
-import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory } from "@massalabs/massa-web3";
-import { Args } from "@massalabs/massa-web3";
+import { IAccount, providers, IProvider } from "@massalabs/wallet-provider"
+import { ClientFactory, Args } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1u8i5H1RQU5qD8R8hQzugA8HwWmS9qqyZNjhvR9WywUP17v1od";
 
 function App() {
     const [errorMessage, setErrorMessage] = useState<any>("");
-    const [nodeUrls, setNodeUrls] = useState<string[] | null>(null);
+    const [provider, setProvider] = useState<IProvider | null>(null);
     const [account, setAccount] = useState<IAccount | null>(null);
     const [lastOpId, setlastOpId] = useState<string | null>(null);
 
@@ -18,12 +17,12 @@ function App() {
         try {
            let provider = (await providers(true, 10000))[0];
            let accounts = await provider.accounts();
-            if (accounts.length == 0) {
+            if (accounts.length === 0) {
                 setErrorMessage("No accounts found");
                 return;
             }
+            setProvider(provider);
             setAccount(accounts[0]);
-            setNodeUrls(await provider.getNodesUrls());
         } catch (e) {
             console.log(e);
             setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
@@ -35,10 +34,10 @@ function App() {
 
     const callHelloWorld = async () => {
         try {
-            if (!nodeUrls || !account) {
+            if (!account || !provider) {
                 return;
             }
-            let client = await ClientFactory.createClientFromWalletProvider(nodeUrls, account);
+            let client = await ClientFactory.fromWalletProvider(provider, account);
             let op_id = await client.smartContracts().callSmartContract({
                 targetAddress: CONTRACT_ADDRESS,
                 functionName: "helloWorld",
