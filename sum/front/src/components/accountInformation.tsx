@@ -17,15 +17,12 @@ const AccountInformation = () => {
         <div className="mas-body text-bold text-center p-5">
             <br />
             <p>
-                Account:{" "}
-                <a
-                    className="mas-menu-underline font-bold text-center cursor-pointer"
-                    href={`https://test.massa.net/v1/#explorer?explore=${account?.address()}`}
-                    target="_blank"
-                    rel="noreferrer"
+                Account:
+                <span
+                    className="mas-menu-underline font-bold text-center cursor-pointer ml-2"
                 >
                     {formatAccountAddress(account?.address() || "")}
-                </a>
+                </span>
             </p>
             <p className="accountName">Account Name: {account?.name()}</p>
             <p className="balance">Balance: {balance.finalBalance} MASSA</p>
