@@ -4,8 +4,7 @@
   "target": "esnext",
   "description": "massa's create-react-app template",
   "author": "Massa Labs <info@massa.net>",
-  "contributors": [
-  ],
+  "contributors": [],
   "license": "MIT",
   "private": false,
   "keywords": [
@@ -18,6 +17,7 @@
   ],
   "dependencies": {
     "@massalabs/massa-web3": "^1.11.0",
+    "@massalabs/wallet-provider": "^1.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",

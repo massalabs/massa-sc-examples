@@ -1,84 +1,102 @@
-import {
-  Args,
-  Client,
-  ClientFactory,
-  DefaultProviderUrls,
-  IAccount,
-} from "@massalabs/massa-web3";
+import "./App.css";
+import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
+import { IAccount, providers } from "@massalabs/wallet-provider"
+import { ClientFactory } from "@massalabs/massa-web3";
+import { Args } from "@massalabs/massa-web3";
 
-const baseAccount = {
-  publicKey: "P12f2K8YoeqZCzWASs2wktFYYGtaHGYaeSukFBrgEnw9d3J1WsMZ",
-  secretKey: "S17Zw8KN3QSzsWGof7PTgkTvyGYbZLNMZmjC4urr6ZziLonThqk",
-  address: "A1qZL4iJYRDRo9EtDauJuWNj56FNXWhtKinv15GEakraBa91dEA",
-} as IAccount;
+const CONTRACT_ADDRESS = "A12VVvTD8bdj1LDwc2uuFNKxT26AxQGv8aDgpWS9EVjekEwTZSab";
 
-const sc_addr = "A12VVvTD8bdj1LDwc2uuFNKxT26AxQGv8aDgpWS9EVjekEwTZSab"
-
-function Content() {
-  const [web3client, setWeb3client] = useState<Client | null>(null);
-  const [age, setAge] = useState<number | null>(null);
+function App() {
+  const [errorMessage, setErrorMessage] = useState<any>("");
+  const [nodeUrls, setNodeUrls] = useState<string[] | null>(null);
+  const [account, setAccount] = useState<IAccount | null>(null);
+  const [lastOpId, setlastOpId] = useState<string | null>(null);
+  const [inputAge, setInputAge] = useState<number>(0);
 
   useEffect(() => {
-    const initClient = async () => {
-      const client = await ClientFactory.createDefaultClient(DefaultProviderUrls.TESTNET, false, baseAccount);
-      setWeb3client(client);
-    }
+    const registerAndSetProvider = async () => {
+      try {
+        let provider = (await providers(true, 10000))[0];
+        let accounts = await provider.accounts();
+        if (accounts.length == 0) {
+          setErrorMessage("No accounts found");
+          return;
+        }
+        setAccount(accounts[0]);
+        setNodeUrls(await provider.getNodesUrls());
+      } catch (e) {
+        console.log(e);
+        setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
+      }
+    };
 
-    initClient().catch(console.error);
+    registerAndSetProvider();
   }, []);
 
-  async function funcSetAge(age: number) {
-    let args = new Args();
-    args.addString("alice");
-    args.addU32(BigInt(age));
-    if (web3client) {
-      await web3client.smartContracts().callSmartContract({
-        fee: 0,
-        maxGas: 1000000,
-        coins: 0,
-        targetAddress: sc_addr,
-        functionName: "change_age",
-        parameter: args.serialize()
-      });
-    }
-  }
-
-  async function initialize() {
-    let args = new Args();
-    if (web3client) {
-      await web3client.smartContracts().callSmartContract({
-        fee: 0,
-        maxGas: 1000000,
-        coins: 10_000_000_000,
-        targetAddress: sc_addr,
-        functionName: "initialize",
-        parameter: args.serialize()
-      });
-    }
-  }
-
-  async function funcGetAge() {
-    if (web3client) {
-      let res = await web3client.publicApi().getDatastoreEntries([{ key: Array.from(Buffer.from("alice", "utf16le")), address: sc_addr }]);
-      if (res[0].candidate_value) {
-        let age_decode = new Args(res[0].candidate_value);
-        let age = age_decode.nextU32();
-        setAge(Number(age));
+  // argument is a u32 that will be passed to the smart contract
+  const callChangeAge = (newAge: number) => async () => {
+    try {
+      if (!nodeUrls || !account) {
+        return;
       }
+      let client = await ClientFactory.createClientFromWalletProvider(nodeUrls, account);
+      let op_id = await client.smartContracts().callSmartContract({
+        targetAddress: CONTRACT_ADDRESS,
+        functionName: "changeAge",
+        parameter: new Args().addU32(newAge).serialize(),
+        maxGas: BigInt(1000000),
+        coins: BigInt(0),
+        fee: BigInt(0),
+      });
+      setlastOpId(op_id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const callGetAge = async () => {
+    try {
+      if (!nodeUrls) {
+        return;
+      }
+      let client = await ClientFactory.createClientFromWalletProvider(nodeUrls, account);
+      let age = await client.smartContracts().callSmartContract({
+        targetAddress: CONTRACT_ADDRESS,
+        functionName: "getAge",
+        parameter: new Args().serialize(),
+        maxGas: BigInt(1000000),
+        coins: BigInt(0),
+        fee: BigInt(0),
+      });
+      console.log("Age", age);
+    } catch (error) {
+      console.error(error);
     }
   }
-
   return (
-    <div>
-      <div>Alice: {age}</div>
-      
-      <button onClick={async () => await funcSetAge(age! + 1)}>Age++</button>
-      <button onClick={async () => await funcSetAge(age! - 1)}>Age--</button>
-      {web3client ? (<button onClick={async () => {await funcGetAge()} } >load</button>): (<div>loading</div>)}
-      {web3client ? (<button onClick={async () => {await initialize()} } >initialize</button>): (<div>loading</div>)}
+    <div className="App theme-light">
+      {errorMessage && <div>{errorMessage}</div>}
+      {account && (
+        <div>
+          <div>Address: {account.address()}</div>
+          <input
+            className="input w-64"
+            type="number"
+            value={inputAge}
+            onChange={(e) => setInputAge(parseInt(e.target.value))}
+          />
+          <button className="button w-64" onClick={callChangeAge(inputAge)}>
+            Change age
+          </button>
+          <button className="button w-64" onClick={callGetAge}>
+            Get age
+          </button>
+        </div>
+      )}
+      {lastOpId && <div>Last Op id: {lastOpId}</div>}
     </div>
-  )
+  );
 }
 
-export default Content;
+export default App;
