@@ -51,27 +51,3 @@ export function deletePost(_args: StaticArray<u8>): void {
 export function blogKey(postIndex: string): string {
   return 'POST_' + postIndex;
 }
-
-export function getPosts(): StaticArray<u8> {
-  let posts = '';
-  let postLastIndex = 0;
-
-  // Check if N_BLOG_POSTS exists in the storage and if it does, retrieve the value
-  if (Storage.get<string>('N_BLOG_POSTS') !== '') {
-    postLastIndex = parseInt(Storage.get('N_BLOG_POSTS')) as i32;
-  }
-
-  // Loop through all posts by their indices
-  for (let i = 1; i <= postLastIndex; i++) {
-    const post = Storage.get(blogKey(i.toString()));
-    if (post !== '') {
-      // Check if post exists
-      if (posts !== '') posts += ','; // If it's not the first post, prepend comma
-      posts += post; // Concatenate posts
-    }
-  }
-
-  posts = '[' + posts + ']'; // Wrap posts string with array brackets
-
-  return stringToBytes(posts); // Return all posts as an array string
-}
