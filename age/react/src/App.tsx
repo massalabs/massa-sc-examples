@@ -2,8 +2,7 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory, IClient, bytesToU32 } from "@massalabs/massa-web3";
-import { Args } from "@massalabs/massa-web3";
+import { ClientFactory, IClient, bytesToU32, Args } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
