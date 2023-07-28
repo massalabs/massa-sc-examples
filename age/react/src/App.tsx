@@ -2,10 +2,10 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory, IClient } from "@massalabs/massa-web3";
+import { ClientFactory, IClient, bytesToU32, strToBytes } from "@massalabs/massa-web3";
 import { Args } from "@massalabs/massa-web3";
 
-const CONTRACT_ADDRESS = "A12VVvTD8bdj1LDwc2uuFNKxT26AxQGv8aDgpWS9EVjekEwTZSab";
+const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
 function App() {
   const [errorMessage, setErrorMessage] = useState<any>("");
@@ -43,15 +43,18 @@ function App() {
       if (!account || !client) {
         return;
       }
-      let op_id = await client.smartContracts().callSmartContract({
+      let args = new Args();
+      args.addString("alice");
+      args.addU32(newAge);
+      let opId = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
-        parameter: new Args().addU32(newAge).serialize(),
+        parameter: args.serialize(),
         maxGas: BigInt(1000000),
         coins: BigInt(0),
         fee: BigInt(0),
       });
-      setlastOpId(op_id);
+      setlastOpId(opId);
     } catch (error) {
       console.error(error);
     }
@@ -62,15 +65,17 @@ function App() {
       if (!account || !client) {
         return;
       }
-      let age = await client.smartContracts().callSmartContract({
-        targetAddress: CONTRACT_ADDRESS,
-        functionName: "getAge",
-        parameter: new Args().serialize(),
+      console.log("call get age");
+      let res = await client.smartContracts().readSmartContract({
         maxGas: BigInt(1000000),
-        coins: BigInt(0),
-        fee: BigInt(0),
+        targetAddress: CONTRACT_ADDRESS,
+        targetFunction: "getAge",
+        parameter: new Args().addString("alice").serialize(),
       });
-      console.log("Age", age);
+
+      let age = bytesToU32(res.returnValue);
+      console.log("age", age);
+
     } catch (error) {
       console.error(error);
     }
