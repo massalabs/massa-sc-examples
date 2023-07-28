@@ -15,8 +15,8 @@ const CONTRACT_ADDRESS =
 function setName() {
   let newName = document.getElementById("nameInput").value;
   let names = document.getElementsByClassName("name");
-  for (let i = 0; i < names.length; i++) {
-    names[i].innerText = newName;
+  for (let nameElement of names) {
+    nameElement.innerText = newName;
   }
   name = newName;
 }
