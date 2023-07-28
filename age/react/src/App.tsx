@@ -2,14 +2,14 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory } from "@massalabs/massa-web3";
+import { ClientFactory, IClient } from "@massalabs/massa-web3";
 import { Args } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "A12VVvTD8bdj1LDwc2uuFNKxT26AxQGv8aDgpWS9EVjekEwTZSab";
 
 function App() {
   const [errorMessage, setErrorMessage] = useState<any>("");
-  const [nodeUrls, setNodeUrls] = useState<string[] | null>(null);
+  const [client, setClient] = useState<IClient | null>(null);
   const [account, setAccount] = useState<IAccount | null>(null);
   const [lastOpId, setlastOpId] = useState<string | null>(null);
   const [inputAge, setInputAge] = useState<number>(0);
@@ -19,12 +19,15 @@ function App() {
       try {
         let provider = (await providers(true, 10000))[0];
         let accounts = await provider.accounts();
-        if (accounts.length == 0) {
+        if (accounts.length === 0) {
           setErrorMessage("No accounts found");
           return;
         }
         setAccount(accounts[0]);
-        setNodeUrls(await provider.getNodesUrls());
+        if (!account || !provider) {
+          return;
+        }
+        setClient(await ClientFactory.fromWalletProvider(provider, account));
       } catch (e) {
         console.log(e);
         setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
@@ -32,15 +35,14 @@ function App() {
     };
 
     registerAndSetProvider();
-  }, []);
+  }, [account]);
 
   // argument is a u32 that will be passed to the smart contract
   const callChangeAge = (newAge: number) => async () => {
     try {
-      if (!nodeUrls || !account) {
+      if (!account || !client) {
         return;
       }
-      let client = await ClientFactory.createClientFromWalletProvider(nodeUrls, account);
       let op_id = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
@@ -57,10 +59,9 @@ function App() {
 
   const callGetAge = async () => {
     try {
-      if (!nodeUrls) {
+      if (!account || !client) {
         return;
       }
-      let client = await ClientFactory.createClientFromWalletProvider(nodeUrls, account);
       let age = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "getAge",
