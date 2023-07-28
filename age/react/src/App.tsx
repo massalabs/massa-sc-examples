@@ -84,34 +84,35 @@ function App() {
       {account && (
         <div className="wrapper">
           <h1 className="messageToDisplay">Age Example: React</h1>
-          <h3>Your address: {account.address()}</h3>
-          <div className="innerWrapper">
-            <input type="text" value={inputName} placeholder="name" onChange={(e) => {
-              setInputName(e.target.value);
-              setAgeResult(null);
-            }} />
-            <input
-              type="number"
-              placeholder="age"
-              value={inputAge}
-              onChange={(e) => setInputAge(parseInt(e.target.value))}
-            />
-            <button onClick={callChangeAge(inputAge)}>
-              Change age of {
-                inputName === "" ? "..." : inputName}
-            </button>
+          <div>
+            <h3>Your address: {account.address()}</h3>
+            <div className="innerWrapper">
+              <input type="text" value={inputName} placeholder="name" onChange={(e) => {
+                setInputName(e.target.value);
+                setAgeResult(null);
+              }} />
+              <input
+                type="number"
+                placeholder="age"
+                value={inputAge}
+                onChange={(e) => setInputAge(parseInt(e.target.value))}
+              />
+              <button onClick={callChangeAge(inputAge)}>
+                Change age of {
+                  inputName === "" ? "..." : inputName}
+              </button>
+            </div>
+            {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
+            <div className="innerWrapper">
+              <button onClick={callGetAge}>
+                Get age of {
+                  inputName === "" ? "..." : inputName}
+              </button>
+              {
+                ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
+              }
+            </div>
           </div>
-          {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
-          <div className="innerWrapper">
-            <button onClick={callGetAge}>
-              Get age of {
-                inputName === "" ? "..." : inputName}
-            </button>
-            {
-              ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
-            }
-          </div>
-
         </div>
       )}
     </div>

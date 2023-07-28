@@ -16,6 +16,7 @@ body {
   align-items: center;
   box-sizing: border-box;
   height: 90vh;
+  align-self: center;
 }
 
 .wrapper {
@@ -27,14 +28,14 @@ body {
   justify-content: center;
 }
 
+
 .innerWrapper {
-  width: 50%;
+  width: 100%;
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  justify-content: space-around;
-  padding-top: 2.2rem;
-  padding-bottom: 1.5rem;
+  justify-content: flex-start;
+  padding-top: 1.5rem;
 }
 
 .invisibleDiv {
@@ -49,6 +50,7 @@ input {
   border-radius: 4px;
   font-weight: 500;
   font-size: 1.1em;
+  margin-right: 2rem;
 }
 
 /* Setup the bodyText text */
@@ -74,7 +76,7 @@ h4 {
 }
 
 button {
-  width: 25%;
+  width: 35%;
   padding: 12px 16px;
   border-radius: 8px;
   border: none;
