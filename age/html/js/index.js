@@ -1,77 +1,87 @@
 let massa = window.massa;
 
-// create a base account for signing transactions
-const baseAccount = {
-    address: 'A1qZL4iJYRDRo9EtDauJuWNj56FNXWhtKinv15GEakraBa91dEA',
-    secretKey: 'S17Zw8KN3QSzsWGof7PTgkTvyGYbZLNMZmjC4urr6ZziLonThqk',
-    publicKey: 'P12f2K8YoeqZCzWASs2wktFYYGtaHGYaeSukFBrgEnw9d3J1WsMZ'
-};
-
-let client = null
-
-const sc_addr = "A124zgkBHPz98F679iYJ56Y2hrMY6ZaVzYKApg2jLuwBBpe9KdQS"
-
-// initialize a testnet client
-massa.ClientFactory.createDefaultClient(
-    massa.DefaultProviderUrls.TESTNET,
-    false,
-    baseAccount
-).then((c) => client = c);
-
+let client = null;
+let account = null;
 let Args = massa.Args;
 
-function strEncodeUTF16(str) {
-    var buf = new ArrayBuffer(str.length*2);
-    var bufView = new Uint8Array(buf);
-    for (var i=0, strLen=str.length * 2; i < strLen; i += 2) {
-      bufView[i] = str.charCodeAt(i / 2);
-      bufView[i + 1] = 0;
-    }
-    return bufView;
-}
+const sc_addr = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
-function load() {
-    if (client) {
-        client.publicApi().getDatastoreEntries([{ key: strEncodeUTF16("alice"), address: sc_addr }]).then((res) => {
-            if (res[0].candidate_value) {
-                let age_decode = new Args(res[0].candidate_value);
-                let age = age_decode.nextU32();
-                document.getElementById("age").innerHTML = age;
-            }
-        });
+// initialize a testnet client
+const initializeClient = async () => {
+  try {
+    let provider = (await massa.providers(true, 10000))[0];
+    let accounts = await provider.accounts();
+    if (accounts.length === 0) {
+      console.log("no accounts found");
+      return;
     }
-}
+    account = accounts[0];
+    if (!account || !provider) {
+      return;
+    }
+    client = await massa.ClientFactory.fromWalletProvider(provider, account);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const callGetAge = async () => {
+    try {
+      if (!account || !client) {
+        return;
+      }
+      console.log("calling getAge");
+      let res = await client.smartContracts().readSmartContract({
+        maxGas: BigInt(1000000),
+        targetAddress: CONTRACT_ADDRESS,
+        targetFunction: "getAge",
+        parameter: new Args().addString(inputName).serialize(),
+      });
+
+      setAgeResult(bytesToU32(res.returnValue));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 function funcSetAge(number) {
-    let args = new Args();
-    args.addString("alice");
-    args.addU32(BigInt(document.getElementById("age").innerHTML) + BigInt(number));
-    if (client) {
-        client.smartContracts().callSmartContract({
-            fee: 0,
-            maxGas: 1000000,
-            coins: 0,
-            targetAddress: sc_addr,
-            functionName: "change_age",
-            parameter: args.serialize()
-        }).then((res) => {
-            console.log(res)
-        });
-    }
+  let args = new Args();
+  args.addString("alice");
+  args.addU32(
+    BigInt(document.getElementById("age").innerHTML) + BigInt(number)
+  );
+  if (client) {
+    client
+      .smartContracts()
+      .callSmartContract({
+        fee: 0,
+        maxGas: 1000000,
+        coins: 0,
+        targetAddress: sc_addr,
+        functionName: "change_age",
+        parameter: args.serialize(),
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  }
 }
 
 function initialize() {
-    let args = new Args();
-    if (client) {
-        client.smartContracts().callSmartContract({
-            fee: 0,
-            maxGas: 1000000,
-            coins: 10_000_000_000,
-            targetAddress: sc_addr,
-            functionName: "initialize",
-            parameter: args.serialize()
-        }).then((res) => {
-            console.log(res)
-        });
-    }
+  let args = new Args();
+  if (client) {
+    client
+      .smartContracts()
+      .callSmartContract({
+        fee: 0,
+        maxGas: 1000000,
+        coins: 10_000_000_000,
+        targetAddress: sc_addr,
+        functionName: "initialize",
+        parameter: args.serialize(),
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  }
 }
