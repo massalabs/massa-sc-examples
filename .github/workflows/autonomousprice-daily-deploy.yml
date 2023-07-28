@@ -9,7 +9,7 @@ on:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy-age:
+  deploy-autonomousprice:
     defaults:
       run:
         working-directory: ./autonomousprice/contracts/

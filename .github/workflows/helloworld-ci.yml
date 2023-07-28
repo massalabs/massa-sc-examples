@@ -1,6 +1,9 @@
 name: Helloworld CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - helloworld/**
 
 defaults:
   run:

@@ -1,6 +1,9 @@
 name: Asynccalls CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - asynccalls/**
 
 defaults:
   run:

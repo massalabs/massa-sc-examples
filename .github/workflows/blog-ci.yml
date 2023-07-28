@@ -1,6 +1,9 @@
 name: Blog CI
 
-on: [push]
+on:
+  push:
+    paths:
+      - blog/**
 
 defaults:
   run:
