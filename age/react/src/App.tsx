@@ -99,13 +99,15 @@ function App() {
               onChange={(e) => setInputAge(parseInt(e.target.value))}
             />
             <button onClick={callChangeAge(inputAge)}>
-              Change age
+              Change age of {
+                inputName === "" ? "..." : inputName}
             </button>
           </div>
           {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
           <div className="innerWrapper">
             <button onClick={callGetAge}>
-              Get age
+              Get age of {
+                inputName === "" ? "..." : inputName}
             </button>
             {
               ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
