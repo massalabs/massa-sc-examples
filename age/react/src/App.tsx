@@ -2,7 +2,7 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory, IClient, bytesToU32, strToBytes } from "@massalabs/massa-web3";
+import { ClientFactory, IClient, bytesToU32 } from "@massalabs/massa-web3";
 import { Args } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
@@ -13,6 +13,8 @@ function App() {
   const [account, setAccount] = useState<IAccount | null>(null);
   const [lastOpId, setlastOpId] = useState<string | null>(null);
   const [inputAge, setInputAge] = useState<number>(0);
+  const [inputName, setInputName] = useState<string>("");
+  const [ageResult, setAgeResult] = useState<number | null>(null);
 
   useEffect(() => {
     const registerAndSetProvider = async () => {
@@ -44,7 +46,7 @@ function App() {
         return;
       }
       let args = new Args();
-      args.addString("alice");
+      args.addString(inputName);
       args.addU32(newAge);
       let opId = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
@@ -70,37 +72,48 @@ function App() {
         maxGas: BigInt(1000000),
         targetAddress: CONTRACT_ADDRESS,
         targetFunction: "getAge",
-        parameter: new Args().addString("alice").serialize(),
+        parameter: new Args().addString(inputName).serialize(),
       });
 
-      let age = bytesToU32(res.returnValue);
-      console.log("age", age);
-
+      setAgeResult(bytesToU32(res.returnValue));
     } catch (error) {
       console.error(error);
     }
   }
   return (
-    <div className="App theme-light">
+    <div className="bodyContent">
       {errorMessage && <div>{errorMessage}</div>}
       {account && (
-        <div>
-          <div>Address: {account.address()}</div>
-          <input
-            className="input w-64"
-            type="number"
-            value={inputAge}
-            onChange={(e) => setInputAge(parseInt(e.target.value))}
-          />
-          <button className="button w-64" onClick={callChangeAge(inputAge)}>
-            Change age
-          </button>
-          <button className="button w-64" onClick={callGetAge}>
-            Get age
-          </button>
+        <div className="wrapper">
+          <h1 className="messageToDisplay">Age Example: React</h1>
+          <h3>Your address: {account.address()}</h3>
+          <div className="innerWrapper">
+            <input type="text" value={inputName} placeholder="name" onChange={(e) => {
+              setInputName(e.target.value);
+              setAgeResult(null);
+            }} />
+            <input
+              type="number"
+              placeholder="age"
+              value={inputAge}
+              onChange={(e) => setInputAge(parseInt(e.target.value))}
+            />
+            <button onClick={callChangeAge(inputAge)}>
+              Change age
+            </button>
+          </div>
+          {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
+          <div className="innerWrapper">
+            <button onClick={callGetAge}>
+              Get age
+            </button>
+            {
+              ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
+            }
+          </div>
+
         </div>
       )}
-      {lastOpId && <div>Last Op id: {lastOpId}</div>}
     </div>
   );
 }
