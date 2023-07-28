@@ -2,23 +2,26 @@
 <html>
   <head>
     <title>Age</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body class="bodyContent">
+    <h1 class="messageToDisplay">Age Example: Vanilla JS</h1>
+    <h2 >Name: Alice <span id="age"></span></h2>
+
+    <button onClick="funcSetAge(1);">Age++</button>
+    <button onClick="funcSetAge(-1);">Age--</button>
+    <button onClick="getAge();">load</button>
+
+    <!-- Scripts -->
     <script
       type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@1.17.0/bundle.js"
+      src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@1.22.0/bundle.js"
     ></script>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/@massalabs/wallet-provider@1.2.0/bundle.js"
     ></script>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body class="bodyContent">
-    <h1 class="messageToDisplay title">Age Example: Vanilla JS</h1>
-    <div class="messageToDisplay">Alice: <span id="age"></span></div>
-
-    <button onClick="funcSetAge(1);">Age++</button>
-    <button onClick="funcSetAge(-1);">Age--</button>
-    <button onClick="load();">load</button>
     <script src="js/index.js"></script>
   </body>
 </html>

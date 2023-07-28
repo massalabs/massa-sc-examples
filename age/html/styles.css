@@ -1,68 +1,57 @@
 /* Setup the background color */
 body {
-    background-image: url("background.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-bottom: 4rem;
-    overflow-y: auto;
-    height: 100vh;
-    overflow: hidden;
+  background-image: url("background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-bottom: 4rem;
+  overflow-y: auto;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .bodyContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 /* Setup the bodyText text */
-button {
-    padding: 20px 40px;
-    margin-bottom: 2rem;
-    background-color: rgb(159, 26, 26);
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
-}
 
 .messageToDisplay {
-    color: rgb(0, 0, 0);
-    font-size: 2em;
-    font-weight: bold;
-    text-align: center;
-    padding-bottom: 2rem;
-}
-
-.title {
-    padding-bottom: 2.5rem;
+  color: rgb(0, 0, 0);
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 2rem;
 }
 
 /* Contract Interaction style */
 
 .input {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1rem;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 button {
-    padding: 10px;
-    border: none;
-    width: 25%;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 1.3em;
+  width: 25%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1.3em;
+  color: rgb(255, 255, 255);
+  background-color: rgb(159, 26, 26);
 }
 
-button:hover{
-    background-color: rgb(73, 47, 47);
+button:hover {
+  background-color: rgb(73, 47, 47);
 }
