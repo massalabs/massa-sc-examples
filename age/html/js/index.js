@@ -26,24 +26,23 @@ const initializeClient = async () => {
     let provider = (await wallet.providers(true, 10000))[0];
     let accounts = await provider.accounts();
     if (accounts.length === 0) {
-      console.log("no accounts found");
-      return;
+      throw new Error("No accounts found");
     }
     account = accounts[0];
     if (!account || !provider) {
-      return;
+      throw new Error("No account or provider found");
     }
     client = await massa.ClientFactory.fromWalletProvider(provider, account);
   } catch (e) {
-    console.log(e);
+    console.error(e);
+
   }
 };
 
 async function getAge() {
   try {
     if (!account || !client) {
-      console.log("no account or client");
-      return;
+      throw new Error("No account or client found");
     }
     let res = await client.smartContracts().readSmartContract({
       maxGas: BigInt(1000000),
