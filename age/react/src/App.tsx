@@ -66,7 +66,6 @@ function App() {
       if (!account || !client) {
         return;
       }
-      console.log("call get age");
       let res = await client.smartContracts().readSmartContract({
         maxGas: BigInt(1000000),
         targetAddress: CONTRACT_ADDRESS,
