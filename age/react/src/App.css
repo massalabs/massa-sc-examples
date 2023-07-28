@@ -30,7 +30,6 @@ body {
 .innerWrapper {
   width: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
   box-sizing: border-box;
   justify-content: space-around;
