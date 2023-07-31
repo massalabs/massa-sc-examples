@@ -44,9 +44,7 @@ function App() {
       if (!account || !client) {
         return;
       }
-      let args = new Args();
-      args.addString(inputName);
-      args.addU32(newAge);
+      let args = new Args().addString(inputName).addU32(newAge);
       let opId = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
