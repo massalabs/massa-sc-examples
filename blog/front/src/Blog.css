@@ -1,0 +1,13 @@
+.publish-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.publish-section div {
+    margin: 10px 0;
+}
+
+.publish-section label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}

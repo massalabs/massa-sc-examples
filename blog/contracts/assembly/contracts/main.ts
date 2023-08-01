@@ -1,5 +1,5 @@
 import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
-import { Args } from '@massalabs/as-types';
+import { Args, stringToBytes } from '@massalabs/as-types';
 
 /**
  * This function is meant to be called only one time: when the contract is deployed.
@@ -19,7 +19,7 @@ export function constructor(_: StaticArray<u8>): void {
   generateEvent('Blog initiated');
 }
 
-export function post(_args: StaticArray<u8>): void {
+export function post(_args: StaticArray<u8>): string {
   const args = new Args(_args);
   // Get the post from the arguments and check if it is valid (not null)
   const post = args.nextString().expect('Post argument is missing or invalid');
@@ -34,6 +34,7 @@ export function post(_args: StaticArray<u8>): void {
   Storage.set(blogKey(postLastIndex.toString()), post);
   // Incrementing the value of N_BLOG_POSTS in the storage of the contract
   Storage.set('N_BLOG_POSTS', postLastIndex.toString());
+  return post;
 }
 
 export function deletePost(_args: StaticArray<u8>): void {
