@@ -84,3 +84,22 @@ body {
 .bodyButton:hover {
     background-color: rgb(73, 47, 47);
 }
+
+.post-preview {
+    cursor: pointer;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 1rem;
+}
+
+.divider {
+    border-bottom: 1px solid #ddd; /* Change color as needed */
+    margin: 10px 0; /* Add some vertical spacing */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.padding-date {
+    padding-top: 1rem;
+
+}

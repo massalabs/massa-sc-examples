@@ -1,22 +1,48 @@
-import React, { ChangeEvent, useContext, useState } from "react";
-import { IAccount } from "@massalabs/wallet-provider";
-import { Args } from "@massalabs/massa-web3";
+import { ChangeEvent, useState, useEffect } from "react";
+import { Args, IClient, ClientFactory } from "@massalabs/massa-web3";
+import { IAccount, providers } from "@massalabs/wallet-provider";
 import Loader from "./Loader";
-import { MassaContext } from "../App";
-
-interface ContractInteractionProps {
-    account: IAccount;
-}
 
 const CONTRACT_ADDRESS =
     "AS12YrZxFisWZCKJpXLEYfSYzrSCS4bjoyKGeaviQMmb5zqfgXaML";
 
 export default function ContractInteraction() {
-    const { account } = useContext(MassaContext)!;
+    const [errorMessage, setErrorMessage] = useState<any>("");
+    const [client, setClient] = useState<IClient | null>(null);
+    const [account, setAccount] = useState<IAccount | null>(null);
+
     const [num1, setNum1] = useState<number>(0);
     const [num2, setNum2] = useState<number>(0);
     const [result, setResult] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingGlobal, setLoadingGlobal] = useState(true);
+
+    useEffect(() => {
+        const registerAndSetProvider = async () => {
+          try {
+            let provider = (await providers(true, 10000))[0];
+            let accounts = await provider.accounts();
+            if (accounts.length === 0) {
+              setErrorMessage("No accounts found");
+              return;
+            }
+            setAccount(accounts[0]);
+            if (!account || !provider) {
+              return;
+            }
+            setClient(await ClientFactory.fromWalletProvider(provider, account));
+          } catch (e) {
+            console.log(e);
+            setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
+          }
+          finally {
+            setLoadingGlobal(false);
+        }
+        };
+    
+        registerAndSetProvider();
+      }, [account]);
+
 
     const handleNum1Change = (event: ChangeEvent<HTMLInputElement>) => {
         setNum1(Number(event.target.value));
@@ -29,33 +55,52 @@ export default function ContractInteraction() {
     const calculateSum = async () => {
         setLoading(true);
         try {
-            await account?.callSC(
-                CONTRACT_ADDRESS,
-                "sum",
-                new Args().addI64(BigInt(num1)).addI64(BigInt(num2)),
-                BigInt(1)
-            );
-
-            setResult((await getLastResult()).toString());
+            setTimeout(async () => {
+                if (!account || !client) {
+                    return;
+                }
+                let call = await client.smartContracts().callSmartContract({
+                    targetAddress: CONTRACT_ADDRESS,
+                    functionName: "sum",
+                    parameter: new Args().addI64(BigInt(num1)).addI64(BigInt(num2)).serialize(),
+                    maxGas: BigInt(1000000),
+                    coins: BigInt(1),
+                    fee: BigInt(0),
+                }); 
+                setResult((await getLastResult()).toString());
+                setLoading(false);
+            }, 0);
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
         }
     };
-
+    
     const getLastResult = async () => {
-        const result = await account?.callSC(
-            CONTRACT_ADDRESS,
-            "lastResult",
-            new Uint8Array([]),
-            BigInt(0),
-            { isNPE: true, maxGas: BigInt(1000000) }
+        setLoading(true);
+            if (!account || !client) {
+              return BigInt(0);
+            }
+            let res = await client.smartContracts().readSmartContract({
+              maxGas: BigInt(1000000),
+              targetAddress: CONTRACT_ADDRESS,
+              targetFunction: "lastResult",
+              parameter: new Args().serialize(),
+            });
+                return new Args(res.returnValue).nextI64();
+            }
+            
+
+    if (loadingGlobal) {
+        return <Loader />;
+    } 
+    else if (errorMessage) {
+        return (
+            <div className="relative bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-5xl p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
+                <div className="text-red-500">{errorMessage}</div>
+            </div>
         );
-
-        return new Args(result.returnValue).nextI64();
-    };
-
+    } 
+    else {
     return (
         <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
             <h3 className="">Manage Sum Transactions</h3>
@@ -90,4 +135,5 @@ export default function ContractInteraction() {
             )}
         </div>
     );
+}
 }
