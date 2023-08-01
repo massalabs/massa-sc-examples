@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Age</title>
-</head>
-<body>
-    <script type='text/javascript' src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@1.11.0/bundle.js"></script>
-    <div>Alice: <span id="age"></span></div>
-      
-      <button onClick="funcSetAge(1);">Age++</button>
-      <button onClick="funcSetAge(-1);">Age--</button>
-      <button onClick="load();">load</button>
-      <script src="js/index.js"></script>
-    </body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body class="bodyContent">
+    <h1 class="messageToDisplay">Age Example: Vanilla JS</h1>
+    <h2 class="name">Alice</h2>
+    <div class="mainWrapper">
+      <div class="wrapper">
+        <input type="text" id="nameInput" placeholder="new name" />
+        <button onClick="setName();">Change name</button>
+      </div>
+      <div class="wrapper">
+        <input type="number" id="ageInput" placeholder="new age" />
+        <button onClick="setAge();">
+          Change age of <span class="name">Alice</span>
+        </button>
+      </div>
+      <div class="wrapper">
+        <button onClick="getAge();">
+          get age of <span class="name">Alice</span>
+        </button>
+        <h3>
+          Age of <span class="name">Alice</span> is:
+          <span id="ageResult"></span>
+        </h3>
+      </div>
+    </div>
+    <!-- Scripts -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@massalabs/massa-web3@1.22.0/bundle.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@massalabs/wallet-provider@1.2.0/bundle.js"
+    ></script>
+    <script src="js/index.js"></script>
+  </body>
 </html>
