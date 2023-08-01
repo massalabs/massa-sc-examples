@@ -1,6 +1,7 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
 import { Args, bytesToStr, IClient, ClientFactory, strToBytes} from "@massalabs/massa-web3";
+import Loader from './Loader';
 
 interface Post {
     Title: string;
@@ -14,6 +15,7 @@ const CONTRACT_ADDRESS =
     "AS12tPCMbNdYi7w3PL6roqbNBafMPa8uSnox2Vg3TaDu6qyQNnWbH";
 
 export default function ContractInteraction() {
+    const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<any>("");
     const [client, setClient] = useState<IClient | null>(null);
     const [account, setAccount] = useState<IAccount | null>(null);
@@ -52,6 +54,9 @@ export default function ContractInteraction() {
             console.log(e);
             setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
           }
+          finally {
+            setLoading(false);
+        }
         };
     
         registerAndSetProvider();
@@ -129,6 +134,18 @@ export default function ContractInteraction() {
         //     setlastOpId(null);
         //   }, 30000);
     }
+
+    if (loading) {
+        return <Loader />;
+    } 
+    else if (errorMessage) {
+        return (
+            <div className="relative bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-5xl p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
+                <div className="text-red-500">{errorMessage}</div>
+            </div>
+        );
+    } 
+    else {
 
     return (
         <div className="relative bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-5xl p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
@@ -213,4 +230,5 @@ export default function ContractInteraction() {
             {lastOpId && <div className="text-blue-500">Last Op id: {lastOpId}</div>}
         </div>
     );
+}
 }
