@@ -2,7 +2,7 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory, IClient, bytesToU32, Args } from "@massalabs/massa-web3";
+import { ClientFactory, IClient, bytesToU32, Args, strToBytes } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
@@ -38,6 +38,16 @@ function App() {
     registerAndSetProvider();
   }, [account]);
 
+  function strEncodeUTF16(str: string) {
+    var buf = new ArrayBuffer(str.length * 2);
+    var bufView = new Uint8Array(buf);
+    for (var i = 0, strLen = str.length * 2; i < strLen; i += 2) {
+      bufView[i] = str.charCodeAt(i / 2);
+      bufView[i + 1] = 0;
+    }
+    return bufView;
+  }
+
   // argument is a u32 that will be passed to the smart contract
   const callChangeAge = (newAge: number) => async () => {
     try {
@@ -64,21 +74,27 @@ function App() {
       if (!account || !client) {
         return;
       }
-      let res = await client.smartContracts().readSmartContract({
-        maxGas: BigInt(1000000),
-        targetAddress: CONTRACT_ADDRESS,
-        targetFunction: "getAge",
-        parameter: new Args().addString(inputName).serialize(),
-      });
+      console.log("calling")
 
-      setAgeResult(bytesToU32(res.returnValue));
+      let res = await client.publicApi().getDatastoreEntries(
+        [{
+          key: strEncodeUTF16("Alice"),
+          address: CONTRACT_ADDRESS,
+        }])
+
+      if (res[0] && res[0].candidate_value) {
+        let age_decode = new Args(res[0].candidate_value);
+        console.log("age_decode", age_decode)
+        let age = age_decode.nextU32();
+        setAgeResult(age);
+      }
     } catch (error) {
       console.error(error);
     }
   }
   return (
     <div className="bodyContent">
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <h2>{errorMessage}</h2>}
       {account && (
         <div className="wrapper">
           <h1 className="messageToDisplay">Age Example: React</h1>
