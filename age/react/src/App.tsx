@@ -31,7 +31,7 @@ function App() {
         setClient(await ClientFactory.fromWalletProvider(provider, account));
       } catch (e) {
         console.log(e);
-        setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
+        setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
       }
     };
 
