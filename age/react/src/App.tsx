@@ -8,7 +8,7 @@ const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw"
 
 function App() {
   const [errorMessage, setErrorMessage] = useState<any>("");
-  const [client, setClient] = useState<IClient | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [account, setAccount] = useState<IAccount | null>(null);
   const [lastOpId, setlastOpId] = useState<string | null>(null);
   const [inputAge, setInputAge] = useState<number>(0);
