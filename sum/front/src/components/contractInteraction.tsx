@@ -3,6 +3,7 @@ import { Args, IClient, ClientFactory } from "@massalabs/massa-web3";
 import { IAccount, providers } from "@massalabs/wallet-provider";
 import Loader from "./Loader";
 
+const MAX_GAS = BigInt(1000000);
 const CONTRACT_ADDRESS =
     "AS12YrZxFisWZCKJpXLEYfSYzrSCS4bjoyKGeaviQMmb5zqfgXaML";
 
@@ -63,7 +64,7 @@ export default function ContractInteraction() {
                     targetAddress: CONTRACT_ADDRESS,
                     functionName: "sum",
                     parameter: new Args().addI64(BigInt(num1)).addI64(BigInt(num2)).serialize(),
-                    maxGas: BigInt(1000000),
+                    maxGas: MAX_GAS,
                     coins: BigInt(1),
                     fee: BigInt(0),
                 }); 
@@ -81,7 +82,7 @@ export default function ContractInteraction() {
               return BigInt(0);
             }
             let res = await client.smartContracts().readSmartContract({
-              maxGas: BigInt(1000000),
+              maxGas: MAX_GAS,
               targetAddress: CONTRACT_ADDRESS,
               targetFunction: "lastResult",
               parameter: new Args().serialize(),
