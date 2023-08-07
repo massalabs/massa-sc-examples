@@ -11,22 +11,23 @@ function App() {
     const [provider, setProvider] = useState<IProvider | null>(null);
     const [account, setAccount] = useState<IAccount | null>(null);
     const [lastOpId, setlastOpId] = useState<string | null>(null);
+    const [message, setMessage] = useState("Hello World");
 
     useEffect(() => {
         const registerAndSetProvider = async () => {
-        try {
-           let provider = (await providers(true, 10000))[0];
-           let accounts = await provider.accounts();
-            if (accounts.length === 0) {
-                setErrorMessage("No accounts found");
-                return;
+            try {
+                let provider = (await providers(true, 10000))[0];
+                let accounts = await provider.accounts();
+                if (accounts.length === 0) {
+                    setErrorMessage("No accounts found");
+                    return;
+                }
+                setProvider(provider);
+                setAccount(accounts[0]);
+            } catch (e) {
+                console.log(e);
+                setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
             }
-            setProvider(provider);
-            setAccount(accounts[0]);
-        } catch (e) {
-            console.log(e);
-            setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
-        }
         };
 
         registerAndSetProvider();
@@ -41,7 +42,7 @@ function App() {
             let op_id = await client.smartContracts().callSmartContract({
                 targetAddress: CONTRACT_ADDRESS,
                 functionName: "helloWorld",
-                parameter: new Args().addString("Hello World").serialize(),
+                parameter: new Args().addString(message).serialize(),
                 maxGas: BigInt(1000000),
                 coins: BigInt(0),
                 fee: BigInt(0),
@@ -57,7 +58,15 @@ function App() {
             {account && (
                 <div>
                     <div>Address: {account.address()}</div>
-                    <button className="button w-64" onClick={callHelloWorld}>Call Hello World</button>
+                    <div>
+                        <label>Message:  </label>
+                        <input
+                            type="text"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)} // mise à jour de l'état du message à chaque modification du champ d'entrée
+                        />
+                    </div>
+                    <button className="button w-64" onClick={callHelloWorld}>Call {message}</button>
                     <div>Op id will be displayed few seconds after the transaction is sent</div>
                 </div>
             )}
