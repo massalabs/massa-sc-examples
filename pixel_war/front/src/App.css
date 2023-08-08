@@ -49,3 +49,26 @@ body,
 .grid-item:hover {
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
+
+#leaderboard-container {
+  position: fixed;
+  top: 500;
+  right: 150px;
+  width: 700px; 
+  padding: 10px;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
