@@ -2,9 +2,11 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers, IProvider } from "@massalabs/wallet-provider"
-import { ClientFactory, Args } from "@massalabs/massa-web3";
+import { ClientFactory, Args, Client, EventPoller, IEvent, IEventFilter, INodeStatus, ON_MASSA_EVENT_DATA, ON_MASSA_EVENT_ERROR, EOperationStatus } from "@massalabs/massa-web3";
+import { withTimeoutRejection } from "@massalabs/massa-web3/dist/esm/utils/time";
 
 const CONTRACT_ADDRESS = "AS1u8i5H1RQU5qD8R8hQzugA8HwWmS9qqyZNjhvR9WywUP17v1od";
+const MASSA_EXEC_ERROR = 'massa_execution_error';
 
 function App() {
     const [errorMessage, setErrorMessage] = useState<any>("");
@@ -12,6 +14,96 @@ function App() {
     const [account, setAccount] = useState<IAccount | null>(null);
     const [lastOpId, setlastOpId] = useState<string | null>(null);
     const [message, setMessage] = useState("Hello World");
+
+
+    interface IEventPollerResult {
+        isError: boolean;
+        eventPoller: EventPoller;
+        events: IEvent[];
+    }
+
+    const pollAsyncEvents = async (
+        client: Client,
+        opId: string,
+    ): Promise<IEventPollerResult> => {
+        // determine the last slot to start polling from
+        let nodeStatusInfo: INodeStatus | null | undefined = await client
+            .publicApi()
+            .getNodeStatus();
+
+        // set the events filter, here we will find event thanks to the opId
+        const eventsFilter = {
+            start: (nodeStatusInfo as INodeStatus).last_slot,
+            end: null,
+            original_caller_address: null,
+            original_operation_id: opId,
+            emitter_address: null,
+            is_final: false,
+        } as IEventFilter;
+
+        const eventPoller = EventPoller.startEventsPolling(
+            eventsFilter,
+            1000,       // polling interval in ms
+            client,
+        );
+
+        return new Promise((resolve, reject) => {
+            eventPoller.on(ON_MASSA_EVENT_DATA, (events: Array<IEvent>) => {
+                console.log('Event Data Received:', events);
+                // check if there is an error event
+                let errorEvents: IEvent[] = events.filter((e) =>
+                    e.data.includes(MASSA_EXEC_ERROR),
+                );
+                if (errorEvents.length > 0) {
+                    return resolve({
+                        isError: true,
+                        eventPoller,
+                        events: errorEvents,
+                    } as IEventPollerResult);
+                }
+
+                // check if there is a success event
+                if (events.length) {
+                    return resolve({
+                        isError: false,
+                        eventPoller,
+                        events,
+                    } as IEventPollerResult);
+                } else {
+                    console.log('No events have been emitted');
+                }
+            });
+            eventPoller.on(ON_MASSA_EVENT_ERROR, (error: Error) => {
+                console.log('Event Data Error:', error);
+                return reject(error);
+            });
+        });
+    };
+
+    async function awaitTxConfirmation(
+        web3Client: Client,
+        deploymentOperationId: string,
+    ): Promise<void> {
+        console.log(`Awaiting  FINAL transaction status....`);
+        let status: EOperationStatus;
+        try {
+            status = await web3Client
+                .smartContracts()
+                .awaitRequiredOperationStatus(
+                    deploymentOperationId,
+                    EOperationStatus.FINAL,
+                );
+            console.log(
+                `Transaction with Operation ID ${deploymentOperationId} has reached finality!`);
+        } catch (ex) {
+            throw new Error(`Error getting finality of transaction ${deploymentOperationId}`);
+        }
+
+        if (status !== EOperationStatus.FINAL) {
+            throw new Error(`Transaction ${deploymentOperationId} did not reach finality after 
+            considerable amount of time.`);
+        }
+    }
 
     useEffect(() => {
         const registerAndSetProvider = async () => {
@@ -48,6 +140,27 @@ function App() {
                 fee: BigInt(0),
             });
             setlastOpId(op_id);
+            // async poll events in the background for the given opId
+            const { isError, eventPoller, events }: IEventPollerResult =
+                await withTimeoutRejection<IEventPollerResult>(
+                    pollAsyncEvents(client, op_id),
+                    20000,
+                );
+
+            // stop polling
+            eventPoller.stopPolling();
+
+            // if errors, don't await finalization
+            if (isError) {
+                throw new Error(
+                    `Massa Deployment Error: ${JSON.stringify(events, null, 4)} `,
+                );
+            }
+
+            // await finalization
+
+            // await finalization
+            await awaitTxConfirmation(client, op_id);
         } catch (error) {
             console.error(error);
         }
