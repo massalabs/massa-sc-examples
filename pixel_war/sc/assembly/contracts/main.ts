@@ -1,5 +1,10 @@
-import { Storage, callerHasWriteAccess, generateEvent } from '@massalabs/massa-as-sdk';
+import { Storage, callerHasWriteAccess, generateEvent, Context } from '@massalabs/massa-as-sdk';
 import { Args } from '@massalabs/as-types';
+
+interface LeaderboardEntry {
+  address: string;
+  pixelCount: i32;
+}
 
 /**
  * This function is meant to be called only one time: when the contract is deployed.
@@ -13,10 +18,20 @@ export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   const gridSize = 500;
   Storage.set("GRID_SIZE", gridSize.toString());
   Storage.set(pixelCoordKey(15, 15), "2a45c6");
+  Storage.set("leaderboard", "");
   // An arbitrary pixel is set to a random color to show that the contract is working
   // Emit an event to the blockchain
   generateEvent(`Pixel War initiated`);
   return [];
+}
+
+function getLeaderboard(): string {
+  return Storage.get("leaderboard");
+}
+
+// Helper function to set the leaderboard in storage
+function setLeaderboard(leaderboard: string): void {
+  Storage.set("leaderboard", leaderboard);
 }
 
 export function setPixel(_args: StaticArray<u8>): void {
@@ -38,7 +53,37 @@ export function setPixel(_args: StaticArray<u8>): void {
   if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) {
     return;
   }
+  let caller = Context.caller().toString();
+  let leaderboard: string = getLeaderboard();
+  let entryStrings: Array<string> = leaderboard.length > 0 ? leaderboard.split("; ") : new Array<string>();
+  
+  let entries = new Array<Array<string>>();
+  for (let i = 0; i < entryStrings.length; i++) {
+    entries.push(entryStrings[i].split(" "));
+  }
 
+  let found = false;
+  
+  for (let i = 0; i < entries.length; i++) {
+    if (entries[i][0] == caller) {
+      // Increment the pixel count for the caller
+      entries[i][1] = (I32.parseInt(entries[i][1]) + 1).toString();
+      found = true;
+      break;
+    }
+  }
+  
+  if (!found) {
+    entries.push([caller, "1"]);
+  }
+
+  let updatedEntries = new Array<string>();
+  for (let i = 0; i < entries.length; i++) {
+    updatedEntries.push(entries[i].join(" "));
+  }
+  
+  // Store the new leaderboard in the storage of the contract
+  setLeaderboard(updatedEntries.join("; "));
   // Store the new color in the storage of the contract
   const pixelKey = pixelCoordKey(x, y);
   Storage.set(pixelKey, color);
