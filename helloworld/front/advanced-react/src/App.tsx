@@ -8,6 +8,12 @@ import { withTimeoutRejection } from "@massalabs/massa-web3/dist/esm/utils/time"
 const CONTRACT_ADDRESS = "AS1u8i5H1RQU5qD8R8hQzugA8HwWmS9qqyZNjhvR9WywUP17v1od";
 const MASSA_EXEC_ERROR = 'massa_execution_error';
 
+interface IEventPollerResult {
+    isError: boolean;
+    eventPoller: EventPoller;
+    events: IEvent[];
+}
+
 function App() {
     const [errorMessage, setErrorMessage] = useState<any>("");
     const [provider, setProvider] = useState<IProvider | null>(null);
@@ -16,13 +22,6 @@ function App() {
     const [message, setMessage] = useState("Hello World");
     const [fetchedMessage, setFetchedMessage] = useState<string | null>(null);
     const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
-
-
-    interface IEventPollerResult {
-        isError: boolean;
-        eventPoller: EventPoller;
-        events: IEvent[];
-    }
 
     const pollAsyncEvents = async (
         client: Client,
@@ -125,7 +124,7 @@ function App() {
         registerAndSetProvider();
     }, []);
 
-    const callHelloWorld = async () => {
+    const emitEvent = async () => {
         try {
             if (!account || !provider) {
                 return;
@@ -170,7 +169,6 @@ function App() {
             // await finalization
             await awaitTxConfirmation(client, op_id);
             console.log("Transaction confirmed");
-
             setTransactionStatus("Transaction confirmed");
 
         } catch (error) {
@@ -178,26 +176,30 @@ function App() {
         }
     };
     return (
-        <div className="App theme-light">
+        <div className="bodyContent">
             {errorMessage && <div>{errorMessage}</div>}
-            {account && (
-                <div>
-                    <div>Address: {account.address()}</div>
-                    <div>
-                        <label>Message:  </label>
-                        <input
-                            type="text"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                        />
+            <div className="wrapper">
+                <h1 className="messageToDisplay">Events Example</h1>
+
+                {account && (
+                    <div className="wrapper">
+                        <h3>Your address: {account.address()}</h3>
+                        <div className="innerWrapper">
+                            <label>Message:</label>
+                            <input
+                                type="text"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                            />
+                        </div>
+                        <button onClick={emitEvent}>Emit event</button>
+                        {lastOpId ? <h4>Op id: {lastOpId}</h4>
+                            : <h4>Op id will be displayed few seconds after the transaction is sent</h4>}
                     </div>
-                    <button className="button w-64" onClick={callHelloWorld}>Call {message}</button>
-                    {lastOpId ? <div>Op id: {lastOpId}</div>
-                        : <div>Op id will be displayed few seconds after the transaction is sent</div>}
-                </div>
-            )}
-            {transactionStatus && <div>Transaction status: {transactionStatus}</div>}
-            {fetchedMessage && <div>Fetched message: {fetchedMessage}</div>}
+                )}
+                {transactionStatus && <h4>Transaction status: {transactionStatus}</h4>}
+                {fetchedMessage && <h4>Fetched message: {fetchedMessage}</h4>}
+            </div>
         </div>
     );
 }
