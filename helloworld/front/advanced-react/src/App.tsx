@@ -2,7 +2,7 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers, IProvider } from "@massalabs/wallet-provider"
-import { ClientFactory, Args, Client, EventPoller, IEvent, IEventFilter, INodeStatus, ON_MASSA_EVENT_DATA, ON_MASSA_EVENT_ERROR, EOperationStatus } from "@massalabs/massa-web3";
+import { ClientFactory, Args, Client, EventPoller, IEvent, IEventFilter, INodeStatus, ON_MASSA_EVENT_DATA, ON_MASSA_EVENT_ERROR, EOperationStatus, ISlot } from "@massalabs/massa-web3";
 import { withTimeoutRejection } from "@massalabs/massa-web3/dist/esm/utils/time";
 
 const CONTRACT_ADDRESS = "AS1u8i5H1RQU5qD8R8hQzugA8HwWmS9qqyZNjhvR9WywUP17v1od";
@@ -14,6 +14,8 @@ function App() {
     const [account, setAccount] = useState<IAccount | null>(null);
     const [lastOpId, setlastOpId] = useState<string | null>(null);
     const [message, setMessage] = useState("Hello World");
+    const [fetchedMessage, setFetchedMessage] = useState<string | null>(null);
+    const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
 
 
     interface IEventPollerResult {
@@ -25,21 +27,19 @@ function App() {
     const pollAsyncEvents = async (
         client: Client,
         opId: string,
+        lastSlot?: ISlot,
     ): Promise<IEventPollerResult> => {
-        // determine the last slot to start polling from
-        let nodeStatusInfo: INodeStatus | null | undefined = await client
-            .publicApi()
-            .getNodeStatus();
-
         // set the events filter, here we will find event thanks to the opId
         const eventsFilter = {
-            start: (nodeStatusInfo as INodeStatus).last_slot,
+            start: lastSlot ? lastSlot : 0,
             end: null,
             original_caller_address: null,
             original_operation_id: opId,
             emitter_address: null,
             is_final: false,
         } as IEventFilter;
+
+        console.log('Event Filter:', eventsFilter)
 
         const eventPoller = EventPoller.startEventsPolling(
             eventsFilter,
@@ -131,6 +131,11 @@ function App() {
                 return;
             }
             let client = await ClientFactory.fromWalletProvider(provider, account);
+
+            // get node status so we can determine the last slot to start polling from
+            let lastSlot: ISlot = (await client
+                .publicApi()
+                .getNodeStatus()).last_slot;
             let op_id = await client.smartContracts().callSmartContract({
                 targetAddress: CONTRACT_ADDRESS,
                 functionName: "helloWorld",
@@ -140,10 +145,12 @@ function App() {
                 fee: BigInt(0),
             });
             setlastOpId(op_id);
+            setTransactionStatus("Transaction sent");
+            console.log("Starting to poll events...")
             // async poll events in the background for the given opId
             const { isError, eventPoller, events }: IEventPollerResult =
                 await withTimeoutRejection<IEventPollerResult>(
-                    pollAsyncEvents(client, op_id),
+                    pollAsyncEvents(client, op_id, lastSlot),
                     20000,
                 );
 
@@ -156,11 +163,16 @@ function App() {
                     `Massa Deployment Error: ${JSON.stringify(events, null, 4)} `,
                 );
             }
-
-            // await finalization
+            const data = events[0].data;
+            console.log("Message fetched: ", data);
+            setFetchedMessage(data);
 
             // await finalization
             await awaitTxConfirmation(client, op_id);
+            console.log("Transaction confirmed");
+
+            setTransactionStatus("Transaction confirmed");
+
         } catch (error) {
             console.error(error);
         }
@@ -176,14 +188,16 @@ function App() {
                         <input
                             type="text"
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)} // mise à jour de l'état du message à chaque modification du champ d'entrée
+                            onChange={(e) => setMessage(e.target.value)}
                         />
                     </div>
                     <button className="button w-64" onClick={callHelloWorld}>Call {message}</button>
-                    <div>Op id will be displayed few seconds after the transaction is sent</div>
+                    {lastOpId ? <div>Op id: {lastOpId}</div>
+                        : <div>Op id will be displayed few seconds after the transaction is sent</div>}
                 </div>
             )}
-            {lastOpId && <div>Last Op id: {lastOpId}</div>}
+            {transactionStatus && <div>Transaction status: {transactionStatus}</div>}
+            {fetchedMessage && <div>Fetched message: {fetchedMessage}</div>}
         </div>
     );
 }
