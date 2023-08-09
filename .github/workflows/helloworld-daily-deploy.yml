@@ -32,10 +32,10 @@ jobs:
 
       - name: Deploy
         run: |
-          if npm run deploy | grep -q "Hello, World!"; then
-            echo "Hello, World! event received."
+          if npm run deploy | grep -q "Contract deployed"; then
+            echo "Contract successfully deployed!"
           else
-            echo "No Hello, World! event."
+            echo "Failed to deploy contract ..."
             exit 1
           fi
         env:
