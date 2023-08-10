@@ -2,7 +2,8 @@ import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
-import { ClientFactory, bytesToU32, Args, Client } from "@massalabs/massa-web3";
+import { ClientFactory, bytesToU32, Client } from "@massalabs/massa-web3";
+import { Args, } from "@massalabs/web3-utils";
 
 const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
@@ -18,44 +19,50 @@ function App() {
   useEffect(() => {
     const registerAndSetProvider = async () => {
       try {
-        let provider = (await providers(true, 10000))[0];
+        let discoverProviders = await providers(true, 5000);
+        if (discoverProviders.length === 0) {
+          setErrorMessage("No providers found");
+          return;
+        }
+        let provider = discoverProviders[0];
         let accounts = await provider.accounts();
         if (accounts.length === 0) {
+          console.log("No accounts found");
           setErrorMessage("No accounts found");
           return;
         }
         setAccount(accounts[0]);
-        if (!account || !provider) {
+        console.log("Balance: ", await accounts[0].balance());
+        if (!accounts[0] || !provider) {
           return;
         }
-        setClient(await ClientFactory.fromWalletProvider(provider, account));
+        setClient(await ClientFactory.fromWalletProvider(provider, accounts[0]));
       } catch (e) {
         console.log(e);
         setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
       }
     };
-
     registerAndSetProvider();
-  }, [account]);
-
+  }, []);
   // argument is a u32 that will be passed to the smart contract
   const callChangeAge = (newAge: number) => async () => {
     try {
       if (!account || !client) {
+        console.log("No account or client");
         return;
       }
       let args = new Args().addString(inputName).addU32(newAge);
       let opId = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
-        parameter: args.serialize(),
+        parameter: args,
         maxGas: BigInt(1000000),
         coins: BigInt(0),
         fee: BigInt(0),
       });
       setlastOpId(opId);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
