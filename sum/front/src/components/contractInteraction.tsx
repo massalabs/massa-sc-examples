@@ -20,29 +20,42 @@ export default function ContractInteraction() {
 
     useEffect(() => {
         const registerAndSetProvider = async () => {
-          try {
-            let provider = (await providers(true, 10000))[0];
-            let accounts = await provider.accounts();
-            if (accounts.length === 0) {
-              setErrorMessage("No accounts found");
-              return;
+            try {
+                const allProviders = await providers(true, 10000);
+    
+                const massastationProvider = allProviders.find(provider => provider.name() === 'MASSASTATION');
+
+                if (!allProviders || allProviders.length === 0) {
+                    throw new Error("No providers available");
+                }
+    
+                if (!massastationProvider) {
+                    setErrorMessage("MASSASTATION provider not found");
+                    return;
+                }
+    
+                let accounts = await massastationProvider.accounts();
+                if (accounts.length === 0) {
+                    setErrorMessage("No accounts found");
+                    return;
+                }
+                setAccount(accounts[0]);
+                if (!account || !massastationProvider) {
+                    return;
+                }
+                setClient(await ClientFactory.fromWalletProvider(massastationProvider, account));
+            } catch (e) {
+                console.log(e);
+                setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
             }
-            setAccount(accounts[0]);
-            if (!account || !provider) {
-              return;
+            finally {
+                setLoadingGlobal(false);
             }
-            setClient(await ClientFactory.fromWalletProvider(provider, account));
-          } catch (e) {
-            console.log(e);
-            setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
-          }
-          finally {
-            setLoadingGlobal(false);
-        }
         };
     
         registerAndSetProvider();
-      }, [account]);
+    }, [account]);
+    
 
 
     const handleNum1Change = (event: ChangeEvent<HTMLInputElement>) => {
