@@ -16,9 +16,9 @@
     "web"
   ],
   "dependencies": {
-    "@massalabs/massa-web3": "^1.22.0",
+    "@massalabs/massa-web3": "^2.1.1-dev.20230811094803",
     "@massalabs/react-ui-kit": "^0.0.3",
-    "@massalabs/wallet-provider": "^1.2.0",
+    "@massalabs/wallet-provider": "^1.2.1-dev.20230811093843",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
