@@ -27,7 +27,6 @@ function App() {
       }
       const provider = availableProviders[0];
       const accounts = await provider.accounts();
-      console.log("providersList", providersList);
       if (accounts.length === 0) {
         setErrorMessage("No accounts found");
         return;
