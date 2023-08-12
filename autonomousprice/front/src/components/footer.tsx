@@ -20,7 +20,7 @@ function Footer() {
             </a>
             |
             <a
-                href="https://docs.massa.net/en/latest/"
+                href="https://docs.massa.net/"
                 target="_blank"
                 rel="noreferrer"
                 className="mx-8"

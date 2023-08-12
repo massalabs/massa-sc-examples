@@ -1,6 +1,6 @@
-# Massa Front-End Example: autonomousprice
+# Massa Front-End Example: Autonomous Price
 
-Welcome to the repository for the autonomousprice smart contract's front-end application, developed on the Massa platform. For a comprehensive understanding of Massa smart contracts, refer to our [documentation](https://docs.massa.net/en/latest/web3-dev/massa-web3.html).
+Welcome to the repository for the Autonomous Price smart contract's front-end application, developed on the Massa platform. For a comprehensive understanding of Massa smart contracts, refer to our [documentation](https://docs.massa.net/en/latest/web3-dev/massa-web3.html).
 
 ## Setup & Installation
 
