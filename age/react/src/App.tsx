@@ -14,6 +14,35 @@ function App() {
   const [inputAge, setInputAge] = useState<number>(0);
   const [inputName, setInputName] = useState<string>("");
   const [ageResult, setAgeResult] = useState<number | null>(null);
+  const [providerUsed, setProviderUsed] = useState<string>("");
+
+  const initialize = async () => {
+    try {
+      console.log("Switching providers")
+      const providersList = await providers(true, 10000);
+      const availableProviders = providersList.filter(provider => providerUsed !== provider.name());
+      if (availableProviders.length === 0) {
+        console.log("All providers are currently in use.");
+        return;
+      }
+      const provider = availableProviders[0];
+      const accounts = await provider.accounts();
+      if (accounts.length === 0) {
+        setErrorMessage("No accounts found");
+        return;
+      }
+      setAccount(accounts[0]);
+      if (!accounts[0] || !provider) {
+        return;
+      }
+      setClient(await ClientFactory.fromWalletProvider(provider, accounts[0]));
+      setProviderUsed(provider.name());
+      console.log("Now using provider", provider.name());
+    } catch (e) {
+      console.log(e);
+      setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
+    }
+  };
 
   useEffect(() => {
     const registerAndSetProvider = async () => {
@@ -25,10 +54,11 @@ function App() {
           return;
         }
         setAccount(accounts[0]);
-        if (!account || !provider) {
+        if (!accounts[0] || !provider) {
           return;
         }
-        setClient(await ClientFactory.fromWalletProvider(provider, account));
+        setClient(await ClientFactory.fromWalletProvider(provider, accounts[0]));
+        setProviderUsed(provider.name());
       } catch (e) {
         console.log(e);
         setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
@@ -36,7 +66,7 @@ function App() {
     };
 
     registerAndSetProvider();
-  }, [account]);
+  }, []);
 
   // argument is a u32 that will be passed to the smart contract
   const callChangeAge = (newAge: number) => async () => {
@@ -48,7 +78,7 @@ function App() {
       let opId = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
-        parameter: args.serialize(),
+        parameter: args,
         maxGas: BigInt(1000000),
         coins: BigInt(0),
         fee: BigInt(0),
@@ -81,6 +111,9 @@ function App() {
       {errorMessage && <div>{errorMessage}</div>}
       {account && (
         <div className="wrapper">
+          <div>
+            <button className="connect-button" onClick={initialize}>Switch provider</button>
+          </div>
           <h1 className="messageToDisplay">Age Example: React</h1>
           <div>
             <h3>Your address: {account.address()}</h3>
