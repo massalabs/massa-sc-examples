@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, useEffect } from "react";
 import { Args, IClient, ClientFactory } from "@massalabs/massa-web3";
-import { IAccount, providers } from "@massalabs/wallet-provider";
+import { IAccount, providers, IProvider } from "@massalabs/wallet-provider";
 import Loader from "./Loader";
 
 const MAX_GAS = BigInt(1000000);
@@ -17,45 +17,65 @@ export default function ContractInteraction() {
     const [result, setResult] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingGlobal, setLoadingGlobal] = useState(true);
+    const [providerUsed, setProviderUsed] = useState<string>("");
+
+    const initializeProvider = async (targetProviderName: string) => {
+        const allProviders = await providers(true, 10000);
+
+        if (!allProviders || allProviders.length === 0) {
+            throw new Error("No providers available");
+        }
+
+        const targetProvider = allProviders.find(provider => provider.name() === targetProviderName);
+        if (!targetProvider) {
+            throw new Error(`${targetProviderName} provider not found`);
+        }
+
+        setProviderUsed(targetProviderName);
+
+        const accounts = await targetProvider.accounts();
+        if (accounts.length === 0) {
+            throw new Error("No accounts found");
+        }
+
+        setAccount(accounts[0]);
+        setClient(await ClientFactory.fromWalletProvider(targetProvider, accounts[0]));
+    };
 
     useEffect(() => {
-        const registerAndSetProvider = async () => {
+        const bootstrap = async () => {
             try {
-                const allProviders = await providers(true, 10000);
-    
-                const massastationProvider = allProviders.find(provider => provider.name() === 'MASSASTATION');
-
-                if (!allProviders || allProviders.length === 0) {
-                    throw new Error("No providers available");
-                }
-    
-                if (!massastationProvider) {
-                    setErrorMessage("MASSASTATION provider not found");
-                    return;
-                }
-    
-                let accounts = await massastationProvider.accounts();
-                if (accounts.length === 0) {
-                    setErrorMessage("No accounts found");
-                    return;
-                }
-                setAccount(accounts[0]);
-                if (!account || !massastationProvider) {
-                    return;
-                }
-                setClient(await ClientFactory.fromWalletProvider(massastationProvider, account));
+                await initializeProvider('MASSASTATION');
             } catch (e) {
                 console.log(e);
-                setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
-            }
-            finally {
-                setLoadingGlobal(false);
+                try {
+                    await initializeProvider('BEARBY');
+                } catch (e) {
+                    setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
+                } finally {
+                    setLoadingGlobal(false);
+                }
             }
         };
-    
-        registerAndSetProvider();
-    }, [account]);
-    
+        bootstrap();
+    }, []);
+
+    const switchProvider = async () => {
+        setLoading(true);
+        try {
+            const nextProvider = providerUsed === "MASSASTATION" ? "BEARBY" : "MASSASTATION";
+            const allProviders = await providers(true, 10000);
+            const nextProviderFound = allProviders.find(provider => provider.name() === nextProvider);
+            if (!nextProviderFound) {
+                return;
+            }
+            await initializeProvider(nextProvider);
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
 
     const handleNum1Change = (event: ChangeEvent<HTMLInputElement>) => {
@@ -73,14 +93,15 @@ export default function ContractInteraction() {
                 if (!account || !client) {
                     return;
                 }
-                let call = await client.smartContracts().callSmartContract({
+                const opId = await client.smartContracts().callSmartContract({
                     targetAddress: CONTRACT_ADDRESS,
                     functionName: "sum",
                     parameter: new Args().addI64(BigInt(num1)).addI64(BigInt(num2)).serialize(),
                     maxGas: MAX_GAS,
                     coins: BigInt(1),
                     fee: BigInt(0),
-                }); 
+                });
+                console.log("opId: ", opId);
                 setResult((await getLastResult()).toString());
                 setLoading(false);
             }, 0);
@@ -88,66 +109,70 @@ export default function ContractInteraction() {
             console.error(error);
         }
     };
-    
+
     const getLastResult = async () => {
         setLoading(true);
-            if (!account || !client) {
-              return BigInt(0);
-            }
-            let res = await client.smartContracts().readSmartContract({
-              maxGas: MAX_GAS,
-              targetAddress: CONTRACT_ADDRESS,
-              targetFunction: "lastResult",
-              parameter: new Args().serialize(),
-            });
-                return new Args(res.returnValue).nextI64();
-            }
-            
+        if (!account || !client) {
+            return BigInt(0);
+        }
+        let res = await client.smartContracts().readSmartContract({
+            maxGas: MAX_GAS,
+            targetAddress: CONTRACT_ADDRESS,
+            targetFunction: "lastResult",
+            parameter: new Args().serialize(),
+        });
+        return new Args(res.returnValue).nextI64();
+    }
+
 
     if (loadingGlobal) {
         return <Loader />;
-    } 
+    }
     else if (errorMessage) {
         return (
             <div className="relative bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-5xl p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
                 <div className="text-red-500">{errorMessage}</div>
             </div>
         );
-    } 
+    }
     else {
-    return (
-        <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
-            <h3 className="">Manage Sum Transactions</h3>
-            <div>
-                <h4 className="py-4">Enter Numbers</h4>
-                <input
-                    type="number"
-                    className="input"
-                    placeholder="Enter number 1"
-                    value={num1}
-                    onChange={handleNum1Change}
-                />
-                <input
-                    type="number"
-                    className="input"
-                    placeholder="Enter number 2"
-                    value={num2}
-                    onChange={handleNum2Change}
-                />
-                <button
-                    className="button flex justify-center items-center border border-green-500 p-3 text-green-500 rounded-md hover:bg-green-500 hover:text-white disabled:bg-secondary"
-                    onClick={calculateSum}
-                    disabled={loading}
-                >
-                    {!loading ? <div>Calculate Sum</div> : <Loader />}
+        return (
+            <div className="bg-secondary mas-body flex flex-col justify-center items-center w-full max-w-lg p-8 box-border rounded-lg shadow-md mb-12 mx-auto">
+                <h3 className="">Manage Sum Transactions</h3>
+                <button className="button flex justify-center items-center border border-green-500 p-3 text-green-500 rounded-md hover:bg-green-500 hover:text-white disabled:bg-secondary" onClick={switchProvider} disabled={loading}>
+                    {!loading ? <div>Switch Provider</div> : <Loader />}
                 </button>
-            </div>
-            {result && (
-                <div className="py-4">
-                    <h4>Result: {result}</h4>
+
+                <div>
+                    <h4 className="py-4">Enter Numbers</h4>
+                    <input
+                        type="number"
+                        className="input"
+                        placeholder="Enter number 1"
+                        value={num1}
+                        onChange={handleNum1Change}
+                    />
+                    <input
+                        type="number"
+                        className="input"
+                        placeholder="Enter number 2"
+                        value={num2}
+                        onChange={handleNum2Change}
+                    />
+                    <button
+                        className="button flex justify-center items-center border border-green-500 p-3 text-green-500 rounded-md hover:bg-green-500 hover:text-white disabled:bg-secondary"
+                        onClick={calculateSum}
+                        disabled={loading}
+                    >
+                        {!loading ? <div>Calculate Sum</div> : <Loader />}
+                    </button>
                 </div>
-            )}
-        </div>
-    );
-}
+                {result && (
+                    <div className="py-4">
+                        <h4>Result: {result}</h4>
+                    </div>
+                )}
+            </div>
+        );
+    }
 }
