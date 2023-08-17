@@ -120,4 +120,13 @@ h3 {
   font-weight: bold;
 }
 
+.button-columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  width: 48%; /* Make each column almost half the width with a small gap in between */
+}
+
 

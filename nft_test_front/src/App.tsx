@@ -166,9 +166,46 @@ export default function AutonomousPriceInteraction() {
             setLoading(false);
         }
     };
+
+    function stringToBoolean(value: string): boolean {
+        if (value.toLowerCase() === "true") return true;
+        if (value.toLowerCase() === "false") return false;
+        throw new Error("Invalid boolean string");
+    }
+
+    const approveForAll = async () => {
+        setLoading(true);
+        try {
+            if (!account || !client) return;
+            
+            const operatorAddress = window.prompt("Please enter the operator's address:");
+            const approved = window.prompt("Please enter true or false to approve or disapprove all tokens:");
+        
+            if (!operatorAddress || !approved) {
+                setErrorMessage("Address/Bool input was canceled or empty.");
+                return;
+            }
+    
+            await client.smartContracts().callSmartContract({
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                functionName: "nft1_setApprovalForAll",
+                parameter: new Args().addString(operatorAddress).addBool(stringToBoolean(approved)).serialize(),
+                maxGas: MAX_GAS,
+                coins: BigInt(1),
+                fee: BigInt(0),
+            });
+    
+        } catch (error) {
+            setErrorMessage("Failed to approve for all.");
+            console.error(error);
+            alert(error);
+        } finally {
+            setLoading(false);
+        }
+    };
     
 
-    const fetchTokenURI = async () => {
+    const fetchBaseURI = async () => {
         try {
             const res = await client!.smartContracts().readSmartContract({
                 maxGas: MAX_GAS,
@@ -177,11 +214,105 @@ export default function AutonomousPriceInteraction() {
                 parameter: new Args().serialize(),
             });
 
+            const retrievedBaseURI = bytesToStr(res.returnValue);
+            alert(`Base URI: ${retrievedBaseURI}`);
+        } catch (error) {
+            setErrorMessage("Failed to fetch base URI.");
+            console.error(error);
+            alert(error);
+        }
+    };
+
+    const fetchTokenURI = async () => {
+        try {
+
+            const tokenID = window.prompt("Please enter the tokenID to check his URI:");
+
+        
+            if (!tokenID) {
+                setErrorMessage("tokenID input was canceled or empty.");
+                return;
+            }
+
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_tokenURI",
+                parameter: new Args().addU256(BigInt(parseInt(tokenID))).serialize(),
+            });
+
             const retrievedTokenURI = bytesToStr(res.returnValue);
             alert(`Token URI: ${retrievedTokenURI}`);
         } catch (error) {
             setErrorMessage("Failed to fetch token URI.");
             console.error(error);
+            alert(error);
+        }
+    };
+
+    const setURI = async () => {
+        setLoading(true);
+        try {
+            if (!account || !client) return;
+
+            const BaseURI = window.prompt("Please enter the new Base URI:");
+
+            if (!BaseURI) {
+                setErrorMessage("BaseURI input was canceled or empty.");
+                return;
+            }
+    
+            await client.smartContracts().callSmartContract({
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                functionName: "nft1_setURI",
+                parameter: new Args().addString(BaseURI).serialize(),
+                maxGas: MAX_GAS,
+                coins: BigInt(1),
+                fee: BigInt(0),
+            });
+    
+        } catch (error) {
+            setErrorMessage("Failed to set new base URI.");
+            console.error(error);
+            alert(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const currentSupply = async () => {
+        try {
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_currentSupply",
+                parameter: new Args().serialize(),
+            });
+
+            const retrievedCurrentSupply = new Args(res.returnValue).nextI64();
+            alert(`Current Supply: ${retrievedCurrentSupply}`);
+        } catch (error) {
+            setErrorMessage("Failed to fetch current supply.");
+            console.error(error);
+            alert(error);
+        }
+    };
+
+    const totalSupply = async () => {
+        try {
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_totalSupply",
+                parameter: new Args().serialize(),
+            });
+
+            const retrievedTotalSupply = new Args(res.returnValue).nextI64();
+            alert(`Total Supply: ${retrievedTotalSupply}`);
+        } catch (error) {
+            setErrorMessage("Failed to fetch total supply.");
+            console.error(error);
+            alert(error);
         }
     };
 
@@ -218,42 +349,134 @@ export default function AutonomousPriceInteraction() {
         }
     };
 
+    const isApprovedForAll = async () => {
+        try {
+            const ownerAddress = window.prompt("Please enter the owner's address:");
+            const operatorAddress = window.prompt("Please enter the operator's address:");
+
+            if (!ownerAddress || !operatorAddress) {
+                setErrorMessage("Address input was canceled or empty.");
+                return;
+            }
+
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_isApprovedForAll",
+                parameter: new Args().addString(ownerAddress).addString(operatorAddress).serialize(),
+            });
+
+            const retrievedApprovals = bytesToStr(res.returnValue);
+            alert(`Is approved for all: ${retrievedApprovals}`);
+        } catch (error) {
+            setErrorMessage("Failed to determine approval.");
+            console.error(error);
+            alert(error);
+        }
+    };
+
+    const fetchName = async () => {
+        try {
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_name",
+                parameter: new Args().serialize(),
+            });
+
+            const retrievedName = bytesToStr(res.returnValue);
+            alert(`Token Name: ${retrievedName}`);
+        } catch (error) {
+            setErrorMessage("Failed to fetch token name.");
+            console.error(error);
+            alert(error);
+        }
+    };
+
+    const fetchSymbol = async () => {
+        try {
+            const res = await client!.smartContracts().readSmartContract({
+                maxGas: MAX_GAS,
+                targetAddress: NFT_CONTRACT_ADDRESS,
+                targetFunction: "nft1_symbol",
+                parameter: new Args().serialize(),
+            });
+
+            const retrievedSymbol = bytesToStr(res.returnValue);
+            alert(`Token Symbol: ${retrievedSymbol}`);
+        } catch (error) {
+            setErrorMessage("Failed to fetch symbol.");
+            console.error(error);
+            alert(error);
+        }
+    };
+
     
     return (
         <div className="centered-content">
             <div className="title">Massa NFT Interaction</div>
             <div className="mas-body">
-                <div className="py-4">
-                    <button onClick={fetchOwner}>
-                        Verify Ownership
-                    </button>
-                </div>
-                <div className="py-4">
-                    <button onClick={fetchTokenURI}>
-                        Verify Token URI
-                    </button>
-                </div>
-                <div className="py-4">
-                    <button onClick={mintToken} disabled={loading}>
-                         {loading ? <div className="spinner"></div> : "Mint Token"}
-                    </button>
-                </div>
-                <div className="py-4">
-                    <button onClick={approve} disabled={loading}>
-                         {loading ? <div className="spinner"></div> : "Approve Token"}
-                    </button>
-                </div>
-                <div className="py-4">
-                    <button onClick={fetchApproved} disabled={loading}>
-                         {loading ? <div className="spinner"></div> : "Verify Approval"}
-                    </button>
-                </div>
-                <div className="py-4">
-                    <button onClick={transferFrom} disabled={loading}>
-                         {loading ? <div className="spinner"></div> : "Transfer token"}
-                    </button>
+                <div className="button-columns">
+                    <div className="column">
+                        <div className="py-4">
+                            <button onClick={fetchOwner}>Verify Ownership</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={fetchBaseURI}>Verify Base URI</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={fetchTokenURI}>Verify Token URI</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={setURI} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Set New Base URI"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={mintToken} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Mint Token"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={approve} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Approve Token"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={isApprovedForAll}>Verify Approved For All</button>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <div className="py-4">
+                            <button onClick={fetchApproved} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Verify Approval"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={transferFrom} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Transfer token"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={currentSupply}>Verify Current Supply</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={totalSupply}>Verify Total Supply</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={approveForAll} disabled={loading}>
+                                {loading ? <div className="spinner"></div> : "Approve for all"}
+                            </button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={fetchName}>Verify Name</button>
+                        </div>
+                        <div className="py-4">
+                            <button onClick={fetchSymbol}>Verify Symbol</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    );
+    )    
 }
