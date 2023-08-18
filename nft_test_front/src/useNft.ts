@@ -18,7 +18,7 @@ import {
 const MAX_GAS = BigInt(4294967295);
 
 const NFT_CONTRACT_ADDRESS =
-  "AS1HdkdZVhX5QtGWp6BdvvxyBD3TPQrSo4djpYaCa8UHWVLBHZCp";
+  "AS12pgMwa3hH4eGrbBp9AxkymoRS3jV2DCGgVyWi1VPkQtRE2XpKD";
 
 const getWallet = async (walletName: string) => {
   const wallets = await providers();
@@ -296,8 +296,19 @@ const useNft = () => {
     alert(`Symbol: ${retrievedSymbol}`);
   };
 
+  const fetchBalanceOf = async () => {
+    const address = promptForInput("Please enter the address:");
+    const res = await readSmartContract(
+      "nft1_balanceOf",
+      new Args().addString(address).serialize()
+    );
+    const retrievedBalance = bytesToU256(res?.returnValue!);
+    alert(`Balance: ${retrievedBalance}`);
+  };
+
   // return everything
   return {
+    client,
     accounts,
     selectedAccount,
     changeAccount,
@@ -315,6 +326,7 @@ const useNft = () => {
     fetchTotalSupply,
     fetchName,
     fetchSymbol,
+    fetchBalanceOf,
     loading,
     loadingGlobal,
     errorMessage,

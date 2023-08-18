@@ -76,12 +76,27 @@ ul {
   height: 100vh;
   background-color: #f4f4f4;
 }
+.mas-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
+.mas-account {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
 .mas-body {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: white;
+}
+.button-columns{
+  display: flex;
+  justify-content: space-between;
 }
 
 button {

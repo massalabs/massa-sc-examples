@@ -3,9 +3,11 @@ import SelectAccount from "./SelectAccount";
 import DisplayAccounts from "./DisplayAccount";
 import ButtonColumn from "./ButtonColumn";
 import { useState } from "react";
+import { IClient } from "@massalabs/massa-web3";
 
 export default function AutonomousPriceInteraction() {
   const {
+    client,
     loading,
     accounts,
     changeAccount,
@@ -23,6 +25,7 @@ export default function AutonomousPriceInteraction() {
     fetchTotalSupply,
     fetchName,
     fetchSymbol,
+    fetchBalanceOf,
   } = useNft();
 
   const actionsRead = [
@@ -32,6 +35,7 @@ export default function AutonomousPriceInteraction() {
       { label: "Verify Symbol", onClick: fetchSymbol, load: "symbol" },
       { label: "Verify Base URI", onClick: fetchBaseURI, load: "baseURI" },
       { label: "Verify Token URI", onClick: fetchTokenURI, load: "tokenURI" },
+      { label: "Verify Balance", onClick: fetchBalanceOf, load: "balanceOf" },
     ],
     [
       {
@@ -72,6 +76,10 @@ export default function AutonomousPriceInteraction() {
   return (
     <div className="centered-content">
       <div className="title">Massa NFT Interaction</div>
+      {/* Current Client account */}
+      <DisplayClientAccountAddress
+        address={client?.wallet().getBaseAccount()?.address() || ""}
+      />
       <SelectAccount accounts={accounts} changeAccount={changeAccount} />
       <DisplayAccounts accounts={accounts} />
 
@@ -97,6 +105,18 @@ export default function AutonomousPriceInteraction() {
               loading={loading}
             />
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+function DisplayClientAccountAddress({ address }: { address: string }) {
+  return (
+    <div className="mas-header">
+      <div className="mas-header-item">
+        <div>
+          <div className="mas-header-item-label">Current Account</div>
+          <div className="mas-header-item-value">{address}</div>
         </div>
       </div>
     </div>
