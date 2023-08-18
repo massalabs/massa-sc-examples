@@ -1,64 +1,123 @@
-/* Setup the background color */
 body {
-    background-image: url("../public/background.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-bottom: 4rem;
-    overflow-y: auto;
-
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
 }
 
-.bodyContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
+ol,
+ul {
+  padding-left: 30px;
 }
 
-/* Setup the bodyText text */
-.bodyButton {
-    padding: 10px 20px;
-    margin-bottom: 1rem;
-    background-color: rgb(159, 26, 26);
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
 }
 
-.messageToDisplay {
-    color: rgb(0, 0, 0);
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
+.status {
+  margin-bottom: 10px;
 }
 
-/* Contract Interaction style */
-
-.input {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1rem;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
 }
 
-.button {
-    width: 100%;
-    padding: 10px;
-    background-color: rgb(0, 0, 0);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center;
+.square:focus {
+  outline: none;
 }
 
-.button:hover,
-.bodyButton:hover {
-    background-color: rgb(73, 47, 47);
+.kbd-navigation .square:focus {
+  background: #ddd;
 }
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info, .node-info {
+  margin-left: 20px;
+}
+
+.restart-button {
+  margin-top: 10px;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.mas-body {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 10px 0;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.text-red-500 {
+  color: red;
+}
+
+.py-4 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+
