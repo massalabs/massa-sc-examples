@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 import { useEffect, useState } from "react";
 import { IAccount, IProvider, providers } from "@massalabs/wallet-provider";
-import pollAsyncEvents from "../utils/pollAsyncEvent";
+import pollAsyncEvents from "./pollAsyncEvent";
 import {
   Args,
   toMAS,
@@ -19,10 +19,11 @@ const getWallet = async (walletName: string) => {
       return wallet;
     }
   });
+
   return _wallet;
 };
 
-export default function IndexPage() {
+export default function Home() {
   const [wallet, setWallet] = useState<IProvider | null>(null);
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [client, setClient] = useState<Client | null>(null);
@@ -33,14 +34,9 @@ export default function IndexPage() {
   const initAccount = async (wallet: IProvider) => {
     const accounts: IAccount[] = await wallet.accounts();
     if (!accounts.length) {
-      console.log("Error: You need to create an account");
     }
     return accounts;
   };
-
-  useEffect(() => {
-    init("MASSASTATION");
-  }, []);
 
   const initClientWallet = async (wallet: IProvider, account: IAccount) => {
     return await ClientFactory.fromWalletProvider(wallet, account);
@@ -48,13 +44,17 @@ export default function IndexPage() {
 
   const init = async (chosenWallet: string) => {
     const wallet = await getWallet(chosenWallet);
+
     if (!wallet) return;
     setWallet(wallet);
+
     const accounts: IAccount[] = await initAccount(wallet);
+
     if (!accounts.length) return;
     setAccounts(accounts);
 
     const account = accounts[0];
+
     setSelectedAccount(account);
 
     const client = await initClientWallet(wallet, account);
@@ -63,6 +63,7 @@ export default function IndexPage() {
 
   const getBalance = async (client: IClient, accountAddress: string) => {
     if (!client) return;
+    selectedAccount?.balance().then((balance) => {});
 
     const balance = await client.wallet().getAccountBalance(accountAddress);
 
@@ -71,9 +72,10 @@ export default function IndexPage() {
     return balance?.final.toString();
   };
 
-  async function storeMessage(_client: Client) {
+  async function storeMessage() {
+    if (!client) return;
     try {
-      const result = await _client.smartContracts().callSmartContract({
+      const result = await client.smartContracts().callSmartContract({
         fee: BigInt(1000),
         maxGas: BigInt(1000000),
         coins: BigInt(0),
@@ -81,11 +83,10 @@ export default function IndexPage() {
         functionName: "storeMessage",
         parameter: new Args().addString("Hello World!"),
       });
+
       setOpId(result);
-      pollAsyncEvents(_client, result);
-    } catch (error) {
-      console.log(error);
-    }
+      pollAsyncEvents(client, result);
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -119,35 +120,39 @@ export default function IndexPage() {
         )}
       </div>
       <div className="flex items-center gap-5 justify-center border p-4 rounded-md">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <BasicButton
           onClick={async () => {
             await init("MASSASTATION");
           }}
         >
           Connect Massa Station
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        </BasicButton>
+        <BasicButton
           onClick={async () => {
-            await init("Bearby");
+            await init("BEARBY");
           }}
         >
           Connect Bearby
-        </button>
-      </div>
-      {/* Button to store message */}
-      <div className="flex gap-5 items-center justify-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-          onClick={async () => {
-            if (!client) return;
-            await storeMessage(client);
-          }}
-        >
+        </BasicButton>
+        <BasicButton onClick={storeMessage}>
           Store message Wallet Provider
-        </button>
+        </BasicButton>
       </div>
     </main>
   );
 }
+
+const BasicButton = ({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) => (
+  <button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    onClick={onClick}
+  >
+    {children}
+  </button>
+);

@@ -26,7 +26,6 @@ const pollAsyncEvents = async (
 
   const start = nodeStatusInfo.last_slot;
   start.period = start.period - 1000;
-  console.log("start", start);
   // set the events filter
   const eventsFilter = {
     start: start,
