@@ -8,7 +8,6 @@ import {
   Client,
   IClient,
   ClientFactory,
-  DefaultProviderUrls,
 } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1MAtScFwncd19rktPEqHQ8D3ZicoDGKm7nXyt1AaJFfzAx3Lbg";

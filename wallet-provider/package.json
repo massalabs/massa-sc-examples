@@ -8,8 +8,8 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@massalabs/massa-web3": "^2.1.1-dev.20230816120244",
-    "@massalabs/wallet-provider": "^1.2.1-dev.20230817063333",
+    "@massalabs/massa-web3": "^2.1.1-dev.20230818120947",
+    "@massalabs/wallet-provider": "^1.2.1-dev.20230818073036",
     "@massalabs/web3-utils": "^1.4.1",
     "next": "latest",
     "react": "^18.2.0",
