@@ -11,11 +11,6 @@ import {
   DefaultProviderUrls,
 } from "@massalabs/massa-web3";
 
-import {
-  PublicKey,
-  SecretKey,
-} from "@massalabs/massa-web3/dist/esm/utils/keyAndAddresses";
-
 const CONTRACT_ADDRESS = "AS1MAtScFwncd19rktPEqHQ8D3ZicoDGKm7nXyt1AaJFfzAx3Lbg";
 
 const getWallet = async (walletName: string) => {
@@ -32,13 +27,9 @@ export default function IndexPage() {
   const [wallet, setWallet] = useState<IProvider | null>(null);
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [client, setClient] = useState<Client | null>(null);
-  const [clientWeb3, setClientWeb3] = useState<Client | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<IAccount | null>(null);
   const [finalBalance, setFinalBalance] = useState<string | null>(null);
   const [opId, setOpId] = useState<string | null>(null);
-  const [clientWeb3PublicKey, setClientWeb3PublicKey] = useState<string | null>(
-    null
-  );
 
   const initAccount = async (wallet: IProvider) => {
     const accounts: IAccount[] = await wallet.accounts();
@@ -56,22 +47,6 @@ export default function IndexPage() {
     return await ClientFactory.fromWalletProvider(wallet, account);
   };
 
-  const initClientWeb3 = async (wallet: IProvider, account: IAccount) => {
-    const secret = "S1NA786im4CFL5cHSmsGkGZFEPxqvgaRP8HXyThQSsVnWj4tR7d";
-    const secretKey = new SecretKey(secret);
-    const pub: PublicKey = await secretKey.getPublicKey();
-    setClientWeb3PublicKey(pub.base58Encode);
-    return await ClientFactory.createDefaultClient(
-      DefaultProviderUrls.BUILDNET,
-      false,
-      {
-        address: "AU1wN8rn4SkwYSTDF3dHFY4U28KtsqKL1NnEjDZhHnHEy6cEQm53",
-        publicKey: pub.base58Encode,
-        secretKey: secret,
-      }
-    );
-  };
-
   const init = async (chosenWallet: string) => {
     const wallet = await getWallet(chosenWallet);
     if (!wallet) return;
@@ -85,9 +60,6 @@ export default function IndexPage() {
 
     const client = await initClientWallet(wallet, account);
     setClient(client);
-
-    const clientWeb3 = await initClientWeb3(wallet, account);
-    setClientWeb3(clientWeb3);
   };
 
   const getBalance = async (client: IClient, accountAddress: string) => {
@@ -98,10 +70,6 @@ export default function IndexPage() {
     setFinalBalance(balance?.final.toString() || null);
 
     return balance?.final.toString();
-  };
-
-  const logSelectedAccount = async () => {
-    console.log("selectedAccount", await selectedAccount?.balance());
   };
 
   async function storeMessage(_client: Client) {
@@ -121,18 +89,6 @@ export default function IndexPage() {
     }
   }
 
-  async function signMessage(_client: Client) {
-    console.log("------------------------------------ signMessage");
-    try {
-      const result = await _client
-        .wallet()
-        .signMessage("Test", _client.wallet().getBaseAccount().address() || "");
-      console.log("result", result);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
     init("Bearby");
   }, []);
@@ -145,12 +101,6 @@ export default function IndexPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold">Massa Web3</h1>
-        <p className="text-xl mt-4">
-          This is a client component, it will only work on the browser
-        </p>
-      </div>
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-2xl font-bold">Wallet</h2>
         <p className="text-xl mt-4">
@@ -165,9 +115,9 @@ export default function IndexPage() {
       </div>
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-2xl font-bold">Balance</h2>
-        {/* {finalBalance && (
-           <p className="text-xl mt-4">{toMAS(finalBalance).toString()}</p>
-        )} */}
+        {finalBalance && (
+          <p className="text-xl mt-4">{toMAS(finalBalance).toString()}</p>
+        )}
       </div>
       <div className="flex items-center gap-5 justify-center border p-4 rounded-md">
         <button
@@ -190,15 +140,6 @@ export default function IndexPage() {
       {/* Button to store message */}
       <div className="flex gap-5 items-center justify-center">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={async () => {
-            if (!clientWeb3) return;
-            await storeMessage(clientWeb3);
-          }}
-        >
-          Store message Web3
-        </button>
-        <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
           onClick={async () => {
             if (!client) return;
@@ -206,34 +147,6 @@ export default function IndexPage() {
           }}
         >
           Store message Wallet Provider
-        </button>
-
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-          onClick={async () => {
-            if (!client) return;
-            await signMessage(clientWeb3);
-          }}
-        >
-          Sign message Web3
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-          onClick={async () => {
-            if (!client) return;
-            await signMessage(client);
-          }}
-        >
-          Sign message Wallet Provider
-        </button>
-      </div>
-      {/* Button to call logSelectedAccount */}
-      <div className="flex gap-5 items-center justify-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={logSelectedAccount}
-        >
-          Log selected account
         </button>
       </div>
     </main>
