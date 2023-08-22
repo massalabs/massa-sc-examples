@@ -25,11 +25,11 @@ const getWallet = async (walletName: string) => {
 
 export default function Home() {
   const [wallet, setWallet] = useState<IProvider | null>(null);
-  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [client, setClient] = useState<Client | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<IAccount | null>(null);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [finalBalance, setFinalBalance] = useState<string | null>(null);
-  const [opId, setOpId] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const initAccount = async (wallet: IProvider) => {
     const accounts: IAccount[] = await wallet.accounts();
@@ -51,7 +51,6 @@ export default function Home() {
     const accounts: IAccount[] = await initAccount(wallet);
 
     if (!accounts.length) return;
-    setAccounts(accounts);
 
     const account = accounts[0];
 
@@ -59,11 +58,12 @@ export default function Home() {
 
     const client = await initClientWallet(wallet, account);
     setClient(client);
+
+    setSelectedWallet(chosenWallet);
   };
 
   const getBalance = async (client: IClient, accountAddress: string) => {
     if (!client) return;
-    selectedAccount?.balance().then((balance) => {});
 
     const balance = await client.wallet().getAccountBalance(accountAddress);
 
@@ -74,7 +74,9 @@ export default function Home() {
 
   async function storeMessage() {
     if (!client) return;
+
     try {
+      setLoading(true);
       const result = await client.smartContracts().callSmartContract({
         fee: BigInt(1000),
         maxGas: BigInt(1000000),
@@ -84,13 +86,15 @@ export default function Home() {
         parameter: new Args().addString("Hello World!"),
       });
 
-      setOpId(result);
-      pollAsyncEvents(client, result);
+      const eventPoll = await pollAsyncEvents(client, result);
+
+      alert(`New event: ${eventPoll.events[0].data}`);
+      setLoading(false);
     } catch (error) {}
   }
 
   useEffect(() => {
-    init("Bearby");
+    init("MASSASTATION");
   }, []);
 
   useEffect(() => {
@@ -99,6 +103,17 @@ export default function Home() {
     getBalance(client, accountAddress);
   }, [client, selectedAccount]);
 
+  function getButtonLabel() {
+    if (loading) {
+      return "Loading...";
+    }
+
+    if (selectedWallet) {
+      return `Store message with ${selectedWallet}`;
+    }
+
+    return "You need to connect a wallet";
+  }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col items-center justify-center">
@@ -134,9 +149,7 @@ export default function Home() {
         >
           Connect Bearby
         </BasicButton>
-        <BasicButton onClick={storeMessage}>
-          Store message Wallet Provider
-        </BasicButton>
+        <BasicButton onClick={storeMessage}>{getButtonLabel()}</BasicButton>
       </div>
     </main>
   );
