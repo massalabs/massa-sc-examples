@@ -1,5 +1,10 @@
 import { generateEvent, Storage } from '@massalabs/massa-as-sdk';
-import { stringToBytes, SafeMath, u64ToBytes, bytesToU64 } from '@massalabs/as-types';
+import {
+  stringToBytes,
+  SafeMath,
+  u64ToBytes,
+  bytesToU64,
+} from '@massalabs/as-types';
 
 /**
  * Sums 2 i64 using the SafeMath library and returns the result.
@@ -22,7 +27,7 @@ function add(a: u64, b: u64): u64 {
  */
 // @ts-ignore: decorator
 @massaExport()
-export function sum(a: u64, b: u64 ): u64 {
+export function sum(a: u64, b: u64): u64 {
   const result = add(a, b);
   generateEvent(
     `Sum (${a.toString()}, ${b.toString()}) = ${result.toString()}`,
