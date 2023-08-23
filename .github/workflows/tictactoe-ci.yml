@@ -7,7 +7,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./games/tictactoe/contracts
+    working-directory: ./deprecated/tictactoe/contracts
 
 jobs:
   unit-tests:
