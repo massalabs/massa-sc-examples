@@ -32,7 +32,7 @@ const __dirname = path.dirname(path.dirname(__filename));
  *
  * @remarks
  * Multiple smart contracts can be deployed by adding more objects to the array.
- * In this example one contract located at 'build/main.wasm' is deployed with
+ * In this example one contract located at 'build/sum.wasm' is deployed with
  * 0.1 MASSA and an argument 'Test'.
  *
  * After all deployments, it terminates the process.
