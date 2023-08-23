@@ -15,9 +15,9 @@ if (!publicApi) {
 }
 
 // Get the secret key for the wallet to be used for the deployment from the environment variables
-const secretKey = process.env.WALLET_PRIVATE_KEY;
+const secretKey = process.env.WALLET_SECRET_KEY;
 if (!secretKey) {
-  throw new Error('Missing WALLET_PRIVATE_KEY in .env file');
+  throw new Error('Missing WALLET_SECRET_KEY in .env file');
 }
 
 // Create an account using the private key
@@ -32,7 +32,7 @@ const __dirname = path.dirname(path.dirname(__filename));
  *
  * @remarks
  * Multiple smart contracts can be deployed by adding more objects to the array.
- * In this example one contract located at 'build/main.wasm' is deployed with
+ * In this example one contract located at 'build/age.wasm' is deployed with
  * 0.1 MASSA and an argument 'Test'.
  *
  * After all deployments, it terminates the process.
@@ -43,9 +43,13 @@ const __dirname = path.dirname(path.dirname(__filename));
     deployerAccount, // account deploying the smart contract(s)
     [
       {
-        data: readFileSync(path.join(__dirname, 'build', 'main.wasm')), // smart contract bytecode
+        data: readFileSync(path.join(__dirname, 'build', 'age.wasm')), // smart contract bytecode
         coins: fromMAS(0.1), // coins for deployment
         args: new Args(), // arguments for deployment
+        protoPaths: [
+          './build/changeAgeHelper.proto',
+          './build/getAgeHelper.proto',
+        ], // proto files for deployment
       } as ISCData,
       // Additional smart contracts can be added here for deployment
     ],

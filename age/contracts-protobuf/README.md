@@ -4,7 +4,7 @@ You now have your own AssemblyScript project setup, with Massa's sdk installed.
 
 You can now run `npm run build` to compile your AssemblyScript files.
 
-By default it will build `assembly/main.ts`.
+By default it will build `assembly/age.ts`.
 
 To use librairies as massa-as-sdk and @massalabs/as you need to import the required function, for instance :
 
@@ -89,7 +89,7 @@ Prerequisites :
 These keys will be the ones used by the deployer script to interact with the blockchain.
 
 The following command will build your contract and create the deployer associated:
-It assumes your contract entrypoint is `assembly/main.ts`
+It assumes your contract entrypoint is `assembly/age.ts`
 
 ```shell
 npm run build
