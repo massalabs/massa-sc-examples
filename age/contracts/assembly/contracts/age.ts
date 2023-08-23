@@ -22,7 +22,7 @@
  * @see [massa-as-sdk](https://github.com/massalabs/massa-as-sdk)
  *
  */
-import { Args } from '@massalabs/as-types';
+import { Args, fromBytes } from '@massalabs/as-types';
 import {
   Storage,
   callerHasWriteAccess,
@@ -42,7 +42,7 @@ import {
 export function constructor(_: StaticArray<u8>): void {
   if (!callerHasWriteAccess()) {
     // First we check if the caller (in this case you when you deploy the contract) has write access on storage.
-    return [];
+    return;
   }
 
   let name = new Args().add('alice'); // We create our 'name' key for the person's entry.
@@ -65,15 +65,10 @@ export function constructor(_: StaticArray<u8>): void {
  * @returns none
  *
  */
-export function changeAge(_args: StaticArray<u8>): void {
-  let args = new Args(_args); // First we deserialize our arguments.
-
-  // We use 'next[Type]()' to retrieve the next argument in the serialized arguments.
-  let name = args.nextString().expect('Missing name argument.');
-  // We use 'expect()' to check if the argument exists, if not we abort the execution.
-  let age = args.nextU32().expect('Missing age argument.');
-
-  // Then we create our key/value pair and store it.
+// @ts-ignore: decorator
+@massaExport()
+export function changeAge(name: string, age: u32): void {
+  // First we create our key/value pair and store it.
   let ageEncoded = new Args().add(age).serialize();
   let nameEncoded = new Args().add(name).serialize();
 
@@ -94,24 +89,22 @@ export function changeAge(_args: StaticArray<u8>): void {
  * @returns The serialized 'age' found.
  *
  */
-export function getAge(_args: StaticArray<u8>): StaticArray<u8> {
-  let args = new Args(_args); // First we deserialize our arguments.
-
-  // We use 'expect()' to check if the argument exists, if not we abort the execution.
-  let name = args.nextString().expect('Missing name argument.');
-  // Then we create our encoded key from the function's argument.
+// @ts-ignore: decorator
+@massaExport()
+export function getAge(name: string): u32 {
+  // First we create our encoded key from the function's argument.
   let nameEncoded = new Args().add(name).serialize();
 
   if (Storage.has(nameEncoded)) {
     // We check if the entry exists.
     let age = Storage.get(nameEncoded);
     // We get the associated value and return it.
-    // Since the return type of 'Storage.get' is 'StaticArray<u8>' it is already serialized.
-    return age;
+    // Since the return type of 'Storage.get' is 'StaticArray<u8>', we need to cast it to 'u32'.
+    return fromBytes<u32>(age);
   } else {
     // If the entry doesn't exist we abort the execution.
     abort("No such person's age is stored.");
     // We still need to return due AssemblyScript compiler.
-    return [];
+    return 0;
   }
 }
