@@ -62,6 +62,7 @@ export async function getEvents(txDetails: TransactionDetails, nodeUrl: string):
   };
   // setup the client
   const client = new Client(clientConfig);
+
   // async poll events in the background for the given opId
   const { isError, eventPoller, events }: EventPollerResult =
     await withTimeoutRejection<EventPollerResult>(

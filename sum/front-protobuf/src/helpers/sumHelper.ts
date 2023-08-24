@@ -190,9 +190,9 @@ export async function sumExtractOutputsAndEvents(
     )
   }
   catch (err) {
-    console.log("error in getEvents: " + err);
     return {
       events: events,
+      error: err,
     } as OperationOutputs;
   }
 

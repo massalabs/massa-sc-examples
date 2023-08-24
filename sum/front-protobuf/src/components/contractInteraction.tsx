@@ -4,11 +4,6 @@ import { IAccount, providers } from "@massalabs/wallet-provider";
 import Loader from "./Loader";
 import { OperationOutputs, Tib4pYZs9ABlockchainCaller } from "../helpers/tib4pYZs9ACaller";
 
-const MAX_GAS = BigInt(1000000);
-// buildnet address of sum contract (which uses protobuf)
-const CONTRACT_ADDRESS =
-    "AS12J5GFW1QTjGQyZ4HRYUZxFT6PjNDUE94rdW5PGnntib4pYZs9A";
-
 export default function ContractInteraction() {
     const [errorMessage, setErrorMessage] = useState<any>("");
     const [caller, setCaller] = useState<Tib4pYZs9ABlockchainCaller | null>(null);
@@ -42,22 +37,7 @@ export default function ContractInteraction() {
 
         setAccount(accounts[0]);
         const client = await ClientFactory.fromWalletProvider(targetProvider, accounts[0]);
-        // setCaller(await Tib4pYZs9ABlockchainCaller.newDefault(client.wallet()));
-        const provider: IProvider = {
-            url: 'https://buildnet.massa.net/api/v2',
-            type: 1,
-        }
-        const clientConfig: IClientConfig = {
-            providers: [provider],
-            periodOffset: null,
-        }
-    
-        const publicApiClient = new PublicApiClient(clientConfig)
-        const iaccount = await WalletClient.getAccountFromSecretKey("S1a1rC1Aar9gEe8VwpWtN5MTaxaKXqrj6vGr9a3WDxbRMDC8spM");
-    
-        const account = new Web3Account(iaccount, publicApiClient)
-        const walletClient = new WalletClient(clientConfig, publicApiClient, account)
-        setCaller(await Tib4pYZs9ABlockchainCaller.newDefault(walletClient));
+        setCaller(await Tib4pYZs9ABlockchainCaller.newDefault(client.wallet()));
     };
 
     useEffect(() => {
@@ -119,10 +99,9 @@ export default function ContractInteraction() {
                 const outputs: OperationOutputs = await caller.sum(
                     BigInt(num1),
                     BigInt(num2),
-                    BigInt(1),
+                    100000000n,
                 );
                 setResult(outputs.outputs? outputs.outputs : "[]");
-                console.log(outputs);
                 setLoading(false);
             }, 0);
         } catch (error) {

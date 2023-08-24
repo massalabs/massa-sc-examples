@@ -17,6 +17,7 @@ import { IBaseAccount } from "@massalabs/massa-web3/dist/esm/interfaces/IBaseAcc
 export interface OperationOutputs {
   outputs?: any;
   events: IEvent[];
+  error?: any;
 }
 
 
