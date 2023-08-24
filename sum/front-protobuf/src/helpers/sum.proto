@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message sumHelper {
+  uint64 a = 1;
+  uint64 b = 2;
+}
+
+message sumRHelper {
+  uint64 value = 1;
+}

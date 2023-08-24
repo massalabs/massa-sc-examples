@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message lastResultHelper {
+
+}
+
+message lastResultRHelper {
+  uint64 value = 1;
+}
