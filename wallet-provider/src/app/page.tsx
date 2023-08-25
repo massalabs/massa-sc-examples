@@ -8,6 +8,7 @@ import {
   Client,
   IClient,
   ClientFactory,
+  fromMAS,
 } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS = "AS1MAtScFwncd19rktPEqHQ8D3ZicoDGKm7nXyt1AaJFfzAx3Lbg";
@@ -24,12 +25,14 @@ const getWallet = async (walletName: string) => {
 };
 
 export default function Home() {
-  const [wallet, setWallet] = useState<IProvider | null>(null);
   const [client, setClient] = useState<Client | null>(null);
+  const [accounts, setAccounts] = useState<IAccount[] | null>(null); // [IAccount, setAccounts
   const [selectedAccount, setSelectedAccount] = useState<IAccount | null>(null);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [finalBalance, setFinalBalance] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const balance = toMAS(finalBalance || 0).toString();
+  const account = selectedAccount?.address() || "No account";
 
   const initAccount = async (wallet: IProvider) => {
     const accounts: IAccount[] = await wallet.accounts();
@@ -44,16 +47,14 @@ export default function Home() {
 
   const init = async (chosenWallet: string) => {
     const wallet = await getWallet(chosenWallet);
-
     if (!wallet) return;
-    setWallet(wallet);
 
     const accounts: IAccount[] = await initAccount(wallet);
-
+    console.log(accounts);
+    setAccounts(accounts);
     if (!accounts.length) return;
 
     const account = accounts[0];
-
     setSelectedAccount(account);
 
     const client = await initClientWallet(wallet, account);
@@ -86,10 +87,57 @@ export default function Home() {
         parameter: new Args().addString("Hello World!"),
       });
 
+      console.log(result);
+
       const eventPoll = await pollAsyncEvents(client, result);
 
       alert(`New event: ${eventPoll.events[0].data}`);
       setLoading(false);
+    } catch (error) {}
+  }
+
+  async function buyRolls() {
+    if (!client) return;
+
+    try {
+      const result = await client.wallet().buyRolls({
+        amount: BigInt(1),
+        fee: fromMAS(0),
+      });
+      console.log(result);
+      const eventPoll = await pollAsyncEvents(client, result[0]);
+      console.log(eventPoll);
+    } catch (error) {}
+  }
+
+  async function sellRolls() {
+    if (!client) return;
+
+    try {
+      const result = await client.wallet().sellRolls({
+        amount: BigInt(1),
+        fee: fromMAS(0),
+      });
+      console.log(result);
+      const eventPoll = await pollAsyncEvents(client, result[0]);
+      console.log(eventPoll);
+    } catch (error) {}
+  }
+
+  // transfer
+  async function sendTransaction() {
+    if (!client) return;
+
+    try {
+      const result = await client.wallet().sendTransaction({
+        amount: fromMAS(10),
+        fee: fromMAS(1),
+        recipientAddress:
+          "AU1ab38HtjfYQLjForEGuprzyDyPJxp1KcodCqGbRTA3DWRMNxqo",
+      });
+      console.log(result);
+      const eventPoll = await pollAsyncEvents(client, result[0]);
+      console.log(eventPoll);
     } catch (error) {}
   }
 
@@ -103,53 +151,47 @@ export default function Home() {
     getBalance(client, accountAddress);
   }, [client, selectedAccount]);
 
-  function getButtonLabel() {
+  function getButtonLabel(message?: string) {
     if (loading) {
       return "Loading...";
     }
 
     if (selectedWallet) {
-      return `Store message with ${selectedWallet}`;
+      return message;
     }
 
     return "You need to connect a wallet";
   }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold">Wallet</h2>
-        <p className="text-xl mt-4">
-          {wallet ? wallet.name() : "No wallet found"}
-        </p>
+    <main className="h-screen">
+      <div className="grid grid-cols-3 gap-2 mt-4">
+        <div className="col-span-2 inline-block bg-white shadow-lg rounded-lg p-4 mx-10">
+          {/* grid that splits in 2 columns and 1 row */}
+          <div className=" items-center">
+            <DisplayInfo name="Wallet" info={selectedWallet || "No wallet"} />
+            <DisplayInfo name="Account" info={account} />
+            <DisplayInfo name="Balance" info={balance} />
+          </div>
+        </div>
+        <div className=" items-center">
+          <DisplayWalletButton init={init} />
+        </div>
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold">Account</h2>
-        <p className="text-xl mt-4">
-          {selectedAccount?.address() || "No account found"}
-        </p>
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold">Balance</h2>
-        {finalBalance && (
-          <p className="text-xl mt-4">{toMAS(finalBalance).toString()}</p>
-        )}
-      </div>
-      <div className="flex items-center gap-5 justify-center border p-4 rounded-md">
-        <BasicButton
-          onClick={async () => {
-            await init("MASSASTATION");
-          }}
-        >
-          Connect Massa Station
+
+      <div className="mt-4 p-5 flex gap-4">
+        <BasicButton onClick={storeMessage}>
+          {getButtonLabel("CallSmartContract")}
         </BasicButton>
-        <BasicButton
-          onClick={async () => {
-            await init("BEARBY");
-          }}
-        >
-          Connect Bearby
+        <BasicButton onClick={buyRolls}>
+          {getButtonLabel("BuyRolls")}
         </BasicButton>
-        <BasicButton onClick={storeMessage}>{getButtonLabel()}</BasicButton>
+        <BasicButton onClick={sellRolls}>
+          {getButtonLabel("SellRolls")}
+        </BasicButton>
+        <BasicButton onClick={sendTransaction}>
+          {getButtonLabel("SendTransaction")}
+        </BasicButton>
       </div>
     </main>
   );
@@ -163,9 +205,39 @@ const BasicButton = ({
   children: React.ReactNode;
 }) => (
   <button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
     onClick={onClick}
   >
     {children}
   </button>
+);
+
+const DisplayInfo = ({ name, info }: { name: string; info: string }) => (
+  <div className="flex items-center overflow-clip">
+    <h2 className="font-bold mr-2">{name}: </h2>
+    <p className=" truncate w-full">{info}</p>
+  </div>
+);
+
+const DisplayWalletButton = ({
+  init,
+}: {
+  init: (walletName: string) => void;
+}) => (
+  <div className="p-4 flex flex-col gap-4">
+    <BasicButton
+      onClick={() => {
+        init("MASSASTATION");
+      }}
+    >
+      Connect Massa Station
+    </BasicButton>
+    <BasicButton
+      onClick={() => {
+        init("BEARBY");
+      }}
+    >
+      Connect Bearby
+    </BasicButton>
+  </div>
 );
