@@ -5,4 +5,4 @@ export const MASSA_EXEMPLE = {
 };
 
 export const CONTRACT_ADDRESS =
-    "AS123jamsBVd2JZssyAMHLiAoGEF6VbcD76pBzFS2pnt7tbK3HPeq";
+    "AS12PE82tiBS8zhjAzkoXr6fjAyWeSJ3j47GYTVmnb5Ru1v2WbjYY";

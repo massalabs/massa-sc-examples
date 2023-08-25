@@ -2,11 +2,11 @@ import { ChangeEvent, useState, useEffect } from "react";
 import { Args, IClient, ClientFactory, WalletClient, IProvider, IClientConfig, PublicApiClient, Web3Account } from "@massalabs/massa-web3";
 import { IAccount, providers } from "@massalabs/wallet-provider";
 import Loader from "./Loader";
-import { OperationOutputs, Tib4pYZs9ABlockchainCaller } from "../helpers/tib4pYZs9ACaller";
+import { OperationOutputs, Ru1v2WbjYYBlockchainCaller } from "../helpers/Ru1v2WbjYYCaller";
 
 export default function ContractInteraction() {
     const [errorMessage, setErrorMessage] = useState<any>("");
-    const [caller, setCaller] = useState<Tib4pYZs9ABlockchainCaller | null>(null);
+    const [caller, setCaller] = useState<Ru1v2WbjYYBlockchainCaller | null>(null);
     const [account, setAccount] = useState<IAccount | null>(null);
 
     const [num1, setNum1] = useState<number>(0);
@@ -37,7 +37,7 @@ export default function ContractInteraction() {
 
         setAccount(accounts[0]);
         const client = await ClientFactory.fromWalletProvider(targetProvider, accounts[0]);
-        setCaller(await Tib4pYZs9ABlockchainCaller.newDefault(client.wallet()));
+        setCaller(await Ru1v2WbjYYBlockchainCaller.newDefault(client.wallet()));
     };
 
     useEffect(() => {

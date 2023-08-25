@@ -3,7 +3,7 @@
 
 import {
   OperationOutputs,
-} from "./tib4pYZs9ACaller";
+} from "./Ru1v2WbjYYCaller";
 import { getEvents } from "./commonHelper";
 import { IBaseAccount } from "@massalabs/massa-web3/dist/esm/interfaces/IBaseAccount";
 import {
@@ -192,7 +192,6 @@ export async function sumExtractOutputsAndEvents(
   catch (err) {
     return {
       events: events,
-      error: err,
     } as OperationOutputs;
   }
 
