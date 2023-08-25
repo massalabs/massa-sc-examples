@@ -1,5 +1,5 @@
-import { Storage, Context, generateEvent } from '@massalabs/massa-as-sdk';
-
+import { Storage, Context } from '@massalabs/massa-as-sdk';
+import { generateEvent } from '@massalabs/massa-as-sdk';
 /**
  * This function is meant to be called only one time: when the contract is deployed.
  *

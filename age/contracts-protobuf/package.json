@@ -1,6 +1,6 @@
 {
     "name": "my-massa-sc",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -21,7 +21,7 @@
     "devDependencies": {
         "@as-pect/cli": "^8.0.1",
         "@assemblyscript/loader": "^0.25.2",
-        "@massalabs/as-transformer": "^0.2.1",
+        "@massalabs/as-transformer": "^0.3.0",
         "@massalabs/as-types": "^1.0.1",
         "@massalabs/eslint-config": "^0.0.9",
         "@massalabs/massa-as-sdk": "^2.4.0",

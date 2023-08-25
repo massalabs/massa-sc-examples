@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message changeAgeHelper {
+  string name = 1;
+  uint32 age = 2;
+}

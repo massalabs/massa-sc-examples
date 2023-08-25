@@ -1,3 +1,10 @@
+import { Args, fromBytes } from '@massalabs/as-types';
+import {
+  Storage,
+  callerHasWriteAccess,
+} from '@massalabs/massa-as-sdk';
+import { generateEvent } from '@massalabs/massa-as-sdk';
+
 /**
  * This file is a smart contract that enables you to store and retrieve the age of a person by their name.
  *
@@ -22,12 +29,6 @@
  * @see [massa-as-sdk](https://github.com/massalabs/massa-as-sdk)
  *
  */
-import { Args, fromBytes } from '@massalabs/as-types';
-import {
-  Storage,
-  callerHasWriteAccess,
-  generateEvent,
-} from '@massalabs/massa-as-sdk';
 
 /**
  * This function is the constructor, it is always called once on contract deployment.

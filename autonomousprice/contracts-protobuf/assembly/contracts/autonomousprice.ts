@@ -1,11 +1,11 @@
 import {
   callerHasWriteAccess,
-  generateEvent,
   Context,
   sendMessage,
   Storage,
   unsafeRandom,
 } from '@massalabs/massa-as-sdk';
+import { generateEvent } from '@massalabs/massa-as-sdk';
 import { currentPeriod } from '@massalabs/massa-as-sdk/assembly/std/context';
 
 const PRICE_KEY = 'PRICE_KEY';
