@@ -27,3 +27,70 @@ jobs:
 
       - name: Test
         run: npm run test
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./helloworld/front/react
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          sudo apt install xvfb libnss3-tools libwebkit2gtk-4.0-dev
+
+      - name: Download MassaStation
+        run: |
+          curl -L https://github.com/massalabs/station/releases/download/v0.3.4/massastation_linux_amd64 -o /usr/local/bin/massastation
+          sudo chmod +x /usr/local/bin/massastation
+          sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/massastation
+
+      - name: Install MassaStation
+        run: |
+          sudo mkdir -p /usr/local/share/massastation/
+          sudo chmod 777 /usr/local/share/massastation/
+          sudo mkdir -p /usr/local/share/massastation/logs/
+          sudo chmod 777 /usr/local/share/massastation/logs/
+          mkdir -p /usr/local/share/massastation/plugins/
+          sudo mkdir -p /etc/massastation/certs
+          sudo chmod 777 /etc/massastation/
+          sudo massastation -repair
+
+      - name: Running Massastation
+        run: xvfb-run massastation > massastation_logs.txt &
+        env:
+          WALLET_PASSWORD: my_wallet_password
+
+      - name: Define station.massa
+        run: sudo echo "127.0.0.1 station.massa" | sudo tee -a /etc/hosts
+
+      - name: Wait for server to be up
+        uses: juliangruber/sleep-action@v1
+        with:
+          time: 5s
+
+      - name: Install MassaStation Wallet
+        run: |
+          curl -X POST "http://station.massa/plugin-manager/?source=https://github.com/massalabs/station-massa-wallet/releases/download/$WALLET_PLUGIN_VERSION/wallet-plugin_linux-amd64.zip"
+        env:
+          WALLET_PLUGIN_VERSION: v0.2.5
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start the app
+        run: npm start &
+        env:
+          CI: true
+
+      - name: Wait for app to start
+        run: sleep 60
+
+      - name: Run Cypress tests
+        run: npx cypress run
