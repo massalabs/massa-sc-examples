@@ -55,9 +55,19 @@ body {
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
+    transition: all 0.2s ease 0s;
 }
 
-.button:hover,
-.bodyButton:hover {
-    background-color: rgb(73, 47, 47);
+.button:hover:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
+    box-shadow: rgb(0 0 0 / 20%) 0px 0px 0px 3px;
+}
+
+/* // active */
+.button:active {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
 }

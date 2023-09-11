@@ -1,10 +1,11 @@
 import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
-import { IAccount, providers } from "@massalabs/wallet-provider"
+import { IAccount, providers } from "@massalabs/wallet-provider";
 import { ClientFactory, bytesToU32, Args, Client } from "@massalabs/massa-web3";
 
-const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
+const CONTRACT_ADDRESS =
+  "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
 
 function App() {
   const [errorMessage, setErrorMessage] = useState<any>("");
@@ -18,15 +19,20 @@ function App() {
 
   const initialize = async () => {
     try {
-      console.log("Switching providers")
-      const providersList = await providers(true, 10000);
-      const availableProviders = providersList.filter(provider => providerUsed !== provider.name());
+      console.log("Switching providers");
+      const providersList = await providers();
+      console.log("------------------------------");
+      console.log("Providers list", providersList);
+      const availableProviders = providersList.filter(
+        (provider) => providerUsed !== provider.name()
+      );
       if (availableProviders.length === 0) {
         console.log("All providers are currently in use.");
         return;
       }
       const provider = availableProviders[0];
       const accounts = await provider.accounts();
+      console.log(accounts);
       if (accounts.length === 0) {
         setErrorMessage("No accounts found");
         return;
@@ -40,7 +46,9 @@ function App() {
       console.log("Now using provider", provider.name());
     } catch (e) {
       console.log(e);
-      setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
+      setErrorMessage(
+        "Please install MassaStation and the plugin Massa Wallet in it and refresh."
+      );
     }
   };
 
@@ -53,15 +61,20 @@ function App() {
           setErrorMessage("No accounts found");
           return;
         }
+        console.log(accounts);
         setAccount(accounts[0]);
         if (!accounts[0] || !provider) {
           return;
         }
-        setClient(await ClientFactory.fromWalletProvider(provider, accounts[0]));
+        setClient(
+          await ClientFactory.fromWalletProvider(provider, accounts[0])
+        );
         setProviderUsed(provider.name());
       } catch (e) {
         console.log(e);
-        setErrorMessage("Please install MassaStation and the plugin Massa Wallet in it and refresh.");
+        setErrorMessage(
+          "Please install MassaStation and the plugin Massa Wallet in it and refresh."
+        );
       }
     };
 
@@ -105,23 +118,30 @@ function App() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   return (
     <div className="bodyContent">
       {errorMessage && <div>{errorMessage}</div>}
       {account && (
         <div className="wrapper">
           <div>
-            <button className="connect-button" onClick={initialize}>Switch provider</button>
+            <button className="connect-button" onClick={initialize}>
+              Switch provider
+            </button>
           </div>
           <h1 className="messageToDisplay">Age Example: React</h1>
           <div>
             <h3>Your address: {account.address()}</h3>
             <div className="innerWrapper">
-              <input type="text" value={inputName} placeholder="name" onChange={(e) => {
-                setInputName(e.target.value);
-                setAgeResult(null);
-              }} />
+              <input
+                type="text"
+                value={inputName}
+                placeholder="name"
+                onChange={(e) => {
+                  setInputName(e.target.value);
+                  setAgeResult(null);
+                }}
+              />
               <input
                 type="number"
                 placeholder="age"
@@ -129,19 +149,19 @@ function App() {
                 onChange={(e) => setInputAge(parseInt(e.target.value))}
               />
               <button onClick={callChangeAge(inputAge)}>
-                Change age of {
-                  inputName === "" ? "..." : inputName}
+                Change age of {inputName === "" ? "..." : inputName}
               </button>
             </div>
             {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
             <div className="innerWrapper">
               <button onClick={callGetAge}>
-                Get age of {
-                  inputName === "" ? "..." : inputName}
+                Get age of {inputName === "" ? "..." : inputName}
               </button>
-              {
-                ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
-              }
+              {ageResult !== null ? (
+                <div>
+                  Age of {inputName} is {ageResult}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
