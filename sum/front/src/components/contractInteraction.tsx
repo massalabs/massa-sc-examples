@@ -52,9 +52,9 @@ export default function ContractInteraction() {
                     await initializeProvider('BEARBY');
                 } catch (e) {
                     setErrorMessage("Please install massa station and the wallet plugin of Massa Labs and refresh.");
-                } finally {
-                    setLoadingGlobal(false);
                 }
+            } finally {
+                setLoadingGlobal(false);
             }
         };
         bootstrap();
