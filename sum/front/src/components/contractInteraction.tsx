@@ -5,7 +5,7 @@ import Loader from "./Loader";
 
 const MAX_GAS = BigInt(1000000);
 const CONTRACT_ADDRESS =
-    "AS12YrZxFisWZCKJpXLEYfSYzrSCS4bjoyKGeaviQMmb5zqfgXaML";
+    "AS1zizBjrZHbaMjCFFaxuJY2MCuvUMxogSxFk9Ao6sqkSv6wDgkk";
 
 export default function ContractInteraction() {
     const [errorMessage, setErrorMessage] = useState<any>("");
@@ -37,7 +37,6 @@ export default function ContractInteraction() {
         if (accounts.length === 0) {
             throw new Error("No accounts found");
         }
-
         setAccount(accounts[0]);
         setClient(await ClientFactory.fromWalletProvider(targetProvider, accounts[0]));
     };
@@ -46,6 +45,7 @@ export default function ContractInteraction() {
         const bootstrap = async () => {
             try {
                 await initializeProvider('MASSASTATION');
+                setLoadingGlobal(false);
             } catch (e) {
                 console.log(e);
                 try {
@@ -147,6 +147,7 @@ export default function ContractInteraction() {
                     <h4 className="py-4">Enter Numbers</h4>
                     <input
                         type="number"
+                        id="number1"
                         className="input"
                         placeholder="Enter number 1"
                         value={num1}
@@ -154,12 +155,14 @@ export default function ContractInteraction() {
                     />
                     <input
                         type="number"
+                        id="number2"
                         className="input"
                         placeholder="Enter number 2"
                         value={num2}
                         onChange={handleNum2Change}
                     />
                     <button
+                        id="calculateSumBtn"
                         className="button flex justify-center items-center border border-green-500 p-3 text-green-500 rounded-md hover:bg-green-500 hover:text-white disabled:bg-secondary"
                         onClick={calculateSum}
                         disabled={loading}
@@ -169,7 +172,7 @@ export default function ContractInteraction() {
                 </div>
                 {result && (
                     <div className="py-4">
-                        <h4>Result: {result}</h4>
+                        <h4 id="result">Result: {result}</h4>
                     </div>
                 )}
             </div>
