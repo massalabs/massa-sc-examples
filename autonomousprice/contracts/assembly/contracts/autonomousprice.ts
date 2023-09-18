@@ -64,9 +64,17 @@ function generateRandomIncrease(base: u64): u64 {
   return base + increase;
 }
 
-export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
-  assert(callerHasWriteAccess(), 'Caller is not allowed');
+export function updatePrice(_: StaticArray<u8>): StaticArray<u8> {
+  assert(Storage.has(PRICE_KEY), 'Price is not set');
+  let currentPrice = u64.parse(Storage.get(PRICE_KEY));
+  const newPrice = generateRandomIncrease(currentPrice);
+  Storage.set(PRICE_KEY, newPrice.toString());
+  generateEvent(`🎉 Price updated manually: ${newPrice.toString()}`);
+  return u64ToBytes(newPrice);
+}
 
+function setPrice(_: StaticArray<u8>): StaticArray<u8> {
+  assert(callerHasWriteAccess(), 'Caller is not allowed');
   let currentPrice: u64;
   if (!Storage.has(PRICE_KEY)) {
     // Set initial autonomousprice price
@@ -78,17 +86,14 @@ export function setPrice(_: StaticArray<u8>): StaticArray<u8> {
   }
 
   const newPrice = generateRandomIncrease(currentPrice);
-
   Storage.set(PRICE_KEY, newPrice.toString());
   generateEvent(`🎉 Price updated: ${newPrice.toString()}`);
-
   sendFuturOperation();
-
   return u64ToBytes(newPrice);
 }
 
 export function getPrice(_: StaticArray<u8>): StaticArray<u8> {
-  assert(!Storage.has(PRICE_KEY), 'Price is not set');
+  // assert(!Storage.has(PRICE_KEY), 'Price is not set');
 
   const price = u64.parse(Storage.get(PRICE_KEY));
   generateEvent(`current price is ${price.toString()}`);

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Args, IClient, ClientFactory, utils, Client } from "@massalabs/massa-web3";
+import { Args, IClient, ClientFactory, IEventFilter, Client, ISlot, ON_MASSA_EVENT_DATA, IEvent, EventPoller, ON_MASSA_EVENT_ERROR } from "@massalabs/massa-web3";
 import { IAccount, providers } from "@massalabs/wallet-provider";
-import pollAsyncEvents, { IEventPollerResult } from "./pollAsyncEvent";
 
-
+const MASSA_EXEC_ERROR = "massa_execution_error";
 const MAX_GAS = BigInt(1000000);
-const CONTRACT_ADDRESS = "AS1zWJmf49TDrREj96h3XLcQxx3jf6hmPJqr1DN5t9XoFbvp3DN";
+const CONTRACT_ADDRESS = "AS12PyM4EZ2TptSoEHEbefz4b8sPbLudR2QsgeJ39Cj8f3fNchQd2";
 
 export default function AutonomousPriceInteraction() {
     const [errorMessage, setErrorMessage] = useState<string>("");
@@ -13,6 +12,7 @@ export default function AutonomousPriceInteraction() {
     const [account, setAccount] = useState<IAccount | null>(null);
 
     const [price, setPrice] = useState<string>("");
+    const [op_id, setOpId] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingGlobal, setLoadingGlobal] = useState(true);
 
@@ -37,13 +37,9 @@ export default function AutonomousPriceInteraction() {
                     setErrorMessage("No accounts found");
                     return;
                 }
-                console.log(accounts);
-                setAccount(accounts[1]);
-                // if (!account || !massastationProvider) {
-                //     return;
-                // }
-                const client = await ClientFactory.fromWalletProvider(massastationProvider, accounts[1]);
-                setClient(client);
+
+                setAccount(accounts[0]);
+                setClient(await ClientFactory.fromWalletProvider(massastationProvider, accounts[0]));
             } catch (e) {
                 setErrorMessage("Please install Massa Station and the wallet plugin of Massa Labs and refresh.");
             } finally {
@@ -62,7 +58,7 @@ export default function AutonomousPriceInteraction() {
                 maxGas: MAX_GAS,
                 targetAddress: CONTRACT_ADDRESS,
                 targetFunction: "getPrice",
-                parameter: new Args().serialize(),
+                parameter: new Args().addString('hi').serialize(),
             });
 
             const retrievedPrice = new Args(res.returnValue).nextI64();
@@ -82,19 +78,18 @@ export default function AutonomousPriceInteraction() {
 
             let op_id = await client.smartContracts().callSmartContract({
                 targetAddress: CONTRACT_ADDRESS,
-                functionName: "setPrice",
-                parameter: new Args().addString('toto').serialize(),
+                functionName: "updatePrice",
+                parameter: new Args().addString('eee').serialize(),
                 maxGas: MAX_GAS,
-                coins: BigInt(1),
-                fee: BigInt(50),
+                coins: BigInt(50),
+                fee: BigInt(2),
             });
-
-            const { isError, eventPoller, events }: IEventPollerResult = await utils.time.withTimeoutRejection<IEventPollerResult>(
-                pollAsyncEvents(client, op_id),
-                10000,
-            );
-            console.log(events);
-            // await fetchPrice();
+            setOpId(op_id);
+            fetchEvents(client, { original_operation_id: op_id } as IEventFilter).then((_events) => {
+                fetchPrice();
+            }).catch((error) => {
+                console.log(error);
+            });
         } catch (error) {
             setErrorMessage("Failed to set random price.");
             console.error(error);
@@ -102,6 +97,51 @@ export default function AutonomousPriceInteraction() {
             setLoading(false);
         }
     };
+
+    function fetchEvents(web3Client: Client, filter: IEventFilter, pollInterval?: number): Promise<Array<IEvent>> {
+        return new Promise((resolve, reject) => {
+            web3Client
+                .publicApi()
+                .getNodeStatus()
+                .then((nodeStatusInfo) => {
+                    if (!filter.start) {
+                        const start = nodeStatusInfo.last_slot;
+                        start.period = start.period - 1000;
+                        filter.start = start;
+                    }
+
+                    if (!pollInterval) {
+                        pollInterval = 1000;
+                    }
+
+                    const eventPoller = EventPoller.startEventsPolling(
+                        filter,
+                        pollInterval,
+                        web3Client
+                    );
+
+                    eventPoller.on(ON_MASSA_EVENT_DATA, (events) => {
+                        let errorEvents = events.filter((e: any) =>
+                            e.data.includes(MASSA_EXEC_ERROR)
+                        );
+                        eventPoller.stopPolling();
+                        if (errorEvents.length > 0) {
+                            reject(errorEvents);
+                        } else {
+                            resolve(events);
+                        }
+                    });
+
+                    eventPoller.on(ON_MASSA_EVENT_ERROR, (error) => {
+                        eventPoller.stopPolling();
+                        reject(error);
+                    });
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
 
     if (loadingGlobal) {
         return (
@@ -126,13 +166,14 @@ export default function AutonomousPriceInteraction() {
                     <h3>Price will be randomly changed by +/- 5% automatically</h3>
 
                     <div className="py-4">
-                        <button onClick={setRandomPrice}>
+                        <button id="btnSetRdm" onClick={setRandomPrice}>
                             Set Random Price
                         </button>
+                        { (op_id && <span id="op" style={{marginLeft : 5}}>Op id = {op_id} </span>)}
                     </div>
 
                     <div className="py-4">
-                        <button onClick={fetchPrice}>
+                        <button id="btnGetPrice" onClick={fetchPrice}>
                             Get Current Price
                         </button>
                     </div>
@@ -141,7 +182,7 @@ export default function AutonomousPriceInteraction() {
                         {loading ? (
                             <div className="spinner"></div>
                         ) : (
-                            price && <h4>Current Price: {price}</h4>
+                            price && <h4 id="price">Current Price: {price}</h4>
                         )}
                     </div>
                 </div>
