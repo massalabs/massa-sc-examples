@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { IAccount, providers } from "@massalabs/wallet-provider"
 import { ClientFactory, bytesToU32, Args, Client } from "@massalabs/massa-web3";
 
-const CONTRACT_ADDRESS = "AS1284LtJxDNyYTMLioPtbnsF3h3xAXMFnDF1kBrKBjN4WDSdbzsw";
+const CONTRACT_ADDRESS = "AS1kCSoFbuffyxF9hVqtacZU3jjA7K2cmqtAJwQgpxGN9ms79ina";
 
 function App() {
   const [errorMessage, setErrorMessage] = useState<any>("");
@@ -116,31 +116,32 @@ function App() {
           </div>
           <h1 className="messageToDisplay">Age Example: React</h1>
           <div>
-            <h3>Your address: {account.address()}</h3>
+            <h3 id="address">Your address: {account.address()}</h3>
             <div className="innerWrapper">
-              <input type="text" value={inputName} placeholder="name" onChange={(e) => {
+              <input id="name" type="text" value={inputName} placeholder="name" onChange={(e) => {
                 setInputName(e.target.value);
                 setAgeResult(null);
               }} />
               <input
+                id="age"
                 type="number"
                 placeholder="age"
                 value={inputAge}
                 onChange={(e) => setInputAge(parseInt(e.target.value))}
               />
-              <button onClick={callChangeAge(inputAge)}>
+              <button id="btnChangeAge" onClick={callChangeAge(inputAge)}>
                 Change age of {
                   inputName === "" ? "..." : inputName}
               </button>
             </div>
-            {lastOpId && <h4>Last Op id: {lastOpId}</h4>}
+            {lastOpId && <h4 id="lastOpId">Last Op id: {lastOpId}</h4>}
             <div className="innerWrapper">
-              <button onClick={callGetAge}>
+              <button id="btnGetAge" onClick={callGetAge}>
                 Get age of {
                   inputName === "" ? "..." : inputName}
               </button>
               {
-                ageResult !== null ? <div>Age of {inputName} is {ageResult}</div> : null
+                ageResult !== null ? <div id="result">Age of {inputName} is {ageResult}</div> : null
               }
             </div>
           </div>
