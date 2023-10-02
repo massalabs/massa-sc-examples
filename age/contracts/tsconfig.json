@@ -7,10 +7,16 @@
         "strict": true,
         "sourceMap": true,
         "target": "es2022",
-        "types": ["node"]
+        "types": [
+            "node"
+        ]
     },
-    "include": ["./*.ts"],
-    "exclude": ["node_modules"],
+    "include": [
+        "./*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ],
     "experimentalDecorators": true,
     "ts-node": {
         "esm": true,

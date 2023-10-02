@@ -88,12 +88,64 @@ button {
 }
 
 button:hover {
-  background-color: rgb(73, 47, 47);
+  background-color: rgba(159, 26, 26, 0.565);
+
 }
 
-.connect-button {
-  position: fixed;
-  width: 15%;
-  top: 5%;
-  right: 5%;
+button:disabled {
+  background-color: rgb(235, 235, 235);
+  color: black;
+  border: 3px solid rgb(159, 26, 26);
+  cursor: not-allowed;
+}
+
+.select-provider{
+  display: flex;
+  gap: 1rem;
+  width: 50%;
+  justify-content: center;
+  position: absolute;
+  top:1rem;
+  right: 1rem;
+}
+
+
+.info-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.action-wrapper{
+  border: 1px solid #ddd; 
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.input-wrapper{
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.action-button-wrapper{
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.error-message{
+  color: red;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  margin: 2rem;
 }
