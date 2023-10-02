@@ -1,6 +1,17 @@
-import { Args } from '@massalabs/as-types';
+import { Args, bytesToF32, bytesToString } from '@massalabs/as-types';
 import { changeAge, constructor, getAge } from '../contracts/main';
-import { resetStorage } from '@massalabs/massa-as-sdk';
+import { mockAdminContext, resetStorage } from '@massalabs/massa-as-sdk';
+const name = 'alice';
+const age: u32 = 42;
+
+describe('constructor tests', () => {
+  test('Storage correctly initialized', () => {
+    mockAdminContext(true);
+    constructor([]);
+    const result = getAge(new Args().add(name).serialize());
+    expect(bytesToString(result)).toStrictEqual('1');
+  });
+});
 
 describe('changeAge tests', () => {
   beforeEach(() => {
@@ -13,12 +24,7 @@ describe('changeAge tests', () => {
 
   test('Arguments ok', () => {
     const result = (): void => {
-      changeAge(
-        new Args()
-          .add('alice')
-          .add(42 as u32)
-          .serialize(),
-      );
+      changeAge(new Args().add(name).add(age).serialize());
     };
 
     expect(result).not.toThrow('Missing name argument.');
@@ -26,48 +32,25 @@ describe('changeAge tests', () => {
   });
 
   test('Name missing', () => {
-    const result = (): void => {
-      changeAge(new Args().add(42 as u32).serialize());
-    };
-
-    expect(result).toThrow('Missing name argument.');
+    const call = (): void => changeAge(new Args().add(age).serialize());
+    expect(call).toThrow('Missing name argument.');
   });
 
   test('Age missing', () => {
-    const result = (): void => {
-      changeAge(new Args().add('alice').serialize());
-    };
-
-    expect(result).toThrow('Missing age argument.');
+    const call = (): void => changeAge(new Args().add(name).serialize());
+    expect(call).toThrow('Missing age argument.');
   });
 });
 
 describe('getAge tests', () => {
   test('Name not exists', () => {
-    const result = getAge(new Args().add('alice').serialize());
-
-    expect(result).toStrictEqual([]);
+    const call = (): void => changeAge(new Args().add(name).serialize());
+    expect(call).toThrow('No age found for ' + name);
   });
 
   test('Name exists', () => {
-    changeAge(
-      new Args()
-        .add('alice')
-        .add(42 as u32)
-        .serialize(),
-    );
-    const result = getAge(new Args().add('alice').serialize());
-
-    expect(result).toStrictEqual(new Args().add(42 as u32).serialize());
-  });
-});
-
-describe('constructor tests', () => {
-  test('Storage correctly initialized', () => {
-    constructor(new Args().add('A31242RFFFZ32R23F1SDF').serialize());
-
-    const result = getAge(new Args().add('alice').serialize());
-
-    expect(result).toStrictEqual(new Args().add(42 as u32).serialize());
+    changeAge(new Args().add(name).add(age).serialize());
+    const result = getAge(new Args().add(name).serialize());
+    expect(bytesToString(result)).toStrictEqual(age.toString());
   });
 });
