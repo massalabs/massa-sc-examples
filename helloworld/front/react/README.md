@@ -1,61 +1,27 @@
-# Massa Front-End Example: helloworld
+# React + TypeScript + Vite
 
-Welcome to the repository for the helloworld smart contract's front-end application, developed on the Massa platform. For a comprehensive understanding of Massa smart contracts, refer to our [documentation](https://docs.massa.net/en/latest/web3-dev/massa-web3.html).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Setup & Installation
+Currently, two official plugins are available:
 
-### Prerequisites
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
--   Ensure you have NodeJs installed on your system. Follow the instructions provided [here](https://nodejs.org/en/download/) for installation.
+## Expanding the ESLint configuration
 
--   Before diving in, ensure you have installed MassaStation on your system. Follow the instructions provided [here](https://github.com/massalabs/station/blob/main/INSTALLATION.md) for installation.
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-### Clone the Repository
+- Configure the top-level `parserOptions` property like this:
 
-After setting up MassaStation, clone this repository
-`git clone git@github.com:massalabs/massa-sc-examples.git`
+```js
+   parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+   },
+```
 
-### Install Dependencies
-
-Install the required dependencies with the following command:
-`npm install`
-
-## Running the Application
-
-The following npm commands are available to run in your project directory:
-
-### Start the Application
-
-`npm start`
-
-This command runs the application in development mode. Open [http://localhost:3000](http://localhost:3000) to view the application in your browser. The application reloads if you make changes to the source files.
-
-### Run Tests
-
-`npm test`
-
-This command launches the test runner in interactive watch mode. For more details, check out the Create React App [documentation on running tests](https://facebook.github.io/create-react-app/docs/running-tests).
-
-### Build for Production
-
-`npm run build`
-
-This command builds the application for production use, optimizing for the best performance. The build is minified and includes hashed filenames. For deployment instructions, refer to the Create React App [deployment guide](https://facebook.github.io/create-react-app/docs/deployment).
-
-### Ejecting
-
-`npm run eject`
-
-**Warning:** Ejecting is a permanent operation!
-
-If the build tool and configuration do not meet your project needs, you can use `npm run eject` to expose all the configuration files and dependencies. This allows for full customization. Remember, this action is irreversible!
-
-## Additional Resources
-
-Further your knowledge on Create React App by visiting the [official documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-For a deeper dive into React, check out the [React documentation](https://reactjs.org/).
-
-### Troubleshooting
-
-In case you encounter issues with the `npm run build` command, refer to this guide: [Troubleshooting 'npm run build' fails to minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify).
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
