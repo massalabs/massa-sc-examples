@@ -1,4 +1,4 @@
-import { Args, bytesToF32, bytesToString } from '@massalabs/as-types';
+import { Args, bytesToString } from '@massalabs/as-types';
 import { changeAge, constructor, getAge } from '../contracts/main';
 import { mockAdminContext, resetStorage } from '@massalabs/massa-as-sdk';
 const name = 'alice';
