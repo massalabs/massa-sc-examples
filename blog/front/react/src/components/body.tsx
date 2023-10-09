@@ -12,7 +12,7 @@ import { ProviderInfo } from "./ProviderInfo";
 export default function Body() {
   const [posts, setPosts] = useState<Post[]>([]);
   const { client } = useWeb3();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -20,6 +20,7 @@ export default function Body() {
 
   const fetchPosts = async () => {
     if (!client) return;
+    setLoading(true);
     try {
       const result = await getPosts(client);
       const posts = bytesToSerializableObjectArray<Post>(
@@ -35,9 +36,12 @@ export default function Body() {
       <div className="flex-col">
         <ProviderSelect />
         <ProviderInfo />
-        <AddPost fetchPosts={fetchPosts} />
-        <BlogPosts posts={posts} loading={loading} />
-        {/* <ContractInteraction /> */}
+        {client && (
+          <>
+            <AddPost fetchPosts={fetchPosts} />
+            <BlogPosts posts={posts} loading={loading} />
+          </>
+        )}
       </div>
     </div>
   );

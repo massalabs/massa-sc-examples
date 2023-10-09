@@ -1,7 +1,14 @@
 import { useWeb3 } from "../context/web3Context";
 
 export const ProviderInfo = () => {
-  const { providerName, providerAddress } = useWeb3();
+  const { providerName, providerAddress, errorMessage } = useWeb3();
+
+  if (errorMessage)
+    return (
+      <div className="flex flex-col justify-center items-center p-4 text-left text-red-500">
+        {errorMessage}
+      </div>
+    );
 
   return (
     <div className="flex flex-col justify-center items-center p-4 text-left ">

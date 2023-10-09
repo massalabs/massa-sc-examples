@@ -11,6 +11,7 @@ const Web3Context = createContext<
       providerAddress?: string;
       providerName?: string;
       initialize: (providerName: Provider) => void;
+      errorMessage?: string;
     }
   | undefined
 >(undefined);
@@ -67,6 +68,7 @@ export const Web3Provider: FC<TabProviderProps> = ({ children }) => {
         providerAddress,
         providerName,
         initialize,
+        errorMessage,
       }}
     >
       {children}
