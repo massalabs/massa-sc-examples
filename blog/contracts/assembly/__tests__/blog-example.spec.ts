@@ -5,7 +5,7 @@ import {
   bytesToString,
   bytesToSerializableObjectArray,
 } from '@massalabs/as-types';
-import { Storage, mockAdminContext } from '@massalabs/massa-as-sdk';
+import { mockAdminContext } from '@massalabs/massa-as-sdk';
 import {
   addPost,
   constructor,
