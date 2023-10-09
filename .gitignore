@@ -4,3 +4,4 @@ node_modules
 ledger.json
 yarn.lock
 .vscode
+screenshots/

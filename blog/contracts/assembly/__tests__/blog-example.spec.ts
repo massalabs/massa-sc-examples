@@ -1,66 +1,57 @@
-import { NoArg, Args } from '@massalabs/as-types';
-import * as main from '../contracts/main';
-import { Storage } from '@massalabs/massa-as-sdk';
+// TODO: Tags should be an array of strings
+// TODO: Add pagination
 
-// The describe function is used to group related tests together.
-// In this case, we're grouping tests related to the `main` function.
-describe('main function', () => {
-  // The it function is used to define individual test cases.
-  // In this case, we're testing that the `constructor` function doesn't throw an error when called with no arguments.
-  it('should not throw with no arguments', () => {
-    // We're using the expect function to make an assertion about the behavior of the `constructor` function.
-    // Specifically, we're expecting that calling `main` with serialized `constructor` will not throw an error.
-    expect(
-      // Using the `() => void` function type is mandatory according to the `as-pect` documentation.
-      () => {
-        main.constructor(NoArg.serialize());
-      },
-    ).not.toThrow();
+import {
+  bytesToString,
+  bytesToSerializableObjectArray,
+} from '@massalabs/as-types';
+import { mockAdminContext } from '@massalabs/massa-as-sdk';
+import {
+  addPost,
+  constructor,
+  getNumberPosts,
+  getPosts,
+} from '../contracts/main';
+import { Post } from '../contracts/post';
+
+const post1 = new Post('My Post', 'Me', '19/09/2021', 'tag2', 'My content');
+const post2 = new Post('My Post 2', 'Me', '20/09/2021', 'tag2', 'My content 2');
+const post3 = new Post('Long', 'Me', '21/09/2021', 'tag2', 'a'.repeat(301));
+
+describe('constructor tests', () => {
+  test('Storage correctly initialized', () => {
+    mockAdminContext(true);
+    constructor([]);
+    const numberBlogPosts = bytesToString(getNumberPosts([]));
+    expect(numberBlogPosts).toStrictEqual('0');
+    const posts = bytesToSerializableObjectArray<Post>(getPosts([])).unwrap();
+    expect(posts).toStrictEqual([]);
   });
 });
 
-// Testing the _blogKey function with a valid post index
-describe('Blog Key', () => {
-  test('blogkey', () => {
-    expect<string>(main.blogKey('1')).toBe('POST_1');
+describe('Posts', () => {
+  test('addPost', () => {
+    addPost(post1.serialize());
+    const numberBlogPosts = bytesToString(getNumberPosts([]));
+    expect(numberBlogPosts).toStrictEqual('1');
+    const posts = bytesToSerializableObjectArray<Post>(getPosts([])).unwrap();
+    expect(posts).toStrictEqual([post1]);
   });
-});
 
-// Testing the post function with an invalid post
-describe('Post function with invalid post', () => {
-  test('post', () => {
-    expect(() => {
-      main.post(
-        new Args()
-          // the function expects a post index as a string, but we're passing a number
-          .add(1 as u32)
-          .serialize(),
-      );
-    }).toThrow('Argument invalid');
+  test('getPosts', () => {
+    addPost(post2.serialize());
+    const numberBlogPosts = bytesToString(getNumberPosts([]));
+    expect(numberBlogPosts).toStrictEqual('2');
+    const posts = bytesToSerializableObjectArray<Post>(getPosts([])).unwrap();
+    expect(posts).toStrictEqual([post1, post2]);
   });
-});
 
-describe('Delete Post function with valid post index', () => {
-  test('delete existing post', () => {
-    // Using a valid post index : 1
-    const postKey = main.blogKey('1');
-    const args = new Args();
-    args.add('1' as string);
-    main.deletePost(args.serialize());
-    const deletedPost = Storage.get<string>(postKey);
-    expect<string>(deletedPost).toBe(''); // Check if the post has been deleted
-  });
-});
+  // test content too long
+  test('addPost content too long', () => {
+    const call = (): void => {
+      addPost(post3.serialize());
+    };
 
-describe('Delete Post function with invalid post index', () => {
-  test('delete existing post', () => {
-    expect(() => {
-      main.deletePost(
-        new Args()
-          // the function expects a post index as a string, but we're passing a number
-          .add(1 as u32)
-          .serialize(),
-      );
-    }).toThrow('Argument invalid');
+    expect(call).toThrow();
   });
 });
