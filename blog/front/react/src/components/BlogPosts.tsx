@@ -1,75 +1,31 @@
-import { useEffect, useState } from "react";
-import { useWeb3 } from "../context/web3Context";
-import { getPosts } from "../web3Call/posts";
-import { bytesToSerializableObjectArray } from "@massalabs/massa-web3";
 import { Post } from "../const/post";
 
-const fakePosts = [
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-  new Post(
-    "Hello world",
-    "This is my first post",
-    "2021-09-01",
-    "Massa",
-    "Hello world"
-  ),
-];
-
-export const BlogPosts = () => {
-  const [posts, setPosts] = useState<Post[]>(fakePosts);
-  const { client } = useWeb3();
-
-  useEffect(() => {
-    // fetchPosts();
-  }, [client]);
-
-  const fetchPosts = async () => {
-    if (!client) return;
-    const result = await getPosts(client);
-    const posts = bytesToSerializableObjectArray<Post>(
-      result.returnValue,
-      Post
+export const BlogPosts = ({
+  posts,
+  loading,
+}: {
+  posts: Post[];
+  loading: boolean;
+}) => {
+  if (loading) {
+    return (
+      <div className="bg-white w-full h-96 flex flex-col justify-center items-center">
+        <h2 className="text-4xl font-bold">Fetching Posts</h2>
+        <span className="loading loading-infinity loading-lg"></span>
+      </div>
     );
-    setPosts(posts);
-  };
-
+  }
   return (
     <div className="flex flex-col px-4 w-full">
       <div className="flex flex-col justify-center items-start w-full lg:px-10 pb-40">
+        {posts.length === 0 && (
+          <div className="flex flex-col justify-center items-center w-full">
+            <h1 className="text-4xl font-bold">No posts yet</h1>
+            <p className="text-gray-700 text-regular text-base pt-4">
+              Be the first to add a post
+            </p>
+          </div>
+        )}
         {posts.map((post, i) => (
           <div key={post.title + i} className="w-full">
             <div className="divider"></div>

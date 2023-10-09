@@ -6,30 +6,61 @@ import { useState } from "react";
 import { Post } from "../const/post";
 import { addPost } from "../web3Call/posts";
 import { useWeb3 } from "../context/web3Context";
+import { getCurrentDate } from "../helpers";
+import { EOperationStatus } from "@massalabs/massa-web3";
 
-export const AddPost = () => {
+export const AddPost = ({ fetchPosts }: { fetchPosts: () => void }) => {
   const { client } = useWeb3();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
   const [author, setAuthor] = useState("");
-  const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    if (title === "" || content === "" || author === "" || !client) return;
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      if (title === "" || content === "" || author === "" || !client) return;
 
-    const newPost = new Post(title, author, date, tags.toString(), content);
+      const newPost = new Post(title, author, getCurrentDate(), "", content);
 
-    addPost(client, newPost);
+      const opId = await addPost(client, newPost);
 
-    setTitle("");
-    setContent("");
-    setAuthor("");
-    setDate("");
-    setTags([]);
-    setOpen(false);
+      const specSuccess = client
+        .smartContracts()
+        .awaitRequiredOperationStatus(
+          opId,
+          EOperationStatus.SPECULATIVE_SUCCESS
+        );
+
+      const specError = client
+        .smartContracts()
+        .awaitRequiredOperationStatus(opId, EOperationStatus.SPECULATIVE_ERROR);
+      const finalResult = await Promise.race([specSuccess, specError]);
+
+      if (finalResult === EOperationStatus.SPECULATIVE_SUCCESS) {
+        console.log("Post added");
+      }
+
+      if (finalResult === EOperationStatus.SPECULATIVE_ERROR) {
+        console.log("Post not added");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await fetchPosts();
+      setLoading(false);
+      setOpen(false);
+    }
   };
+  if (loading) {
+    return (
+      <div className=" absolute bg-white w-full h-full top-0 left-0 z-10 px-4 py-8 flex flex-col justify-center items-center">
+        <h2 className="text-4xl font-bold">Adding Post</h2>
+        <span className="loading loading-infinity loading-lg"></span>
+      </div>
+    );
+  }
 
   if (open) {
     return (

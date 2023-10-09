@@ -6,7 +6,7 @@ export const MASSA_EXEMPLE = {
 };
 
 export const CONTRACT_ADDRESS =
-  "AS1oEMKF9tJHtCaUVs1r3erQb2v1ARaxvvfuv6neHTgGatkBXXj";
+  "AS1E4kzewFh9b58rrqAigB8HJkPNAEFuBK87qtEFKDLsXnfYsEao";
 
 export enum Provider {
   MASSASTATION = "MASSASTATION",
