@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
-import { Args, fromMAS } from '@massalabs/massa-web3';
+import { Args, MAX_GAS_DEPLOYMENT, fromMAS } from '@massalabs/massa-web3';
 
 dotenv.config();
 
@@ -36,7 +36,7 @@ const __dirname = path.dirname(path.dirname(__filename));
       } as ISCData,
     ],
     0n,
-    4_200_000_000n,
+    MAX_GAS_DEPLOYMENT,
     true,
   );
   process.exit(0);
