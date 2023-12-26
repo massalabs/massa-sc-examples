@@ -81,7 +81,7 @@ Keep in mind that many false positives will remain undetected by ESLint such as 
 Prerequisites :
 
 -   You must add a .env file at the root of the repository with the following keys set to valid values :
-    -   WALLET_PRIVATE_KEY="wallet_private_key"
+    -   WALLET_PRIVATE_KEY="WALLET_PRIVATE_KEY"
     -   JSON_RPC_URL_PUBLIC=https://buildnet.massa.net/api/v2:33035
     -   JSON_RPC_URL_PRIVATE=https://buildnet.massa.net/api/v2:33035
 

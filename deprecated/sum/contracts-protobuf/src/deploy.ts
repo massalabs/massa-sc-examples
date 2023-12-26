@@ -15,9 +15,9 @@ if (!publicApi) {
 }
 
 // Get the secret key for the wallet to be used for the deployment from the environment variables
-const secretKey = process.env.WALLET_SECRET_KEY;
+const secretKey = process.env.WALLET_PRIVATE_KEY;
 if (!secretKey) {
-  throw new Error('Missing WALLET_SECRET_KEY in .env file');
+  throw new Error('Missing WALLET_PRIVATE_KEY in .env file');
 }
 
 // Create an account using the private key

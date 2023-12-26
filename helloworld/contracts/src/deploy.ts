@@ -3,7 +3,12 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
-import { Args, IEvent, fromMAS } from '@massalabs/massa-web3';
+import {
+  Args,
+  IEvent,
+  MAX_GAS_DEPLOYMENT,
+  fromMAS,
+} from '@massalabs/massa-web3';
 
 // Load .env file content into process.env
 dotenv.config();
@@ -50,7 +55,7 @@ const __dirname = path.dirname(path.dirname(__filename));
       // Additional smart contracts can be added here for deployment
     ],
     0n, // fees for deployment
-    4_200_000_000n, // max gas for deployment
+    MAX_GAS_DEPLOYMENT,
     true, // if true, waits for the first event before returning
   );
   process.exit(0); // terminate the process after deployment(s)
