@@ -41,6 +41,9 @@ export class EventListener {
       }
       const currentNodeStatus = await client.publicApi().getNodeStatus();
       const latestSlot = currentNodeStatus.last_slot;
+
+      if (!latestSlot) throw new Error("Could not fetch latest slot");
+
       latestSlot.period -= 3;
 
       const filter: EventFilter = {

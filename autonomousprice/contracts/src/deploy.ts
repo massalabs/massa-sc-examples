@@ -9,9 +9,9 @@ import {
 
 // Get environment variables
 const publicApi = getEnvVariable('JSON_RPC_URL_PUBLIC');
-const secretKey = getEnvVariable('WALLET_SECRET_KEY');
+const secretKey = getEnvVariable('WALLET_PRIVATE_KEY');
 // Define deployment parameters
-const chainId = CHAIN_ID.LabNet; // Choose the chain ID corresponding to the network you want to deploy to
+const chainId = CHAIN_ID.BuildNet; // Choose the chain ID corresponding to the network you want to deploy to
 const maxGas = MAX_GAS_DEPLOYMENT; // Gas for deployment Default is the maximum gas allowed for deployment
 const fees = 0n; // Fees to be paid for deployment. Default is 0
 const waitFirstEvent = true;
