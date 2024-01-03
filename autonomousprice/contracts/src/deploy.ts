@@ -1,43 +1,50 @@
-import * as dotenv from 'dotenv';
-import { readFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { getByteCode, getEnvVariable } from './utils';
 import { deploySC, WalletClient, ISCData } from '@massalabs/massa-sc-deployer';
-import { Args, fromMAS } from '@massalabs/massa-web3';
+import {
+  Args,
+  fromMAS,
+  MAX_GAS_DEPLOYMENT,
+  CHAIN_ID,
+} from '@massalabs/massa-web3';
 
-dotenv.config();
+// Get environment variables
+const publicApi = getEnvVariable('JSON_RPC_URL_PUBLIC');
+const secretKey = getEnvVariable('WALLET_SECRET_KEY');
+// Define deployment parameters
+const chainId = CHAIN_ID.LabNet; // Choose the chain ID corresponding to the network you want to deploy to
+const maxGas = MAX_GAS_DEPLOYMENT; // Gas for deployment Default is the maximum gas allowed for deployment
+const fees = 0n; // Fees to be paid for deployment. Default is 0
+const waitFirstEvent = true;
 
-const publicApi = process.env.JSON_RPC_URL_PUBLIC;
-if (!publicApi) {
-  throw new Error('Missing JSON_RPC_URL_PUBLIC in .env file');
-}
-const privKey = process.env.WALLET_PRIVATE_KEY;
-if (!privKey) {
-  throw new Error('Missing WALLET_PRIVATE_KEY in .env file');
-}
+// Create an account using the private key
+const deployerAccount = await WalletClient.getAccountFromSecretKey(secretKey);
 
-const deployerAccount = await WalletClient.getAccountFromSecretKey(privKey);
-
-const __filename = fileURLToPath(import.meta.url);
-
-const __dirname = path.dirname(path.dirname(__filename));
-
+/**
+ * Deploy one or more smart contracts.
+ *
+ * @remarks
+ * Multiple smart contracts can be deployed by adding more objects to the array.
+ * In this example one contract located at 'build/main.wasm' is deployed with
+ * 0.1 MASSA and an argument 'Test'.
+ *
+ * After all deployments, it terminates the process.
+ */
 (async () => {
   await deploySC(
-    publicApi,
-    deployerAccount,
+    publicApi, // JSON RPC URL
+    deployerAccount, // account deploying the smart contract(s)
     [
       {
-        data: readFileSync(
-          path.join(__dirname, 'build', 'autonomousprice.wasm'),
-        ),
-        coins: fromMAS(0.1),
-        args: new Args().addString('Test'),
+        data: getByteCode('build', 'autonomousprice.wasm'), // smart contract bytecode
+        coins: fromMAS(1), // coins for deployment
+        args: new Args(), // arguments for deployment
       } as ISCData,
+      // Additional smart contracts can be added here for deployment
     ],
-    0n,
-    4_200_000_000n,
-    true,
+    chainId,
+    fees,
+    maxGas,
+    waitFirstEvent,
   );
-  process.exit(0);
+  process.exit(0); // terminate the process after deployment(s)
 })();
