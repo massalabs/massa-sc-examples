@@ -13,7 +13,6 @@ const PRICE_KEY = 'PRICE_KEY';
 const INIT_PRICE = 100000 as u64;
 const MAX_CHANGE = 20;
 
-
 export function constructor(_: StaticArray<u8>): StaticArray<u8> {
   // This line is important. It ensure that this function can't be called in the future.
   // If you remove this check someone could call your constructor function and reset your SC.
@@ -58,11 +57,9 @@ export function sendFutureOperation(): void {
 }
 
 export function updatePrice(_: StaticArray<u8>): StaticArray<u8> {
-
   const currentPrice = u64.parse(Storage.get(PRICE_KEY));
 
-  
-  const priceChange = unsafeRandom() % (2 * MAX_CHANGE + 1) - MAX_CHANGE;
+  const priceChange = (unsafeRandom() % (2 * MAX_CHANGE + 1)) - MAX_CHANGE;
 
   const newPrice = currentPrice + priceChange;
 
@@ -79,7 +76,9 @@ export function getPrice(_: StaticArray<u8>): StaticArray<u8> {
   assert(Storage.has(PRICE_KEY), 'Price is not set');
 
   const price = u64.parse(Storage.get(PRICE_KEY));
-  generateEvent(`current price is ${price.toString()} ${Storage.has(PRICE_KEY).toString()}`);
+  generateEvent(
+    `current price is ${price.toString()} ${Storage.has(PRICE_KEY).toString()}`,
+  );
 
   return u64ToBytes(price);
 }

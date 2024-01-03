@@ -4,9 +4,7 @@ import {
   getPrice,
   updatePrice,
 } from '../contracts/autonomousprice';
-import { mockAdminContext, resetStorage, set } from '@massalabs/massa-as-sdk';
-const name = 'alice';
-const age: u32 = 42;
+import { mockAdminContext, resetStorage } from '@massalabs/massa-as-sdk';
 
 describe('Autonomous price tests', () => {
   beforeEach(() => {

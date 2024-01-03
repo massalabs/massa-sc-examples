@@ -26,6 +26,6 @@ export function setMessage(args: StaticArray<u8>): void {
   generateEvent(message);
 }
 
-export function getMessage(args: StaticArray<u8>): StaticArray<u8> {
+export function getMessage(_: StaticArray<u8>): StaticArray<u8> {
   return stringToBytes(Storage.get(MESSAGE_KEY));
 }
