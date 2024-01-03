@@ -1,17 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  IClient,
-  ClientFactory,
-  IEvent,
-  MAX_GAS_CALL,
-} from "@massalabs/massa-web3";
+import { IClient, ClientFactory, IEvent } from "@massalabs/massa-web3";
 import { providers } from "@massalabs/wallet-provider";
 import { EventListener } from "./utils/pollEvent";
 
 const CONTRACT_ADDRESS = "AS1q1CBeirGUArRUnSFBCRZw3djf6k1jgeXcYfuTBiEFJ39ioxij";
 
 export default function AutonomousPriceInteraction() {
-  MAX_GAS_CALL;
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [client, setClient] = useState<IClient | null>(null);
   const [price, setPrice] = useState<string>("");
