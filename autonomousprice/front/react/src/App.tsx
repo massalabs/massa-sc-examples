@@ -3,7 +3,8 @@ import { IClient, ClientFactory, IEvent } from "@massalabs/massa-web3";
 import { providers } from "@massalabs/wallet-provider";
 import { EventListener } from "./utils/pollEvent";
 
-const CONTRACT_ADDRESS = "AS1q1CBeirGUArRUnSFBCRZw3djf6k1jgeXcYfuTBiEFJ39ioxij";
+const CONTRACT_ADDRESS =
+  "AS12cUgpyh56LW5xmDy7BA5xxKoyCoToRy919Fps8Uhcy8P3AEHoy";
 
 export default function AutonomousPriceInteraction() {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -25,9 +26,8 @@ export default function AutonomousPriceInteraction() {
     setPrice(match[0]);
   };
 
-  // setErrorMessage("");
   async function initializeEventListener(client: IClient) {
-    const listener = await EventListener.createInstance(
+    const listener = await EventListener.createInstanceWithDefaultFilter(
       CONTRACT_ADDRESS,
       client
     );
@@ -37,9 +37,6 @@ export default function AutonomousPriceInteraction() {
 
   useEffect(() => {
     if (client) initializeEventListener(client);
-    return () => {
-      listener?.stopPolling();
-    };
   }, [client]);
 
   async function initProvider() {
@@ -81,6 +78,7 @@ export default function AutonomousPriceInteraction() {
 
     return () => {
       listener?.unsubscribe(updatePrice);
+      listener?.stopPolling();
     };
   }, []);
 
