@@ -1,17 +1,23 @@
 import "./App.css";
 import "@massalabs/react-ui-kit/src/global.css";
 import { useEffect, useState } from "react";
-import { IAccount, providers } from "@massalabs/wallet-provider";
+import {
+  IAccount,
+  IProvider,
+  getProviderByName,
+} from "@massalabs/wallet-provider";
+
 import {
   ClientFactory,
   Args,
   Client,
   bytesToStr,
   fromMAS,
+  MAX_GAS_CALL,
 } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS =
-  "AS12S1xuDVdpTMGhs19iBo3HXRQqZZaFzSF1hkz1RdF5YxqqVvTnb";
+  "AS12L26PU9UoUs9gEsBZKMWUW4MKudKw2XtCKUZouXVFPiePPwfEX";
 const coins = 0.1;
 const operationDelayNotice =
   "If there's no change, please wait a few seconds before clicking again. Confirmation of the operation may take up to 16 seconds.";
@@ -24,21 +30,26 @@ enum Provider {
 
 function App() {
   const [client, setClient] = useState<Client>();
-  const [provider, setProvider] = useState<Provider>();
+  const [provider, setProvider] = useState<IProvider>();
   const [account, setAccount] = useState<IAccount>();
   const [lastOpId, setLastOpId] = useState<string>();
   const [ageResult, setAgeResult] = useState<string>();
   const [inputAge, setInputAge] = useState<number>(0);
   const [inputName, setInputName] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<any>();
+  const [observer, setObserver] = useState<any>();
+
+  function subscribeToAccountChanges() {
+    return provider?.listenAccountChanges(async (address: string) => {
+      console.log(address);
+      setClientAndAccount();
+    });
+  }
 
   const initialize = async (providerName: Provider) => {
     setErrorMessage(null);
-    const providersList = await providers(true, 10000);
-    const selectedProvider = providersList.find(
-      (p) => p.name() === providerName
-    );
 
+    const selectedProvider = await getProviderByName(providerName);
     if (!selectedProvider) {
       setErrorMessage(
         "Please install MassaStation and the plugin Massa Wallet in it and refresh."
@@ -46,21 +57,36 @@ function App() {
       return;
     }
 
-    const accounts = await selectedProvider.accounts();
+    setProvider(selectedProvider);
+  };
 
+  async function setClientAndAccount() {
+    if (!provider) return;
+    const accounts = await provider.accounts();
     if (accounts.length === 0) {
       setErrorMessage("No accounts found");
       return;
     }
-    setClient(
-      await ClientFactory.fromWalletProvider(selectedProvider, accounts[0])
-    );
-    setProvider(providerName);
+    const c = await ClientFactory.fromWalletProvider(provider, accounts[0]);
+    setClient(c);
     setAccount(accounts[0]);
-  };
+  }
+
+  useEffect(() => {
+    if (provider && !client) {
+      setClientAndAccount();
+    }
+    if (!observer && account) {
+      console.log("subscribeToAccountChanges");
+      setObserver(subscribeToAccountChanges());
+    }
+  }, [provider, account]);
 
   useEffect(() => {
     initialize(Provider.MASSASTATION);
+    return () => {
+      observer?.unsubscribe();
+    };
   }, []);
 
   const updateAge = (newAge: number) => async () => {
@@ -97,7 +123,7 @@ function App() {
     }
     try {
       let res = await client.smartContracts().readSmartContract({
-        maxGas: BigInt(1000000),
+        maxGas: MAX_GAS_CALL,
         targetAddress: CONTRACT_ADDRESS,
         targetFunction: "getAge",
         parameter: new Args().addString(inputName).serialize(),
@@ -112,7 +138,7 @@ function App() {
   return (
     <div className="bodyContent">
       <SelectProvider
-        selectedProvider={provider}
+        selectedProvider={provider?.name()}
         onClick={(providerName) => {
           initialize(providerName);
         }}
@@ -123,7 +149,7 @@ function App() {
           <div>
             <InfoWrapper
               address={account.address()}
-              provider={provider || ""}
+              provider={provider?.name() || ""}
               lastOpId={lastOpId}
             />
             <div className="action-wrapper">
@@ -179,7 +205,7 @@ const SelectProvider = ({
   selectedProvider,
 }: {
   onClick: (providerName: Provider) => void;
-  selectedProvider?: Provider;
+  selectedProvider?: string;
 }) => {
   return (
     <div className="select-provider">
