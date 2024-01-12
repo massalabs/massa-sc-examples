@@ -37,12 +37,20 @@ function App() {
   const [inputAge, setInputAge] = useState<number>(0);
   const [inputName, setInputName] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<any>();
-  const [observer, setObserver] = useState<any>();
+  const [AccountObserver, setAccountObserver] = useState<any>();
+  const [NetworkObserver, setNetworkObserver] = useState<any>();
 
   function subscribeToAccountChanges() {
     return provider?.listenAccountChanges(async (address: string) => {
       console.log(address);
       setClientAndAccount();
+    });
+  }
+
+  // same for network changes
+  function subscribeToNetworkChanges() {
+    return provider?.listenNetworkChanges(async (network: string) => {
+      console.log(network);
     });
   }
 
@@ -76,16 +84,21 @@ function App() {
     if (provider && !client) {
       setClientAndAccount();
     }
-    if (!observer && account) {
+    if (!AccountObserver && account) {
       console.log("subscribeToAccountChanges");
-      setObserver(subscribeToAccountChanges());
+      setAccountObserver(subscribeToAccountChanges());
+    }
+    if (!NetworkObserver) {
+      console.log("subscribeToNetworkChanges");
+      setNetworkObserver(subscribeToNetworkChanges());
     }
   }, [provider, account]);
 
   useEffect(() => {
     initialize(Provider.MASSASTATION);
     return () => {
-      observer?.unsubscribe();
+      AccountObserver?.unsubscribe();
+      NetworkObserver?.unsubscribe();
     };
   }, []);
 
