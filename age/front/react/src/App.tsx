@@ -36,7 +36,7 @@ function App() {
 
   const selectAccount = async (account: IAccount) => {
     if (!provider) return;
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(p => p.name() === provider);
     if (!selectedProvider) return;
     setClient(await ClientFactory.fromWalletProvider(selectedProvider, account));
@@ -45,7 +45,7 @@ function App() {
 
   const initialize = async (providerName: Provider) => {
     setErrorMessage(null);
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(
       (p) => p.name() === providerName
     );
@@ -108,7 +108,7 @@ function App() {
       return;
     }
     try {
-      let res = await client.smartContracts().readSmartContract({
+      const res = await client.smartContracts().readSmartContract({
         maxGas: BigInt(minGas),
         targetAddress: CONTRACT_ADDRESS,
         targetFunction: "getAge",

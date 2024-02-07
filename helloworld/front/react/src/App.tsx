@@ -21,8 +21,8 @@ function App() {
   useEffect(() => {
     (async () => {
       try {
-        let provider = (await providers(true, 10000))[0];
-        let accounts = await provider.accounts();
+        const provider = (await providers())[0];
+        const accounts = await provider.accounts();
         if (accounts.length === 0) {
           setErrorMessage("No accounts found");
           return;
@@ -42,7 +42,7 @@ function App() {
 
   const selectAccount = async (account: IAccount) => {
     if (!provider) return;
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(p => p.name() === provider.name());
     if (!selectedProvider) return;
     setSelectedAccount(account);
@@ -53,8 +53,8 @@ function App() {
       if (!selectedAccount || !provider) {
         return;
       }
-      let client = await ClientFactory.fromWalletProvider(provider, selectedAccount);
-      let op_id = await client.smartContracts().callSmartContract({
+      const client = await ClientFactory.fromWalletProvider(provider, selectedAccount);
+      const op_id = await client.smartContracts().callSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         functionName: "setMessage",
         parameter: new Args().addString(
@@ -81,8 +81,8 @@ function App() {
         return;
       }
 
-      let client = await ClientFactory.fromWalletProvider(provider, selectedAccount);
-      let result = await client.smartContracts().readSmartContract({
+      const client = await ClientFactory.fromWalletProvider(provider, selectedAccount);
+      const result = await client.smartContracts().readSmartContract({
         targetAddress: CONTRACT_ADDRESS,
         targetFunction: "getMessage",
         parameter: new Args(),

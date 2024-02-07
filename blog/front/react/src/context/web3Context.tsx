@@ -33,7 +33,7 @@ export const Web3Provider: FC<TabProviderProps> = ({ children }) => {
 
   const initialize = async (providerName: Provider) => {
     setErrorMessage("");
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(
       (p) => p.name() === providerName
     );
@@ -65,7 +65,7 @@ export const Web3Provider: FC<TabProviderProps> = ({ children }) => {
 
   const selectAccount = async (account: IAccount) => {
     if (!provider) return;
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(p => p.name() === provider);
     if (!selectedProvider) return;
     setClient(await ClientFactory.fromWalletProvider(selectedProvider, account));
