@@ -6,11 +6,13 @@ import { Provider } from "../const";
 const Web3Context = createContext<
   | {
       client?: IClient;
-      account?: IAccount;
+      selectedAccount?: IAccount;
+      accounts?: IAccount[];
       provider?: Provider;
       providerAddress?: string;
       providerName?: string;
       initialize: (providerName: Provider) => void;
+      selectAccount: (acccount: IAccount) => void;
       errorMessage?: string;
     }
   | undefined
@@ -22,9 +24,10 @@ type TabProviderProps = {
 
 export const Web3Provider: FC<TabProviderProps> = ({ children }) => {
   const [client, setClient] = useState<IClient>();
-  const [account, setAccount] = useState<IAccount>();
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<IAccount>();
   const [provider, setProvider] = useState<Provider>();
-  const providerAddress = account?.address() || "";
+  const providerAddress = selectedAccount?.address() || "";
   const providerName = provider || "";
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -52,22 +55,34 @@ export const Web3Provider: FC<TabProviderProps> = ({ children }) => {
       await ClientFactory.fromWalletProvider(selectedProvider, accounts[0])
     );
     setProvider(providerName);
-    setAccount(accounts[0]);
+    setAccounts(accounts)
+    setSelectedAccount(accounts[0]);
   };
 
   useEffect(() => {
     initialize(Provider.MASSASTATION);
   }, []);
 
+  const selectAccount = async (account: IAccount) => {
+    if (!provider) return;
+    const providersList = await providers(true, 10000);
+    const selectedProvider = providersList.find(p => p.name() === provider);
+    if (!selectedProvider) return;
+    setClient(await ClientFactory.fromWalletProvider(selectedProvider, account));
+    setSelectedAccount(account);
+  };
+
   return (
     <Web3Context.Provider
       value={{
         client,
-        account,
+        accounts,
+        selectedAccount,
         provider,
         providerAddress,
         providerName,
         initialize,
+        selectAccount,
         errorMessage,
       }}
     >

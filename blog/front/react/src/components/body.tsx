@@ -8,10 +8,11 @@ import { Post } from "../const/post";
 import { useWeb3 } from "../context/web3Context";
 import { getPosts } from "../web3Call/posts";
 import { ProviderInfo } from "./ProviderInfo";
+import { AccountSelect } from "./AccountSelector";
 
 export default function Body() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { client } = useWeb3();
+  const { client, accounts } = useWeb3();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function Body() {
     <div className="body flex-col justify-center align-middle">
       <div className="flex-col">
         <ProviderSelect />
+        {accounts && (<AccountSelect />)}
         <ProviderInfo />
         {client && (
           <>
