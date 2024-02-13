@@ -13,6 +13,7 @@ import {
 const CONTRACT_ADDRESS =
   "AS12S1xuDVdpTMGhs19iBo3HXRQqZZaFzSF1hkz1RdF5YxqqVvTnb";
 const coins = 0.1;
+const minGas = 2100000
 const operationDelayNotice =
   "If there's no change, please wait a few seconds before clicking again. Confirmation of the operation may take up to 16 seconds.";
 const errorMessageNotEnoughBalance = `You need a minimum of ${coins} MAS to set the age.`;
@@ -25,16 +26,26 @@ enum Provider {
 function App() {
   const [client, setClient] = useState<Client>();
   const [provider, setProvider] = useState<Provider>();
-  const [account, setAccount] = useState<IAccount>();
+  const [selectedAccount, setSelectedAccount] = useState<IAccount>();
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [lastOpId, setLastOpId] = useState<string>();
   const [ageResult, setAgeResult] = useState<string>();
   const [inputAge, setInputAge] = useState<number>(0);
   const [inputName, setInputName] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<any>();
 
+  const selectAccount = async (account: IAccount) => {
+    if (!provider) return;
+    const providersList = await providers();
+    const selectedProvider = providersList.find(p => p.name() === provider);
+    if (!selectedProvider) return;
+    setClient(await ClientFactory.fromWalletProvider(selectedProvider, account));
+    setSelectedAccount(account); // Update the selected account
+  };
+
   const initialize = async (providerName: Provider) => {
     setErrorMessage(null);
-    const providersList = await providers(true, 10000);
+    const providersList = await providers();
     const selectedProvider = providersList.find(
       (p) => p.name() === providerName
     );
@@ -56,7 +67,8 @@ function App() {
       await ClientFactory.fromWalletProvider(selectedProvider, accounts[0])
     );
     setProvider(providerName);
-    setAccount(accounts[0]);
+    setAccounts(accounts)
+    setSelectedAccount(accounts[0]);
   };
 
   useEffect(() => {
@@ -76,7 +88,7 @@ function App() {
         targetAddress: CONTRACT_ADDRESS,
         functionName: "changeAge",
         parameter: args,
-        maxGas: BigInt(1000000),
+        maxGas: BigInt(minGas),
         coins: fromMAS(coins),
         fee: BigInt(0),
       });
@@ -96,8 +108,8 @@ function App() {
       return;
     }
     try {
-      let res = await client.smartContracts().readSmartContract({
-        maxGas: BigInt(1000000),
+      const res = await client.smartContracts().readSmartContract({
+        maxGas: BigInt(minGas),
         targetAddress: CONTRACT_ADDRESS,
         targetFunction: "getAge",
         parameter: new Args().addString(inputName).serialize(),
@@ -117,12 +129,26 @@ function App() {
           initialize(providerName);
         }}
       />
-      {account && (
+      {selectedAccount && (
         <div className="wrapper">
           <h1 className="messageToDisplay">Age Example: React</h1>
           <div>
+            <div className="account-select-container flex w-full gap-4 justify-center items-center">
+              <label htmlFor="account-selector" className="account-select-label">Select Your Account</label>
+              <select
+                id="account-selector"
+                className="account-select-dropdown"
+                onChange={(e) => selectAccount(accounts[parseInt(e.target.value)])}
+              >
+                {accounts.map((account, index) => (
+                  <option value={index} key={account.address()}>
+                    Account {account.name()} : {account.address().substring(0, 6)}...{account.address().substring(account.address().length - 4)}
+                  </option>
+                ))}
+              </select>
+            </div>
             <InfoWrapper
-              address={account.address()}
+              address={selectedAccount.address()}
               provider={provider || ""}
               lastOpId={lastOpId}
             />

@@ -20,7 +20,7 @@ export default function ContractInteraction() {
     const [providerUsed, setProviderUsed] = useState<string>("");
 
     const initializeProvider = async (targetProviderName: string) => {
-        const allProviders = await providers(true, 10000);
+        const allProviders = await providers();
 
         if (!allProviders || allProviders.length === 0) {
             throw new Error("No providers available");
@@ -64,7 +64,7 @@ export default function ContractInteraction() {
         setLoading(true);
         try {
             const nextProvider = providerUsed === "MASSASTATION" ? "BEARBY" : "MASSASTATION";
-            const allProviders = await providers(true, 10000);
+            const allProviders = await providers();
             const nextProviderFound = allProviders.find(provider => provider.name() === nextProvider);
             if (!nextProviderFound) {
                 return;

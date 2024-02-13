@@ -16,6 +16,7 @@ export const AddPost = ({ fetchPosts }: { fetchPosts: () => void }) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -46,7 +47,11 @@ export const AddPost = ({ fetchPosts }: { fetchPosts: () => void }) => {
         console.log("Post not added");
       }
     } catch (error) {
-      console.log(error);
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+      setError(errorMessage);
+      setTimeout(() => {
+        setError("");
+      }, 10000);
     } finally {
       await fetchPosts();
       setLoading(false);
@@ -137,6 +142,19 @@ export const AddPost = ({ fetchPosts }: { fetchPosts: () => void }) => {
         </div>
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div className="flex flex-col w-full items-start px-4 lg:px-14 underline underline-offset-4 font-Poppins font-bold text-lg text-primary hover:text-primary-focus">
+          <button onClick={() => setOpen(true)}>Add Post</button>
+        </div>
+        <div className="flex flex-col justify-center items-center p-4 text-left text-red-500">
+          {error}
+        </div>
+      </div>
+    )
   }
 
   return (
