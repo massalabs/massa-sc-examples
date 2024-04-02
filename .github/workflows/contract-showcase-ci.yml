@@ -1,7 +1,7 @@
 name: Contract Showcase CI
 
 on:
-  push:
+  pull_request:
     paths:
       - contracts_showcase/**
 
@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: dirs
-        run: echo "dirs=$(ls -d tests/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
+        run: echo "dirs=$(ls -d ./*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
 
   run_tests:
     needs: collect_dirs

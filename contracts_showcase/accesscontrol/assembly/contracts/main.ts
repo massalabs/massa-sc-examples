@@ -35,7 +35,6 @@ export function changeAdmin(argsSer: StaticArray<u8>): void {
   Storage.set("admin", newAdmin.toString());
 }
 
-
 export function getAdmin(): StaticArray<u8> {
   controller.mustHaveAnyPermission(USER | ADMIN, caller());
   return stringToBytes(Storage.get("admin"));
