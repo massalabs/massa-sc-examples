@@ -1,29 +1,47 @@
-name: Helloworld Daily Deploy
+name: Contract Showcase CI
 
 on:
-  push:
+  merge_request:
     paths:
       - contracts_showcase/**
 
+defaults:
+  run:
+    working-directory: ./contracts_showcase/
+
 jobs:
-  test-contract-showcases:
+  find-out-changes:
     runs-on: ubuntu-latest
-
+    outputs:
+      dirs: ${{ steps.changed-files.dirs }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: ls
-        run: ls
-
-      - name: Deploy
-        run: |
-          if npm run deploy | grep -q "Contract deployed"; then
-            echo "Contract successfully deployed!"
-          else
-            echo "Failed to deploy contract ..."
-            exit 1
-          fi
-        env:
-          JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
-          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          dir_names: true
+  
+  do-stuff:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
+      needs:
+        - find-out-changes
+      steps:
+        - uses: actions/checkout@v3
+        - run: ls
+      # - name: Deploy
+      #   run: |
+      #     if npm run deploy | grep -q "Contract deployed"; then
+      #       echo "Contract successfully deployed!"
+      #     else
+      #       echo "Failed to deploy contract ..."
+      #       exit 1
+      #     fi
+      #   env:
+      #     JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
+      #     WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
