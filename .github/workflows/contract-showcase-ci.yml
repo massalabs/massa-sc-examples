@@ -10,7 +10,7 @@ defaults:
     working-directory: ./contracts_showcase/
 
 jobs:
-  find-out-changes:
+    find-out-changes:
     runs-on: ubuntu-latest
     outputs:
       dirs: ${{ steps.changed-files.dirs }}
@@ -21,19 +21,19 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v35
         with:
           dir_names: true
-  
+
   do-stuff:
-      runs-on: ubuntu-latest
-      strategy:
-        matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
-      needs:
-        - find-out-changes
-      steps:
-        - uses: actions/checkout@v3
-        - run: ls
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
+    needs:
+      - find-out-changes
+    steps:
+      - uses: actions/checkout@v3
+      - run: ls
       # - name: Deploy
       #   run: |
       #     if npm run deploy | grep -q "Contract deployed"; then
