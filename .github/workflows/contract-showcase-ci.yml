@@ -48,4 +48,4 @@ jobs:
         run: npm run start
         env:
           JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
-          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
+          WALLET_SECRET_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
