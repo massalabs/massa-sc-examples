@@ -1,7 +1,7 @@
 name: Contract Showcase CI
 
 on:
-  merge_request:
+  push:
     paths:
       - contracts_showcase/**
 
