@@ -25,15 +25,15 @@ jobs:
           with:
             dir_names: true
 
-      do-stuff:
-        runs-on: ubuntu-latest
-        strategy:
-          matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
-        needs:
-          - find-out-changes
-        steps:
-          - uses: actions/checkout@v3
-          - run: ls -la ${{ matrix.dir }}
+    do-stuff:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
+      needs:
+        - find-out-changes
+      steps:
+        - uses: actions/checkout@v3
+        - run: ls -la ${{ matrix.dir }}
       # - name: Deploy
       #   run: |
       #     if npm run deploy | grep -q "Contract deployed"; then
