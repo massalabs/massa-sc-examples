@@ -27,7 +27,7 @@ jobs:
         dir: ${{ fromJson(needs.collect_dirs.outputs.dirs) }}
     steps:
       - name: Checkout code
-          uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: display folder
         working-directory: ./contracts_showcase/${{ matrix.dir }}
@@ -40,13 +40,13 @@ jobs:
           cache: "npm"
           cache-dependency-path: ./contracts_showcase/${{ matrix.dir }}/package-lock.json
 
-        - name: Install dependencies
-          working-directory: ./contracts_showcase/${{ matrix.dir }}
-          run: npm install
+      - name: Install dependencies
+        working-directory: ./contracts_showcase/${{ matrix.dir }}
+        run: npm install
 
-        - name: Test
-          working-directory: ./contracts_showcase/${{ matrix.dir }}
-          run: npm run start
-          env:
-            JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
-            WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
+      - name: Test
+        working-directory: ./contracts_showcase/${{ matrix.dir }}
+        run: npm run start
+        env:
+          JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
+          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
