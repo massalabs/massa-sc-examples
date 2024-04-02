@@ -10,31 +10,24 @@ defaults:
     working-directory: ./contracts_showcase/
 
 jobs:
-    find-out-changes:
-      runs-on: ubuntu-latest
-      outputs:
-        dirs: ${{ steps.changed-files.dirs }}
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
+  collect_dirs:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.dirs.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: dirs
+        run: echo "dirs=$(ls -d tests/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
 
-        - name: Get changed files
-          id: changed-files
-          uses: tj-actions/changed-files@v35
-          with:
-            dir_names: true
-
-    do-stuff:
-      runs-on: ubuntu-latest
-      strategy:
-        matrix: ${{fromJson(needs.find-out-changes.outputs.dirs)}}
-      needs:
-        - find-out-changes
-      steps:
-        - uses: actions/checkout@v3
-        - run: ls -la ${{ matrix.dir }}
-      # - name: Deploy
+  run_tests:
+    needs: collect_dirs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.collect_dirs.outputs.dirs) }}
+    steps:
+      - run: echo ${{ matrix.dir }}
+          # - name: Deploy
       #   run: |
       #     if npm run deploy | grep -q "Contract deployed"; then
       #       echo "Contract successfully deployed!"
