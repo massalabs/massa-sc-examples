@@ -29,10 +29,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: display folder
-        working-directory: ./contracts_showcase/${{ matrix.dir }}
-        run: ls
-
       - name: Install node
         uses: actions/setup-node@v3
         with:

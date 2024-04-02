@@ -89,8 +89,6 @@ const deployerAccount = await WalletClient.getAccountFromSecretKey(secretKey);
 // Create a random account for the user
 const userAccount = await WalletClient.walletGenerateNewAccount();
 
-throw new Error("Test failed");
-
 // Create a web3 client
 const web3Client: Client = await ClientFactory.createCustomClient(
   [
