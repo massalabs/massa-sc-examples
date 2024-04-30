@@ -81,7 +81,7 @@ const secretKey = getEnvVariable("WALLET_SECRET_KEY");
 // Define deployment parameters
 const chainId = CHAIN_ID.BuildNet; // Choose the chain ID corresponding to the network you want to deploy to
 const maxGas = 2980167295n; // Gas for deployment Default is the maximum gas allowed for deployment
-const fees = 0n; // Fees to be paid for deployment. Default is 0
+const fees = fromMAS(0.01); // Fees to be paid for deployment. Default is 0
 
 // Create an account using the secret key
 const deployerAccount = await WalletClient.getAccountFromSecretKey(secretKey);
