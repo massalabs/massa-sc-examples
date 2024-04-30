@@ -103,7 +103,7 @@ const web3Client: Client = await ClientFactory.createCustomClient(
 
 // Send some coins to the user account
 web3Client.wallet().sendTransaction({
-  fee: 0n,
+  fee: fromMAS(0.01),
   amount: fromMAS(1),
   recipientAddress: userAccount.address!,
 });
@@ -177,7 +177,7 @@ const opId = await web3ClientUser.smartContracts().callSmartContract({
   functionName: "changeAdmin",
   parameter: new Args().addString(userAccount.address!),
   maxGas: MAX_GAS_CALL,
-  fee: 0n,
+  fee: fromMAS(0.01),
 });
 
 const callEvents = await getEventsFromOp(opId);
@@ -222,7 +222,7 @@ const opId2 = await web3Client.smartContracts().callSmartContract({
   functionName: "changeAdmin",
   parameter: new Args().addString(userAccount.address!),
   maxGas: MAX_GAS_CALL,
-  fee: 0n,
+  fee: fromMAS(0.01),
 });
 
 // Get the event for the call
