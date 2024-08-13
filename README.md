@@ -14,6 +14,80 @@ The Massa blockchain ecosystem now uses the following tools for smart contract d
 - [Massa Web3](https://github.com/massalabs/massa-web3/tree/next): A JavaScript library for interacting with the Massa blockchain.
 - [Massa wallet-provider](https://github.com/massalabs/wallet-provider/tree/next): A Web3 provider for connecting to the Massa wallet.
 
+## Hello World Project
+
+This repository includes a Hello World project to help you get started with Massa smart contract development. Here's what you need to know:
+
+1. **Smart Contract Setup**:
+
+   - Navigate to the `smart-contract` folder.
+   - Create a `.env` file in this folder.
+   - Add a private key that owns some coins to the `.env` file.
+   - **Important**: Be careful not to push the `.env` file to version control.
+
+2. **Testing**:
+
+   - Run tests using the command: `npm run test`
+
+3. **Deployment**:
+   - Check the deploy file to understand how contracts are deployed.
+   - Deploy the contract using: `npm run deploy`
+
+# Massa Smart Contract Development
+
+## Front-end Implementations
+
+We provide two front-end implementations for interacting with the smart contract:
+
+1. **Vanilla JavaScript Version**:
+
+   - Located in the `vanilla-js` folder.
+   - Setup: Run `npm install`
+   - Start the development server: `npm run dev`
+
+2. **React Version**:
+   - Located in the `react` folder.
+   - Setup: Run `npm install`
+   - Start the development server: `npm run dev`
+
+Both versions demonstrate the same functionality but use different technologies.
+
+### Vite Configuration and Polyfills
+
+To ensure compatibility with Vite and to provide necessary polyfills, we have done the following:
+
+1. Install required dependencies:
+
+   ```
+   npm install lodash-es
+   npm install vite-plugin-node-polyfills
+   ```
+
+2. Create a `vite.config.js` file in your project root with the following content:
+
+   ```javascript
+   import { defineConfig } from "vite";
+   import { nodePolyfills } from "vite-plugin-node-polyfills";
+
+   export default defineConfig({
+     plugins: [nodePolyfills()],
+     resolve: {
+       alias: {
+         lodash: "lodash-es",
+       },
+     },
+     build: {
+       rollupOptions: {
+         external: ["lodash"],
+       },
+     },
+   });
+   ```
+
+   This configuration adds the necessary Node.js polyfills and resolves lodash to its ES module version.
+
+   **Use it in your own Vite projects to ensure compatibility with the Massa Web3 library.**
+
 ## Resources
 
 - [Massa Documentation](https://docs.massa.net/)
