@@ -1,52 +1,33 @@
-# Massa Smart Contract Examples
+# Massa Smart Contract Development
 
-This repository contains examples of smart contracts developed for the Massa blockchain. The examples illustrate various functionalities of smart contracts, ranging from simple synchronous operations to more complex asynchronous operations and even autonomous contracts.
+This repository provides information and resources for developing smart contracts on the Massa blockchain using the latest tooling.
 
-## Projects
+> **Important Version Information**
+>
+> This project uses the next version of Massa development tools, which includes significant improvements and new features. If you need to reference older versions or examples, please check the `legacy` folder in this repository.
 
-The following projects are included in this repository:
+## Current Tooling
 
-#### [HelloWorld](helloworld/README.md)
+The Massa blockchain ecosystem now uses the following tools for smart contract development:
 
-This project provides the timeless "Hello World" example.
+- [Massa Smart Contract Toolkit](https://github.com/massalabs/massa-sc-toolkit): A comprehensive toolkit for developing, testing, and deploying smart contracts on Massa.
+- [Massa Web3](https://github.com/massalabs/massa-web3/tree/next): A JavaScript library for interacting with the Massa blockchain.
+- [Massa wallet-provider](https://github.com/massalabs/wallet-provider/tree/next): A Web3 provider for connecting to the Massa wallet.
 
-#### [Blog](blog/README.md)
+## Resources
 
-This project is a blog functioning on the Massa Blockchain. Fully decentralized and censorship resistant, it allows users to create, and delete blog posts, all of which are stored directly on the blockchain as transactions.
+- [Massa Documentation](https://docs.massa.net/)
+- [Massa Smart Contract Development Guide](https://docs.massa.net/docs/build/smart-contract/intro)
+- [Massa Web3 API Reference (legacy version)](https://web3.docs.massa.net/)
+- [Massa official website](https://massa.net/)
 
-#### [Age](age/README.md)
+## Legacy Projects
 
-This project provides a basic example of a simple smart contract with a front-end implemented in plain JavaScript and ReactJS.
+For reference to older projects and examples, please check the `legacy` folder in this repository. Note that these projects may use outdated tools or approaches and are kept for historical purposes only.
 
-### Potentially Non-Functional Projects
+## Contributing
 
-The following projects may not be functional or up to date, but contributions to improve them are welcome:
-
-#### [Async-Calls](asynccalls/README.md)
-
-This project provides basic examples of asynchronous smart contracts.
-
-#### [Sum](sum/README.md)
-
-This project provides an example of a decentralized application for calculating the sum using Thyra, a blockchain platform built on top of Massa.
-
-#### [Tic-Tac-Toe](games/tictactoe/README.md)
-
-This project provides a fully functional Tic-Tac-Toe game, with both a smart contract and a user interface built in ReactJS. The game can be deployed to Thyra.
-
-#### [Autonomousprice](autonomousprice/README.md)
-
-This project provides a simple use case of an autonomous smart contract that simulates an autonomousprice on-chain.
-
-If you'd like to contribute to one of these projects, please read the [CONTRIBUTING file](CONTRIBUTING.md) and submit a pull request.
-
-## How to use
-
-Each project contains detailed instructions on how to run the smart contract and user interface. Simply navigate to the project folder of your choice and follow the instructions provided in the README file.
-
-## Contributions
-
-We welcome contributions to this repository, including bug fixes, improvements, and new examples. Please see the [CONTRIBUTING file](CONTRIBUTING.md) for more information on how to contribute.
+We welcome contributions to improve smart contract development resources for Massa. Please see the [CONTRIBUTING file](CONTRIBUTING.md) for more information on how to contribute.
 
 ## License
 
