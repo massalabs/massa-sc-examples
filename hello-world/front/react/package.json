@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@massalabs/wallet-provider": "^3.0.0-next.20240812194237",
+    "@massalabs/massa-web3": "^5.0.0-next",
+    "@massalabs/wallet-provider": "^3.0.0-next",
     "events": "^3.3.0",
     "lodash-es": "^4.17.21",
     "react": "^18.3.1",
