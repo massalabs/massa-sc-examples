@@ -8,13 +8,17 @@ async function deploy() {
 
   console.log('Deploying contract...');
 
-  const byteCode = getScByteCode('build', 'main.wasm');
-  const constructorArgs = new Args().addString('Massa');
+  const byteCode = getScByteCode('build', 'token.wasm');
+  const tokenArgs = new Args()
+    .addString('Massa Token')
+    .addString('MAS')
+    .addU8(9n)
+    .addU256(120000000000n * 10n ** 9n);
 
   const contract = await provider.deploySC({
     coins: Mas.fromString('1'),
     byteCode,
-    parameter: constructorArgs.serialize(),
+    parameter: tokenArgs.serialize(),
   });
 
   console.log('Contract deployed at:', contract.address);
