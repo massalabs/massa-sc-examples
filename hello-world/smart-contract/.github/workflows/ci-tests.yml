@@ -1,14 +1,5 @@
-name: Autonomousprice CI
-
-on:
-  push:
-    paths:
-      - autonomousprice/**
-
-defaults:
-  run:
-    working-directory: ./autonomousprice/contracts
-
+name: massa sc ci tests
+on: [push]
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -17,13 +8,11 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install
         run: npm ci
-
-      - name: Code quality
-        run: npm run fmt:check
 
       - name: Test
         run: npm run test

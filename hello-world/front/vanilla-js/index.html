@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message App</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="card">
+        <h1 class="card-title">Message App</h1>
+
+        <form id="messageForm">
+          <input
+            type="text"
+            id="inputMessage"
+            placeholder="Enter a message"
+            class="input"
+          />
+          <button type="submit" class="button">Set Message</button>
+        </form>
+        <button id="getMessageBtn" class="button">Get Message</button>
+        <div>
+          <p id="message" class="message"></p>
+        </div>
+      </div>
+    </div>
+    <div id="errorMessage" class="error"></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

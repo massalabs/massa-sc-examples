@@ -3,16 +3,16 @@ name: Helloworld Daily Deploy
 on:
   push:
     paths:
-      - helloworld/**
+      - hello-world/**
   workflow_dispatch:
   schedule:
     - cron: "0 7 * * *"
 
 jobs:
-  deploy-helloworld:
+  deploy-hello-world:
     defaults:
       run:
-        working-directory: ./helloworld/contracts/
+        working-directory: ./hello-world/smart-contract/
 
     runs-on: ubuntu-latest
 
@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: ./helloworld/contracts/package-lock.json
+          cache-dependency-path: ./hello-world/smart-contract/package-lock.json
 
       - name: Install dependencies
         run: npm install

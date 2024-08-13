@@ -3,11 +3,11 @@ name: Helloworld CI
 on:
   push:
     paths:
-      - helloworld/**
+      - hello-world/**
 
 defaults:
   run:
-    working-directory: ./helloworld/contracts
+    working-directory: ./hello-world/smart-contract
 
 jobs:
   unit-tests:
