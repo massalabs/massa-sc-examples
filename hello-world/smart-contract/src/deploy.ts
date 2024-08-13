@@ -3,7 +3,7 @@ import { Account, Args, Mas, Web3Provider } from '@massalabs/massa-web3';
 import { getScByteCode } from './utils';
 
 async function deploy() {
-  const account = await Account.fromEnv();
+  const account = await Account.fromEnv('WALLET_PRIVATE_KEY');
   const provider = Web3Provider.newPublicBuildnetProvider(account);
 
   console.log('Deploying contract...');
