@@ -1,4 +1,3 @@
-// The entry file of your WebAssembly module.
 import { Context, generateEvent, Storage } from '@massalabs/massa-as-sdk';
 import { Args, stringToBytes } from '@massalabs/as-types';
 
@@ -7,12 +6,11 @@ import { Args, stringToBytes } from '@massalabs/as-types';
  *
  * @param binaryArgs - Arguments serialized with Args
  */
-export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
+export function constructor(binaryArgs: StaticArray<u8>): void {
   // This line is important. It ensures that this function can't be called in the future.
   // If you remove this check, someone could call your constructor function and reset your smart contract.
-  if (!Context.isDeployingContract()) {
-    return [];
-  }
+  if (!Context.isDeployingContract()) return;
+
   const args = new Args(binaryArgs);
 
   const message = args
@@ -21,7 +19,6 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
 
   Storage.set(stringToBytes('messageKey'), stringToBytes(message));
   generateEvent(`Constructor called with message ${message}`);
-  return [];
 }
 
 /**
@@ -29,7 +26,7 @@ export function constructor(binaryArgs: StaticArray<u8>): StaticArray<u8> {
  *
  * @param binaryArgs - Arguments serialized with Args
  */
-export function setMessage(binaryArgs: StaticArray<u8>): StaticArray<u8> {
+export function setMessage(binaryArgs: StaticArray<u8>): void {
   const args = new Args(binaryArgs);
 
   const message = args
@@ -38,7 +35,6 @@ export function setMessage(binaryArgs: StaticArray<u8>): StaticArray<u8> {
 
   Storage.set<string>('messageKey', message);
   generateEvent(`Message updated to ${message}`);
-  return [];
 }
 
 /**
@@ -46,5 +42,6 @@ export function setMessage(binaryArgs: StaticArray<u8>): StaticArray<u8> {
  */
 export function getMessage(): StaticArray<u8> {
   const message = Storage.get<string>('messageKey');
+  // We could also serialize with Args
   return stringToBytes(message);
 }

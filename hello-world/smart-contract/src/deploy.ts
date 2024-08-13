@@ -18,7 +18,7 @@ async function deploy() {
   const constructorArgs = new Args().addString('Massa');
 
   const contract: SmartContract = await provider.deploySC({
-    coins: Mas.fromString('0.01'),
+    coins: Mas.fromString('1'),
     byteCode,
     parameter: constructorArgs.serialize(),
   });
