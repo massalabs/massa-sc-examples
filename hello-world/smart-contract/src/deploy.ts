@@ -4,7 +4,7 @@ import { getScByteCode } from './utils';
 
 async function deploy() {
   const account = await Account.fromEnv('WALLET_PRIVATE_KEY');
-  const provider = Web3Provider.newPublicBuildnetProvider(account);
+  const provider = Web3Provider.buildnet(account);
 
   console.log('Deploying contract...');
 

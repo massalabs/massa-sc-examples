@@ -5,3 +5,5 @@ ledger.json
 yarn.lock
 .vscode
 screenshots/
+.env
+

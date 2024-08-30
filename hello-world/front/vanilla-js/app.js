@@ -22,7 +22,9 @@ async function initProvider() {
       (provider) => provider.name() === "MASSASTATION"
     );
     if (!wallet) {
-      throw new Error("No wallet found");
+      throw new Error(
+        "Wallet not detected. To proceed, please install the Massa wallet and configure it for the Buildnet network"
+      );
     }
 
     const accounts = await wallet.accounts();
