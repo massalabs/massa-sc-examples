@@ -29,29 +29,29 @@ function App() {
     return bytesToStr(result.value);
   };
 
+  async function initProvider() {
+    const walletList = await getWallets();
+    const wallet = walletList.find(
+      (provider) => provider.name() === "MASSASTATION"
+    );
+    if (!wallet) {
+      console.log("No wallet found");
+      return;
+    }
+
+    const accounts = await wallet?.accounts();
+
+    if (accounts.length === 0) {
+      console.log("No accounts found");
+      return;
+    }
+
+    // We use the first account as the provider
+    const provider = accounts[0];
+    setProvider(provider);
+  }
+
   useEffect(() => {
-    const initProvider = async () => {
-      const walletList = await getWallets();
-      const wallet = walletList.find(
-        (provider) => provider.name() === "MASSASTATION"
-      );
-      if (!wallet) {
-        console.log("No wallet found");
-        return;
-      }
-
-      // We get the accounts from the wallet
-      const accounts = await wallet?.accounts();
-
-      if (accounts.length === 0) {
-        console.log("No accounts found");
-        return;
-      }
-
-      // We use the first account as the provider
-      const provider = accounts[0];
-      setProvider(provider);
-    };
     initProvider();
   }, []);
 
@@ -85,7 +85,15 @@ function App() {
   };
 
   if (!provider) {
-    return <div className="app-container">Loading Provider...</div>;
+    return (
+      <div className="app-container">
+        <p>Loading Provider... </p>
+        <p>
+          Please install the Massa wallet and configure it for the Buildnet
+          network
+        </p>
+      </div>
+    );
   }
 
   return (
