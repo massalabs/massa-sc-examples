@@ -26,10 +26,11 @@ export function registerCall(period: u64): void {
   generateEvent('Current contract balance: ' + initBal.toString());
 
   const maxGas = 20_000_000;
+  const params_size = 0;
   const bookingPeriod = Context.currentPeriod() + period;
-  const slot = findCheapestSlot(bookingPeriod, bookingPeriod, maxGas);
+  const slot = findCheapestSlot(bookingPeriod, bookingPeriod, maxGas, params_size);
 
-  const cost = deferredCallQuote(slot, maxGas);
+  const cost = deferredCallQuote(slot, maxGas, params_size);
   const callId = deferredCallRegister(
     Context.callee().toString(),
     'processTask',
