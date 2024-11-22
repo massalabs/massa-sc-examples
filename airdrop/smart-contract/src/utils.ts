@@ -13,16 +13,6 @@ export function getScByteCode(folderName: string, fileName: string): Buffer {
   return readFileSync(path.join(__dirname, folderName, fileName));
 }
 
-export function getMrc20Address(): string {
-  const address = process.env.MRC20_CONTRACT_ADDRESS;
-  if (!address) {
-    throw new Error(
-      'MRC20_CONTRACT_ADDRESS is not defined in the environment variables',
-    );
-  }
-  return address;
-}
-
 export function logBalance(
   prefix: string,
   balance: bigint,
