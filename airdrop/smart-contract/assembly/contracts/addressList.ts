@@ -1,0 +1,12 @@
+export const addressList = [
+  'AU1jCffxJFjMQRg1WkoT1gDiFvZGg1WuogiwBWQFZ2LJwEyHPRPZ',
+  'AU1rFqhTWvRyuJT3UH5ZZSBjALcAsjXCPPcgUkWaBghYsYicTrB5',
+  'AU1x44P7LWJfy3w6bL7fKmH8CxXzZq8a1odg3WKUoq6iqvs5Kcwv',
+  'AU1c3YbxDL5vyaJQ8mGQFBEABmmopMWCdhHQpUxcDkVAU4ya666S',
+  'AU1SjbSd8u4sutG7fSuxnPgTbiifrHJGN1paopKwDgDkDDTG8iJo',
+  'AU1HG96jNJXKVyqeEuwiTFMwfZvX2WVTjTTq8yzxcdYbSmW7n2Hx',
+  'AU1i4ey48VhVbG7YyRJHTZ6mkQTj8NESNCbyf8xDgJWbcEmbX8sk',
+  'AU12hrZyu1wCYAx8k76J8gu9gNksFzmpCA9ke21bsjV4wG5rpNN1j',
+  'AU1U41TqgyhTsWcXntev86FGm3gUD4vM7cKALJGCfyE2UJKZvYC9',
+  'AU1vjHCLS3AVApxm4kUCecuTQJuuZRoUbvsszZabLKZi8WUzAzrX',
+];
