@@ -13,14 +13,6 @@ export function getScByteCode(folderName: string, fileName: string): Buffer {
   return readFileSync(path.join(__dirname, folderName, fileName));
 }
 
-export function logBalance(
-  prefix: string,
-  balance: bigint,
-  symbol: string,
-): void {
-  console.log(`${prefix} ${symbol} Balance: ${balance.toString()}`);
-}
-
-export function logEvents(event: SCEvent, i: number): void {
+export function logEvent(event: SCEvent, i: number): void {
   console.log(`'Event nº ${i + 1}: '${event.data.toString()}`);
 }
