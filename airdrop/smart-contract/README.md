@@ -30,7 +30,6 @@ The **Airdrop** smart contract leverages `executeSc` to ensure that the operatio
 3. Update the `addressList` in `addressList.ts` with the recipient addresses for the airdrop.
 4. Update MRC20 contract address in `assembly/contracts/mrc20-address.ts` contract.
 5. Update token amount in `airdrop.ts` contract.
-6. Update token information in `airdrop.ts` contract.
 
 
 ## Scripts

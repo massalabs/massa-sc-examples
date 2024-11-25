@@ -13,10 +13,12 @@ export * from '@massalabs/sc-standards/assembly/contracts/FT/token';
 
 const VERSION_KEY = stringToBytes('airdrop_version'); // Key to store the version of the airdrop
 const VERSION = u32(1); // Increment this number to run the airdrop again
-const TOKEN_AMOUNT = 20; // Amount of tokens to airdrop
 const AIRDROP_LIMIT = 850; // Maximum number of transfers per block
 const TRANSFER_COST = 9600000; // Cost of a transfer
 export const MRC20_ADDRESS = new Address(mrc20Address);
+
+/** Update this value to the amount you wish to airdrop at each account */
+const TOKEN_AMOUNT = 20; // Amount of tokens to airdrop
 
 /**
  * Main function to run the airdrop. Will be automatically called when executing the contract.
