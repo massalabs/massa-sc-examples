@@ -12,7 +12,9 @@ The **Airdrop** smart contract leverages `executeSc` to ensure that the operatio
 
 - [Node.js](https://nodejs.org/) (v18+)
 - Massa Account
-- MRC20 Token Contract (Deployed) Check fungible token example for more details.
+- [Node.js](https://nodejs.org/) (v18+)
+- Massa Account
+- MRC20 Token Contract (Deployed). Check the [fungible token standard](https://github.com/massalabs/massa-standards/tree/main/smart-contracts/assembly/contracts/FT) for more details.
 
 
 ## Installation

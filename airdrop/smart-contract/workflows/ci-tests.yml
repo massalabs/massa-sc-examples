@@ -13,3 +13,6 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      -name : Run build
+        run: npm run build
