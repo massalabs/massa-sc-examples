@@ -1,0 +1,47 @@
+name: Contract Showcase CI
+
+on:
+  pull_request:
+    paths:
+      - contracts_showcase/**
+
+defaults:
+  run:
+    working-directory: ./contracts_showcase/
+
+jobs:
+  collect_dirs:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.dirs.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: dirs
+        run: echo "dirs=$(ls -d ./*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
+
+  run_tests:
+    needs: collect_dirs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.collect_dirs.outputs.dirs) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        working-directory: ./contracts_showcase/${{ matrix.dir }}
+        run: npm install
+
+      - name: Test
+        working-directory: ./contracts_showcase/${{ matrix.dir }}
+        run: npm run start
+        env:
+          JSON_RPC_URL_PUBLIC: ${{ secrets.JSON_RPC_URL_PUBLIC }}
+          WALLET_SECRET_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
