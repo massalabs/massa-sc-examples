@@ -42,9 +42,10 @@ for (const [index, event] of events.entries()) {
 /* -------------------------------------------------------------------------- */
 /*                               Final Balances                               */
 /* -------------------------------------------------------------------------- */
-for (const address of addressList) {
-  const balance = await mrc20.balanceOf(address);
-  console.log(`Address: ${address}, ${mr20Symbol} balance: ${balance}`);
+
+const balances = await mrc20.balancesOf(addressList);
+for (const { address, balance } of balances) {
+  console.log(`Address: ${address}, Balance: ${balance.toString()}`);
 }
 
 mrc20Balance = await mrc20.balanceOf(account.address.toString());
