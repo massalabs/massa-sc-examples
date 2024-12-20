@@ -26,6 +26,7 @@
         "@massalabs/massa-as-sdk": "^2.5.4",
         "@massalabs/massa-sc-compiler": "^0.2.1-dev",
         "@massalabs/massa-sc-deployer": "^1.3.0",
+        "@massalabs/sc-standards": "^1.3.0",
         "@massalabs/massa-web3": "^5.0.0-next",
         "@massalabs/prettier-config-as": "^0.0.2",
         "@types/node": "^18.11.10",
@@ -46,8 +47,5 @@
     "prettier": "@massalabs/prettier-config-as",
     "engines": {
         "node": ">=16"
-    },
-    "dependencies": {
-        "@massalabs/sc-standards": "^1.2.2"
     }
 }

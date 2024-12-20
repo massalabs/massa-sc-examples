@@ -1,5 +1,18 @@
-export * from '@massalabs/sc-standards/assembly/contracts/FT/token';
-export * from '@massalabs/sc-standards/assembly/contracts/FT/burnable';
-export * from '@massalabs/sc-standards/assembly/contracts/utils/accessControl';
-export * from '@massalabs/sc-standards/assembly/contracts/utils/ownership';
-export * from '@massalabs/sc-standards/assembly/contracts/FT/mintable';
+import { u256 } from 'as-bignum/assembly';
+import { mrc20Constructor } from '@massalabs/sc-standards/assembly/contracts/MRC20';
+
+export function constructor(): void {
+  mrc20Constructor('MassaToken', 'MT', 18, u256.fromU64(1010101010));
+}
+
+export * from '@massalabs/sc-standards/assembly/contracts/MRC20';
+export { mint } from '@massalabs/sc-standards/assembly/contracts/MRC20/mintable';
+export {
+  burn,
+  burnFrom,
+} from '@massalabs/sc-standards/assembly/contracts/MRC20/burnable';
+export {
+  setOwner,
+  onlyOwner,
+  isOwner,
+} from '@massalabs/sc-standards/assembly/contracts/utils/ownership';
