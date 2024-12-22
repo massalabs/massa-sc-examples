@@ -3,7 +3,8 @@ import "./App.css";
 import { getWallets } from "@massalabs/wallet-provider";
 import { MRC20, OperationStatus, Provider } from "@massalabs/massa-web3";
 
-const CONTRACT_ADDRESS = "AS1fSyr39jvAryKjrLV2JgRDauHb7GKVRA1TZoeK2NnogDNSw9iS";
+const CONTRACT_ADDRESS =
+  "AS12J2t29NT5VyZVQHBCmQFLNFqwpiZZtwcbHQTHWLJtWFXsz3U96";
 
 function App() {
   const [provider, setProvider] = useState<Provider>();
