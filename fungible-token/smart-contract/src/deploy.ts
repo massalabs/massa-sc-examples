@@ -1,5 +1,12 @@
 /* eslint-disable no-console */
-import { Account, Args, Mas, Web3Provider } from '@massalabs/massa-web3';
+import {
+  Account,
+  Args,
+  bytesToStr,
+  Mas,
+  MRC20,
+  Web3Provider,
+} from '@massalabs/massa-web3';
 import { getScByteCode } from './utils';
 
 async function deploy() {
@@ -9,16 +16,11 @@ async function deploy() {
   console.log('Deploying contract...');
 
   const byteCode = getScByteCode('build', 'token.wasm');
-  const tokenArgs = new Args()
-    .addString('Massa Token')
-    .addString('MAS')
-    .addU8(9n)
-    .addU256(120000000000n * 10n ** 9n);
 
   const contract = await provider.deploySC({
     coins: Mas.fromString('1'),
     byteCode,
-    parameter: tokenArgs.serialize(),
+    parameter: new Args(),
   });
 
   console.log('Contract deployed at:', contract.address);

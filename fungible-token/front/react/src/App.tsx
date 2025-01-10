@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import "./App.css";
-import { getWallets } from "@massalabs/wallet-provider";
+import { getWallets, WalletName } from "@massalabs/wallet-provider";
 import { MRC20, OperationStatus, Provider } from "@massalabs/massa-web3";
 
-const CONTRACT_ADDRESS = "AS1fSyr39jvAryKjrLV2JgRDauHb7GKVRA1TZoeK2NnogDNSw9iS";
+const CONTRACT_ADDRESS = "AS1Pm9Cbh8zM6HjfGMADKNxWshQm9cHrkbKrDBRNPdbCcvuWGGWx";
 
 function App() {
   const [provider, setProvider] = useState<Provider>();
@@ -43,7 +43,7 @@ function App() {
     const initProvider = async () => {
       const walletList = await getWallets();
       const wallet = walletList.find(
-        (provider) => provider.name() === "MASSASTATION"
+        (provider) => provider.name() === WalletName.Bearby
       );
       if (!wallet) {
         console.log("No wallet found");
