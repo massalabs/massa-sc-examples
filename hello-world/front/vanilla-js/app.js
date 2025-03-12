@@ -1,4 +1,4 @@
-import { getWallets } from "@massalabs/wallet-provider";
+import { getWallets, WalletName } from "@massalabs/wallet-provider";
 import { Args, bytesToStr, OperationStatus } from "@massalabs/massa-web3";
 
 const CONTRACT_ADDRESS =
@@ -19,7 +19,7 @@ async function initProvider() {
   try {
     const walletList = await getWallets();
     const wallet = walletList.find(
-      (provider) => provider.name() === "MASSASTATION"
+      (provider) => provider.name() === WalletName.MassaWallet
     );
     if (!wallet) {
       throw new Error(
