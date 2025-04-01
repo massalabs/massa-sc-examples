@@ -15,8 +15,8 @@
     "vite-plugin-node-polyfills": "^0.22.0"
   },
   "dependencies": {
-    "@massalabs/massa-web3": "^5.0.0-next",
-    "@massalabs/wallet-provider": "^3.0.0-next",
+    "@massalabs/massa-web3": "^5.1.2-dev",
+    "@massalabs/wallet-provider": "^3.1.2-dev",
     "events": "^3.3.0",
     "lodash-es": "^4.17.21"
   }

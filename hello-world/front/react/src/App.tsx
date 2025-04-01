@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { getWallets } from "@massalabs/wallet-provider";
+import { getWallets, WalletName } from "@massalabs/wallet-provider";
 import {
   Args,
   bytesToStr,
@@ -32,7 +32,7 @@ function App() {
   async function initProvider() {
     const walletList = await getWallets();
     const wallet = walletList.find(
-      (provider) => provider.name() === "MASSASTATION"
+      (provider) => provider.name() === WalletName.MassaWallet
     );
     if (!wallet) {
       console.log("No wallet found");
