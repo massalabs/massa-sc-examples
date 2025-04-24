@@ -9,6 +9,7 @@
         "clean": "rimraf build",
         "deploy": "npm run build && tsx src/deploy.ts",
         "call": "tsx src/call.ts",
+        "listen": "tsx src/listen.ts",
         "prettier": "prettier '**/src/**/*.ts' --check && as-prettier --check assembly",
         "prettier:fix": "prettier '**/src/**/*.ts' --write && as-prettier --write assembly",
         "lint": "eslint assembly",
@@ -41,8 +42,7 @@
     "overrides": {
         "visitor-as": {
             "assemblyscript": "$assemblyscript"
-        },
-        "esbuild": "0.19.12"
+        }
     },
     "type": "module",
     "prettier": "@massalabs/prettier-config-as",

@@ -1,11 +1,10 @@
-import { Account, SmartContract, Web3Provider } from '@massalabs/massa-web3';
-import { CONTRACT_ADDR } from './utils';
+import { SmartContract } from '@massalabs/massa-web3';
+import { getAccountProvider, getContractAddress } from './utils';
 
-const rpcUrl = 'https://labnet.massa.net/api/v2:33035';
-const account = await Account.fromEnv();
-const provider = Web3Provider.fromRPCUrl(rpcUrl, account);
+const provider = await getAccountProvider();
+const contractAddress = await getContractAddress();
 
-const contract = new SmartContract(provider, CONTRACT_ADDR);
+const contract = new SmartContract(provider, contractAddress);
 const operation = await contract.call('stop');
 
 await operation.waitSpeculativeExecution();

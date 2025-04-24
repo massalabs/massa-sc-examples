@@ -45,6 +45,20 @@ to create advanced deployment procedure.
 For more information, please visit our ReadTheDocs about
 [Massa smart-contract development](https://docs.massa.net/en/latest/web3-dev/smart-contracts.html).
 
+## Call a smart contract
+
+Prerequisites :
+
+- You must update the `.env` file at the root of the repository with the key:
+  - CONTRACT_ADDRESS=<contract_address>
+where `<contract_address>` is the address of the smart contract the deployment script has returned.
+
+The following command will call the `setMessage` function of the smart contract previously deployed.
+
+```shell
+npm run call
+```
+
 ## Unit tests
 
 The test framework documentation is available here: [as-pect docs](https://as-pect.gitbook.io/as-pect)
