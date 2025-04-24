@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { Args, Mas } from '@massalabs/massa-web3';
-import { getScByteCode, getAccountProvider } from './utils';
+import { Args, Mas, SmartContract } from '@massalabs/massa-web3';
+import { getAccountProvider, getScByteCode } from './utils';
 
 async function deployContract() {
   const provider = await getAccountProvider();
@@ -11,11 +11,12 @@ async function deployContract() {
 
   const constructorArgs = new Args().addString('Massa');
 
-  const contract = await provider.deploySC({
-    coins: Mas.fromString('1'),
+  const contract = await SmartContract.deploy(
+    provider,
     byteCode,
-    parameter: constructorArgs.serialize(),
-  });
+    constructorArgs,
+    { coins: Mas.fromString('1') },
+  );
 
   console.log('Contract deployed at:', contract.address);
   console.log(
